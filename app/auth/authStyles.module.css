@@ -1,0 +1,30 @@
+.auth_layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 30px;
+    background-color: #EBECFA;
+}
+.auth_container {
+    max-width: 550px;
+    width: 100%;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+.heading {
+    color: #9D9FE6;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 30px;
+}
+.paragraph {
+    color: #667085;
+    font-size: 16px;
+}
+.registerSteps{
+    width: 100%;
+}

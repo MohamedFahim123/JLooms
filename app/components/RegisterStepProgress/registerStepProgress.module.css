@@ -1,0 +1,29 @@
+.progressContainer {
+  position: relative;
+}
+.progressContainer::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  top: 15px;
+  height: 2px;
+  width: 60%;
+  background-color: #dee2e6;
+}
+.progress {
+  position: relative;
+  background-color: #ebecfa;
+  width: 150px;
+  z-index: 3;
+}
+.progressIcon {
+  border-radius: 50%;
+  border: 2px solid #9d9fe6;
+  box-shadow: none;
+}
+.bgActive {
+  background-color: #9d9fe6;
+}
+.textActive {
+  color: #9d9fe6;
+}

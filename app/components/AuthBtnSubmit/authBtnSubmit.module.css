@@ -1,0 +1,32 @@
+.authSubmit {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  color: #fff;
+  background-color: #9D9FE6;
+  border: 1px solid #9D9FE6;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+}
+.authSubmit:hover {
+  background-color: #fff;
+  color: #9D9FE6;
+}
+.authSubmit:active,
+.authSubmit:focus,
+.authSubmit:focus-visible {
+  box-shadow: none !important;
+}
+.typeBtn {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #fff !important;
+  border-color: rgb(239, 107, 74) !important;
+  color: rgb(239, 107, 74);
+}
+.typeBtn:hover {
+  background-color: rgb(239, 107, 74) !important;
+  color: #fff !important;
+}
