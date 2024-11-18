@@ -18,6 +18,16 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
 
   return (
     <Sidebar collapsed={collapsed} className={`h-screen shadow-lg ${styles.sideBarContainer}`}>
+      <div
+        className='flex justify-center my-2'
+      >
+        {
+          collapsed ?
+            <FaArrowAltCircleRight className='cursor-pointer' size={30} onClick={() => setCollapsed(!collapsed)} />
+            :
+            <FaArrowAltCircleLeft className='cursor-pointer' onClick={() => setCollapsed(!collapsed)} size={30} />
+        }
+      </div>
       <Menu >
         <MenuItem
           icon={<FaUser />}
@@ -100,16 +110,6 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           Requests
         </MenuItem>
       </Menu>
-      <div
-        className='flex justify-center mt-5'
-      >
-        {
-          collapsed ?
-            <FaArrowAltCircleRight className='cursor-pointer' size={30} onClick={() => setCollapsed(!collapsed)} />
-            :
-            <FaArrowAltCircleLeft className='cursor-pointer' onClick={() => setCollapsed(!collapsed)} size={30} />
-        }
-      </div>
     </Sidebar>
   );
 }

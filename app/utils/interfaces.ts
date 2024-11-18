@@ -13,6 +13,11 @@ export interface CustomeInputProps {
     error?: FieldErrors<FormAuthInputs>;
     fileUploaded?: boolean;
 };
+
 export interface LayoutInterface {
     children: ReactNode;
+};
+
+export interface ParamsProps {
+    id: string;
 }
