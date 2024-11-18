@@ -32,12 +32,12 @@ export default function AuthForm({ type, inputs }: AuthFormProps) {
     };
 
     useEffect(() => {
-        if (watchValues.password !== watchValues.confirmPassword) {
+        if (watch('password') !== watch('confirmPassword')) {
             setError('confirmPassword', { message: 'Passwords do not match' });
-        } else if (watchValues.confirmPassword === watchValues.password) {
+        } else {
             clearErrors("confirmPassword");
-        };
-    }, [watchValues.confirmPassword]);
+        }
+    }, [watch('password'), watch('confirmPassword'), setError, clearErrors]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={`${styles.authForm}`}>

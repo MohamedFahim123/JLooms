@@ -11,17 +11,14 @@ import AddSubject from '@/app/components/AddSubject/AddSubject';
 
 interface TeacherDetailsProps {
     params: ParamsProps;
-};
-
+}
 export const metadata: Metadata = {
     title: `Teacher Details`,
 };
 
-export default async function TeacherDetailsPage({ params }: TeacherDetailsProps) {
-    const { id } = await params;
-
+export default function TeacherDetailsPage({ params }: TeacherDetailsProps) {
+    const { id } = params;
     const teacher = teachers?.find(el => +el?.id === +id);
-
     const filterOptions = [
         {
             label: 'Status',
