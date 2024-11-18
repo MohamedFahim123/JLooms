@@ -1,4 +1,4 @@
-import { ParamsProps } from '@/app/utils/interfaces';
+
 import React from 'react';
 import { teachers } from '../page';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
@@ -8,6 +8,7 @@ import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import AddSubject from '@/app/components/AddSubject/AddSubject';
+import { ParamsProps } from '@/app/utils/interfaces';
 
 interface TeacherDetailsProps {
     params: ParamsProps;
@@ -17,8 +18,8 @@ export const metadata: Metadata = {
     title: `Teacher Details`,
 };
 
-export default function TeacherDetailsPage({ params }: TeacherDetailsProps) {
-    const { id } = params;
+export default async function TeacherDetailsPage({ params }: TeacherDetailsProps) {
+    const { id } = await params;
 
     const teacher = teachers?.find(el => +el?.id === +id);
 
