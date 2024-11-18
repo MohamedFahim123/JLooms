@@ -102,4 +102,4 @@ export default function TeacherDetailsPage({ params }: TeacherDetailsProps) {
             </div>
         </div>
     );
-}
+};

@@ -19,6 +19,5 @@ export interface LayoutInterface {
 };
 
 export interface ParamsProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    id: Promise<any>;
+    id: number | string;
 }
