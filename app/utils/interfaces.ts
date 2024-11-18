@@ -17,7 +17,3 @@ export interface CustomeInputProps {
 export interface LayoutInterface {
     children: ReactNode;
 };
-
-export interface ParamsProps {
-    id: number | string;
-}

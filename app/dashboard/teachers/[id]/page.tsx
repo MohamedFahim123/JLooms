@@ -8,11 +8,14 @@ import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import AddSubject from '@/app/components/AddSubject/AddSubject';
-import { ParamsProps } from '@/app/utils/interfaces';
+
+interface ParamsProps {
+    id: number | string;
+};
 
 interface TeacherDetailsProps {
     params: ParamsProps;
-}
+};
 
 export const metadata: Metadata = {
     title: `Teacher Details`,
