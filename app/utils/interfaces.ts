@@ -19,5 +19,5 @@ export interface LayoutInterface {
 };
 
 export interface ParamsProps {
-    id: string;
+    id: Promise<number | string>;
 }
