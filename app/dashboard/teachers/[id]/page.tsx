@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { teachers } from '../page';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
@@ -10,12 +9,12 @@ import { Metadata } from 'next';
 import AddSubject from '@/app/components/AddSubject/AddSubject';
 
 interface ParamsProps {
-    id: number | string;
-};
+    id: string;
+}
 
 interface TeacherDetailsProps {
-    params: ParamsProps;
-};
+    params: Promise<ParamsProps>;
+}
 
 export const metadata: Metadata = {
     title: `Teacher Details`,
@@ -24,34 +23,14 @@ export const metadata: Metadata = {
 export default async function TeacherDetailsPage({ params }: TeacherDetailsProps) {
     const { id } = await params;
 
-    const teacher = teachers?.find(el => +el?.id === +id);
+    const teacher = teachers?.find((el) => el.id === Number(id));
 
     const filterOptions = [
-        {
-            label: 'Status',
-            value: '',
-            disabled: true,
-        },
-        {
-            label: 'InActive',
-            value: 'InActive',
-            disabled: false,
-        },
-        {
-            label: 'Active',
-            value: 'Active',
-            disabled: false,
-        },
-        {
-            label: 'Sick Leave',
-            value: 'Sick Leave',
-            disabled: false,
-        },
-        {
-            label: 'Maternity Leave',
-            value: 'Maternity Leave',
-            disabled: false,
-        },
+        { label: 'Status', value: '', disabled: true },
+        { label: 'Inactive', value: 'Inactive', disabled: false },
+        { label: 'Active', value: 'Active', disabled: false },
+        { label: 'Sick Leave', value: 'Sick Leave', disabled: false },
+        { label: 'Maternity Leave', value: 'Maternity Leave', disabled: false },
     ];
 
     return (
