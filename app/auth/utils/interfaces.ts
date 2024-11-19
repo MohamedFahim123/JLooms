@@ -1,4 +1,5 @@
 export interface FormAuthInputs {
+    // Auth Inputs
     email?: string;
     password?: string;
     confirmPassword?: string;
@@ -8,6 +9,16 @@ export interface FormAuthInputs {
     official_registration?: File;
     commercial_certificate?: File;
     otp?: string;
+
+    // Teacher Inputs
+    teacher_name?: string;
+    teacher_gender?: string;
+    teacher_email?: string;
+    teacher_password?: string;
+    teacher_phone?: string;
+    teacher_profile?: File;
+
+
 };
 
 interface Pattern {
@@ -15,7 +26,7 @@ interface Pattern {
     message: string;
 };
 
-interface Validation {
+export interface Validation {
     required?: string;
     pattern?: Pattern;
 };

@@ -1,10 +1,9 @@
 'use client'
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { FaUser, FaBook, FaChalkboardTeacher, FaCog, FaBell, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaBook, FaChalkboardTeacher, FaCog, FaBell, FaSignOutAlt, FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 import { useRouter, usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import styles from './sideBar.module.css';
-import { FaArrowAltCircleLeft } from "react-icons/fa";
-import { FaArrowAltCircleRight } from "react-icons/fa";
 
 interface SideBarProps {
   collapsed: boolean;
@@ -14,21 +13,35 @@ interface SideBarProps {
 export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const router = useRouter();
   const pathname = usePathname();
+
   const isActive = (path: string) => pathname.includes(path);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      };
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setCollapsed]);
 
   return (
     <Sidebar collapsed={collapsed} className={`h-screen shadow-lg ${styles.sideBarContainer}`}>
-      <div
-        className='flex justify-center my-2'
-      >
-        {
-          collapsed ?
-            <FaArrowAltCircleRight className='cursor-pointer' size={30} onClick={() => setCollapsed(!collapsed)} />
-            :
-            <FaArrowAltCircleLeft className='cursor-pointer' onClick={() => setCollapsed(!collapsed)} size={30} />
-        }
+      <div className='flex justify-center my-2'>
+        {collapsed ? (
+          <FaArrowAltCircleRight className='cursor-pointer' size={30} onClick={() => setCollapsed(!collapsed)} />
+        ) : (
+          <FaArrowAltCircleLeft className='cursor-pointer' onClick={() => setCollapsed(!collapsed)} size={30} />
+        )}
       </div>
-      <Menu >
+      <Menu>
         <MenuItem
           icon={<FaUser />}
           onClick={() => router.push('/dashboard/profile')}

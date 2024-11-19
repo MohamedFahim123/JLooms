@@ -97,3 +97,13 @@ export const CustomFileCommercialInput: Input = {
         required: 'Commercial Certificate is Required',
     },
 };
+
+export const CustomPhoneNumberInput: Input = {
+    lableName: "Phone Number",
+    name: "teacher_phone",
+    placeholder: "Phone Number",
+    type: "text",
+    validation: {
+        required: 'Phone Number is Required',
+    },
+};

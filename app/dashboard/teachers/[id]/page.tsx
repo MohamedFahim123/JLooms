@@ -10,11 +10,11 @@ import AddSubject from '@/app/components/AddSubject/AddSubject';
 
 interface ParamsProps {
     id: string;
-}
+};
 
 interface TeacherDetailsProps {
     params: Promise<ParamsProps>;
-}
+};
 
 export const metadata: Metadata = {
     title: `Teacher Details`,

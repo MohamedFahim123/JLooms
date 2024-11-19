@@ -14,7 +14,6 @@ export default function CustomFileInput({
     validation,
     fileUploaded
 }: CustomeInputProps) {
-    console.log(name)
     return (
         <div className={`mb-1 ${styles.inputContainer}`}>
                 <label

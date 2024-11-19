@@ -5,7 +5,7 @@ import SideBar from '../components/SideBar/SideBar';
 import { FaBell } from 'react-icons/fa';
 import styles from './dashboardMain.module.css';
 import Image from 'next/image';
-import logo from '@/public/Ellipse 6.svg';
+import logo from '@/public/Ellipse6.svg';
 
 export default function Layout({ children }: LayoutInterface) {
     const [collapsed, setCollapsed] = useState(false);
