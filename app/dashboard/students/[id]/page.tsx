@@ -1,33 +1,31 @@
 import React from 'react';
-import { teachers } from '../page';
+import { students } from '../page';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import Image from 'next/image';
 import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import AddSubject from '@/app/components/AddSubject/AddSubject';
 
 interface ParamsProps {
     id: string;
 };
 
-interface TeacherDetailsProps {
+interface StudentsDetailsProps {
     params: Promise<ParamsProps>;
 };
 
 export const metadata: Metadata = {
-    title: `Teacher Details`,
+    title: `Student Details`,
 };
 
-export default async function TeacherDetailsPage({ params }: TeacherDetailsProps) {
+export default async function SingleStudentPage({params}: StudentsDetailsProps) {
     const { id } = await params;
 
-    const teacher = teachers?.find((el) => el.id === Number(id));
+    const student = students?.find((el) => el.id === Number(id));
 
     const filterOptions = [
         { label: 'Status', value: '', disabled: true },
-        { label: 'Inactive', value: 'Inactive', disabled: false },
         { label: 'Active', value: 'Active', disabled: false },
         { label: 'Sick Leave', value: 'Sick Leave', disabled: false },
         { label: 'Maternity Leave', value: 'Maternity Leave', disabled: false },
@@ -35,13 +33,13 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
 
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
-            <DashBoardPageHead haveFilter={true} filterOptions={filterOptions} text={teacher?.name || ''} haveBtn={false} />
+            <DashBoardPageHead haveFilter={true} filterOptions={filterOptions} text={student?.name || ''} haveBtn={false} />
             <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <div className="lg:col-span-4 flex flex-col items-center space-y-6">
                     <div className="w-44 h-44 rounded-full overflow-hidden border">
                         <Image
-                            src={teacher?.image || Avatar}
-                            alt={teacher?.name || 'Teacher Profile Avatar'}
+                            src={student?.image || Avatar}
+                            alt={student?.name || 'student Profile Avatar'}
                             width={175}
                             height={175}
                             className="object-cover"
@@ -50,21 +48,21 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
                     <div className="flex space-x-4">
                         <div className="flex items-center flex-col w-16 h-16 gap-2">
                             <h5 className="font-bold">Age</h5>
-                            <p>{teacher?.age}</p>
+                            <p>{student?.age}</p>
                         </div>
                         <div className="flex items-center flex-col w-16 h-16 gap-2">
                             <h5 className="font-bold">Gender</h5>
-                            <p>{teacher?.gender}</p>
+                            <p>{student?.gender}</p>
                         </div>
                     </div>
                     <div className="flex space-x-4">
                         <div className="flex items-center justify-center w-10 h-10 cursor-pointer bg-[#EBECFA] rounded-lg">
-                            <Link href={`tel:${teacher?.phone}`}>
+                            <Link href={`tel:${student?.phone}`}>
                                 <FaPhoneAlt size={20} className="text-[#8A8A8A]" />
                             </Link>
                         </div>
                         <div className="flex items-center justify-center w-10 cursor-pointer h-10 bg-[#EBECFA] rounded-lg">
-                            <Link href={`mailto:${teacher?.email}`}>
+                            <Link href={`mailto:${student?.email}`}>
                                 <FaEnvelope size={20} className="text-[#8A8A8A]" />
                             </Link>
                         </div>
@@ -76,10 +74,9 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
                             <FaGraduationCap size={32} className="text-[#8A8A8A]" />
                         </span>
                         {
-                            teacher?.class
+                            student?.class
                         }
                     </h3>
-                    <AddSubject />
                 </div>
             </div>
         </div>

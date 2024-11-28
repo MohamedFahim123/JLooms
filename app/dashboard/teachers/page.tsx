@@ -1,6 +1,6 @@
 import DashBoardTable from '@/app/components/DashBoardTable/DashBoardTable';
 import React from 'react';
-import { Teacher } from '../utils/interfaces';
+import { Table } from '../utils/interfaces';
 import teacher from '../../imgs/teachers/teacher1.png';
 import { Metadata } from 'next';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Our Teachers",
 };
 
-export const teachers: Teacher[] = [
+export const teachers: Table[] = [
     { id: 1, classDetails: '' ,address: '1th elhoria streat ,zefta ,egypt',email: 'teacher@email.com',phone: '0123 456 789',age: 34 , gender: 'male',image: teacher.src, name: 'Kristin Watson', subject: 'Multiple Subjects', class: 'Multiple Classes', status: 'Active' },
     { id: 2, classDetails: '' ,address: '1th elhoria streat ,zefta ,egypt',email: 'teacher@email.com',phone: '0123 456 789',age: 34 , gender: 'female',image: teacher.src, name: 'Marvin McKinney', subject: 'French', class: 'JSS 3', status: 'Active' },
     { id: 3, classDetails: '' ,address: '1th elhoria streat ,zefta ,egypt',email: 'teacher@email.com',phone: '0123 456 789',age: 34 , gender: 'male',image: teacher.src, name: 'Jane Cooper', subject: 'Maths', class: 'JSS 3', status: 'Active' },
@@ -30,7 +30,7 @@ export default function TeachersPage() {
     return (
         <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
             <DashBoardPageHead text='Teachers' btnText='Add Teacher' haveBtn={true} btnLink='/dashboard/teachers/add-new-teacher' />
-            <DashBoardFilterations />
+            <DashBoardFilterations placeHolder="Search for a teacher by name or email" />
             <div className="overflow-x-auto">
                 <DashBoardTable tableData={teachers} tableCells={tableCells} />
             </div>

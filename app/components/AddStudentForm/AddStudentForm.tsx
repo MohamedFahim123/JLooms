@@ -6,34 +6,46 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import CustomeInput from "../CustomInput/CustomeInput";
 import CustomFileInput from "../CustomFileInput/CustomFileInput";
 
-interface TeacherInput {
+interface StudentInput {
     lableName: string;
     name: keyof FormAuthInputs;
     placeholder: string;
     type: string;
     validation?: Validation;
 };
-export default function AddTeacherForm() {
+
+export default function AddStudentForm() {
     const { register, watch, handleSubmit, formState: { errors } } = useForm<FormAuthInputs>();
-    const name: TeacherInput = {
-        lableName: "Full Name",
-        name: "teacher_name",
-        placeholder: "Enter Full Name",
-        type: "text",
-        validation: {
-            required: 'Name is Required',
+    const firstInputs: StudentInput[] = [
+        {
+            lableName: "Full Name",
+            name: "student_name",
+            placeholder: "Enter Full Name",
+            type: "text",
+            validation: {
+                required: 'Name is Required',
+            },
         },
-    };
+        {
+            lableName: "Student ID",
+            name: "student_id",
+            placeholder: "Student ID",
+            type: "text",
+            validation: {
+                required: 'Id is Required',
+            },
+        },
+    ];
 
     const watchValues = watch();
 
-    const Inputs: TeacherInput[] = [
+    const Inputs: StudentInput[] = [
         CustomEmailInput,
         CustomPasswordInput,
         CustomPhoneNumberInput,
         {
             lableName: "Profile Picture",
-            name: "teacher_profile",
+            name: "student_profile",
             placeholder: "profile picture",
             type: "file",
             validation: {
@@ -47,31 +59,47 @@ export default function AddTeacherForm() {
     };
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
-            <CustomeInput
-                name={name.name}
-                placeHolder={name.placeholder}
-                register={register}
-                error={errors}
-                type={name.type}
-                lable={name.lableName}
-                id={`addTeacher${name.name}`}
-                validation={name.validation}
-            />
-
+            {
+                firstInputs?.map((input, idx) => (
+                    <CustomeInput
+                        key={idx}
+                        name={input.name}
+                        placeHolder={input.placeholder}
+                        register={register}
+                        error={errors}
+                        type={input.type}
+                        lable={input.lableName}
+                        id={`addstudent${input.name}`}
+                        validation={input.validation}
+                    />
+                ))
+            }
             <div>
                 <label className="block text-gray-700">Gender</label>
                 <select
-                    {...register("teacher_gender", { required: "Gender is required" })}
-                    className={`${errors?.teacher_gender?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
+                    {...register("student_gender", { required: "Gender is required" })}
+                    className={`${errors?.student_gender?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
                 >
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select>
-                {errors.teacher_gender && <p className="text-red-500 text-sm">{errors.teacher_gender.message}</p>}
+                {errors.student_gender && <p className="text-red-500 text-sm">{errors.student_gender.message}</p>}
             </div>
-
+            <div>
+                <label className="block text-gray-700">Class</label>
+                <select
+                    {...register("student_class", { required: "Class is required" })}
+                    className={`${errors?.student_class?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
+                >
+                    <option value="">Select Class</option>
+                    <option value="male">Math</option>
+                    <option value="female">English</option>
+                    <option value="other">Other</option>
+                </select>
+                {errors.student_class && <p className="text-red-500 text-sm">{errors.student_class.message}</p>}
+            </div>
             {
                 Inputs?.map(input =>
                     input?.type === 'file' ?
@@ -84,7 +112,7 @@ export default function AddTeacherForm() {
                                 error={errors}
                                 type={input.type}
                                 lable={input.lableName}
-                                id={`addTeacher${input.name}`}
+                                id={`addstudent${input.name}`}
                                 validation={input.validation}
                                 fileUploaded={(watchValues[input.name] as unknown as FileList)?.length > 0}
                             />
@@ -99,19 +127,18 @@ export default function AddTeacherForm() {
                                 error={errors}
                                 type={input.type}
                                 lable={input.lableName}
-                                id={`addTeacher${input.name}`}
+                                id={`addstudent${input.name}`}
                                 validation={input.validation}
                             />
                         )
                 )
             }
-
             <button
                 type="submit"
-                className="bg-indigo-500 transition-all duration-300 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded"
+                className="bg-indigo-500 hover:bg-indigo-600 transition-all duration-300 text-white font-medium py-2 px-4 rounded"
             >
-                Add Teacher
+                Add Student
             </button>
         </form>
-    )
-}
+    );
+};

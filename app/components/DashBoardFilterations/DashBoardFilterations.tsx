@@ -1,6 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-export default function DashBoardFilterations() {
+interface DashBoardFilterationsProps {
+    placeHolder?: string;
+};
+
+export default function DashBoardFilterations({placeHolder}: DashBoardFilterationsProps) {
     return (
         <div className="px-6 py-4">
             <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
@@ -13,7 +17,7 @@ export default function DashBoardFilterations() {
                 <div className="relative w-full md:w-auto">
                     <input
                         type="text"
-                        placeholder="Search for a teacher by name or email"
+                        placeholder={placeHolder}
                         className="w-full md:w-64 border border-gray-300 rounded-lg py-2 pl-4 pr-10 focus:outline-none focus:border-indigo-500"
                     />
                     <svg

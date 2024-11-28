@@ -1,8 +1,9 @@
-export interface Teacher {
-    name: string;
-    subject: string;
-    class: string;
-    status: string;
+export interface Table {
+    parents: ReactNode;
+    name?: string;
+    subject?: string;
+    class?: string;
+    status?: string;
     image?: string ;
     id: number;
     age?: number;

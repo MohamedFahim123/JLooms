@@ -18,6 +18,15 @@ export interface FormAuthInputs {
     teacher_phone?: string;
     teacher_profile?: File;
 
+    // Student Inputs
+    student_name?: string;
+    student_id?: string;
+    student_class?: string;
+    student_gender?: string;
+    student_email?: string;
+    student_password?: string;
+    student_phone?: string;
+    student_profile?: string;
 
 };
 
