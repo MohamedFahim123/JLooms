@@ -1,11 +1,11 @@
 import React from 'react';
-import { students } from '../page';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import Image from 'next/image';
 import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { students } from '../page';
 
 interface ParamsProps {
     id: string;
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default async function SingleStudentPage({params}: StudentsDetailsProps) {
     const { id } = await params;
 
-    const student = students?.find((el) => el.id === Number(id));
+    const student = students?.find((el: { id: number; }) => el.id === Number(id));
 
     const filterOptions = [
         { label: 'Status', value: '', disabled: true },
