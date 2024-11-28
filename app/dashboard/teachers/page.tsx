@@ -30,7 +30,7 @@ export default function TeachersPage() {
     return (
         <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
             <DashBoardPageHead text='Teachers' btnText='Add Teacher' haveBtn={true} btnLink='/dashboard/teachers/add-new-teacher' />
-            <DashBoardFilterations placeHolder="Search for a teacher by name or email" />
+            <DashBoardFilterations />
             <div className="overflow-x-auto">
                 <DashBoardTable tableData={teachers} tableCells={tableCells} />
             </div>

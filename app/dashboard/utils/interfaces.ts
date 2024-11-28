@@ -1,5 +1,5 @@
 export interface Table {
-    parents: ReactNode;
+    parents?: string;
     name?: string;
     subject?: string;
     class?: string;

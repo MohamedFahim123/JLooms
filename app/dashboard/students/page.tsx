@@ -24,8 +24,7 @@ export const students: Table[] = [
     { id: 11, classDetails: '', address: '1th elhoria streat ,zefta ,egypt', email: 'student@email.com', phone: '0123 456 789', age: 3, gender: 'male', image: teacher.src, name: 'Wade Warren', subject: 'C.R.S', class: 'JSS 5', parents: 'Mother and Father' },
 ];
 
-
-export default function page() {
+export default function StudentsPage() {
     const tableCells: string[] = ['name', 'class', 'Parent'];
 
     return (
