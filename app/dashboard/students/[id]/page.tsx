@@ -5,7 +5,7 @@ import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { students } from '../page';
+import { students } from '../../utils/tableData';
 
 interface ParamsProps {
     id: string;

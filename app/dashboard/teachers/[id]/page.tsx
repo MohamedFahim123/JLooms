@@ -1,5 +1,4 @@
 import React from 'react';
-import { teachers } from '../page';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import Image from 'next/image';
 import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
@@ -7,6 +6,7 @@ import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import AddSubject from '@/app/components/AddSubject/AddSubject';
+import { teachers } from '../../utils/tableData';
 
 interface ParamsProps {
     id: string;
