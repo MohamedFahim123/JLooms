@@ -25,7 +25,7 @@ export const students: Table[] = [
 ];
 
 
-export default function StudentsPage() {
+export default function page() {
     const tableCells: string[] = ['name', 'class', 'Parent'];
 
     return (
