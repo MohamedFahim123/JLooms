@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AddNewTeacherPage() {
     return (
-        <div className="mx-auto p-6 bg-white rounded-lg">
+        <div className="mx-auto py-6 bg-white rounded-lg">
             <DashBoardPageHead text='Add Teacher' />
             <AddTeacherForm />
         </div>

@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 };
 
 const StudentsPage = () => {
-    const tableCells: string[] = ['name', 'class', 'Parent'];
+    const tableCells: string[] = ['name', 'class', 'Parents'];
 
     return (
         <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
             <DashBoardPageHead text='Students' btnText='Add Student' haveBtn={true} btnLink='/dashboard/students/add-new-student' />
-            <DashBoardFilterations placeHolder="Search for a Student by name or email" />
+            <DashBoardFilterations placeHolder="Find a Student" />
             <div className="overflow-x-auto">
                 <DashBoardTable tableData={students} tableCells={tableCells} currPage={'students'} />
             </div>

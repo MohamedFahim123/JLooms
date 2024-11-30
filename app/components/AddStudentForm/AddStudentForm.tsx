@@ -58,7 +58,7 @@ export default function AddStudentForm() {
         console.log(data);
     };
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 mt-5">
             {
                 firstInputs?.map((input, idx) => (
                     <CustomeInput

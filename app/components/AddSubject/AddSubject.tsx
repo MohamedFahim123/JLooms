@@ -114,7 +114,6 @@ export default function AddSubject() {
                             >
                                 Edit
                             </button>
-
                         )
                 }
             </div>

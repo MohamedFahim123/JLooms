@@ -1,6 +1,20 @@
 import { Table } from "./interfaces";
 import teacher from '../../imgs/teachers/teacher1.png';
 
+export const classes: Table[] = [
+    { id: 1, className: 'KG-1', numberOfStudents: 20, floor: 1},
+    { id: 2, className: 'KG-2', numberOfStudents: 20, floor: 1},
+    { id: 3, className: 'Class-1', numberOfStudents: 20, floor: 2},
+    { id: 4, className: 'Class-2', numberOfStudents: 20, floor: 2},
+    { id: 5, className: 'Class-3', numberOfStudents: 20, floor: 2},
+    { id: 6, className: 'Class-4', numberOfStudents: 20, floor: 3},
+    { id: 7, className: 'Class-5', numberOfStudents: 20, floor: 3},
+    { id: 8, className: 'Class-6', numberOfStudents: 20, floor: 3},
+    { id: 9, className: 'Primary-1', numberOfStudents: 20, floor: 4},
+    { id: 10, className: 'Primary-2', numberOfStudents: 20, floor: 4},
+    { id: 11, className: 'Primary-3', numberOfStudents: 20, floor: 4},
+];
+
 export const students: Table[] = [
     { id: 1, classDetails: '', address: '1th elhoria streat ,zefta ,egypt', email: 'student@email.com', phone: '0123 456 789', age: 4, gender: 'male', image: teacher.src, name: 'Kristin Watson', subject: 'Multiple Subjects', class: 'Multiple Classes', parents: 'Mother and Father' },
     { id: 2, classDetails: '', address: '1th elhoria streat ,zefta ,egypt', email: 'student@email.com', phone: '0123 456 789', age: 4, gender: 'female', image: teacher.src, name: 'Marvin McKinney', subject: 'French', class: 'JSS 3', parents: 'Mother and Father' },

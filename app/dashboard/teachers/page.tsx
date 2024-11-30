@@ -15,9 +15,9 @@ export default function TeachersPage() {
     return (
         <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
             <DashBoardPageHead text='Teachers' btnText='Add Teacher' haveBtn={true} btnLink='/dashboard/teachers/add-new-teacher' />
-            <DashBoardFilterations />
+            <DashBoardFilterations placeHolder={'Find a teacher'} />
             <div className="overflow-x-auto">
-                <DashBoardTable tableData={teachers} tableCells={tableCells} />
+                <DashBoardTable tableData={teachers} tableCells={tableCells} currPage='teachers' />
             </div>
         </div>
     );

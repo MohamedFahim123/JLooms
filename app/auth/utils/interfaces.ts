@@ -28,6 +28,9 @@ export interface FormAuthInputs {
     student_phone?: string;
     student_profile?: string;
 
+    // class inputs 
+    class_name?: string;
+
 };
 
 interface Pattern {

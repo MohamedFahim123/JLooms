@@ -1,6 +1,7 @@
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { FormAuthInputs } from "../auth/utils/interfaces";
 import { ReactNode } from "react";
+import { Table } from "../dashboard/utils/interfaces";
 
 export interface CustomeInputProps {
     name: keyof FormAuthInputs;
@@ -16,4 +17,8 @@ export interface CustomeInputProps {
 
 export interface LayoutInterface {
     children: ReactNode;
+};
+
+export interface TableRowProps {
+    cell: Table;
 };

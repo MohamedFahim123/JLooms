@@ -12,4 +12,7 @@ export interface Table {
     address?: string;
     email?: string;
     classDetails?: string;
+    className?: string;
+    numberOfStudents?: number,
+    floor?: number;
 };

@@ -1,4 +1,3 @@
-import React from 'react';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import Image from 'next/image';
 import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
