@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default async function SingleStudentPage({params}: StudentsDetailsProps) {
     const { id } = await params;
 
-    const student = students?.find((el: { id: number; }) => el.id === Number(id));
+    const student = students?.find((el) => el.id === Number(id));
 
     const filterOptions = [
         { label: 'Status', value: '', disabled: true },
