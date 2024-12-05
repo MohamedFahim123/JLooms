@@ -18,6 +18,7 @@ export default function Layout({ children }: LayoutInterface) {
         const token = Cookies.get('JLOOMS_TOKEN');
         if (!token) {
             router.push('/auth/login');
+            return;
         };
     }, [router]);
 

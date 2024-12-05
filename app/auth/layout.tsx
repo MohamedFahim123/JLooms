@@ -29,7 +29,8 @@ export default function AuthLayout({
         const TOKEN = Cookies.get('JLOOMS_TOKEN');
         if (TOKEN) {
             router.push('/dashboard/profile');
-        }
+            return;
+        };
     }, [router]);
 
 
