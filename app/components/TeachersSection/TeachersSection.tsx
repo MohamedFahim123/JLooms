@@ -70,16 +70,19 @@ export default function TeachersSection() {
             <DashBoardPageHead text="Teachers" btnText="Add Teacher" haveBtn={true} btnLink="/dashboard/teachers/add-new-teacher" />
             <DashBoardFilterations placeHolder="Find a teacher" />
             <div className="overflow-x-auto">
-                {teachers.length > 0 ? (
-                    <>
-                        <DashBoardTable tableData={teachers} tableCells={tableCells} currPage="teachers" />
-                        <Pagination totalPages={totalPages} currentPage={Number(filters.page)} />
-                    </>
-                ) : (
-                    <div className="flex justify-center min-h-screen">
-                        <p className="text-gray-500 font-semibold pt-10 text-xl">No teachers Yet!</p>
-                    </div>
-                )}
+                {
+                    teachers.length > 0 ?
+                        (
+                            <>
+                                <DashBoardTable tableData={teachers} tableCells={tableCells} currPage="teachers" />
+                                <Pagination totalPages={totalPages} currentPage={Number(filters.page)} />
+                            </>
+                        ) : (
+                            <div className="flex justify-center min-h-screen">
+                                <p className="text-gray-500 font-semibold pt-10 text-xl">No teachers Yet!</p>
+                            </div>
+                        )
+                }
             </div>
         </div>
     );

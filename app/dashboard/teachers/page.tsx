@@ -4,7 +4,7 @@ export const metadata: Metadata = {
     title: "Our Teachers",
 };
 
-export default async function TeachersPage() {
+export default function TeachersPage() {
     return (
         <TeachersSection />
     );
