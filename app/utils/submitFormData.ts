@@ -7,7 +7,8 @@ import Cookies from "js-cookie";
 export const handleMultiPartWebSiteFormData = async (
     data: FormAuthInputs,
     endPoint: string,
-    setError: UseFormSetError<FormAuthInputs>
+    setError: UseFormSetError<FormAuthInputs>,
+    reset: () => void
 ) => {
     const loadingToastId = toast.loading('Loading...');
     const token = Cookies.get('JLOOMS_TOKEN');
@@ -40,6 +41,7 @@ export const handleMultiPartWebSiteFormData = async (
             isLoading: false,
             autoClose: 1500,
         });
+        reset();
     } catch (error) {
         const errorMessage = axios.isAxiosError(error)
             ? error.response?.data?.message || 'Something went wrong!'

@@ -16,7 +16,7 @@ interface TeacherInput {
     validation?: Validation;
 };
 export default function AddTeacherForm() {
-    const { register, watch, handleSubmit, setError, formState: { errors } } = useForm<FormAuthInputs>();
+    const { register, watch, handleSubmit, reset, setError, formState: { errors } } = useForm<FormAuthInputs>();
     const name: TeacherInput = {
         lableName: "Full Name",
         name: "name",
@@ -45,7 +45,7 @@ export default function AddTeacherForm() {
     ];
 
     const onSubmit: SubmitHandler<FormAuthInputs> = (data) => {
-        handleMultiPartWebSiteFormData(data, dataURLS.addTeacher, setError);
+        handleMultiPartWebSiteFormData(data, dataURLS.addTeacher, setError, reset);
     };
 
     return (
