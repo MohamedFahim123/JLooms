@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import { authEndPoints } from "./authEndPoints";
-import { FormAuthInputs } from "../../utils/interfaces";
 import axios from "axios";
 import { UseFormSetError } from "react-hook-form";
 import Cookies from 'js-cookie';
+import { FormAuthInputs } from "./interfaces";
 type AuthEndPointType = keyof typeof authEndPoints;
 
 export const handleApplication_JsonData = async (data: FormAuthInputs, type: AuthEndPointType, setError: UseFormSetError<FormAuthInputs>) => {
