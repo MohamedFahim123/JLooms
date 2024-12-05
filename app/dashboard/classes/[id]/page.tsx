@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function page({ params }: classDetailsProps) {
     const { id } = await params;
-    const classDetails = classes?.find((el: { id: number; }) => el.id === Number(id));
+    const classDetails = classes?.find((el) => el.id === Number(id));
 
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
