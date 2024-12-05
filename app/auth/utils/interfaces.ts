@@ -29,7 +29,6 @@ export interface FormAuthInputs {
 
     // class inputs 
     class_name?: string;
-
 };
 
 interface Pattern {

@@ -20,8 +20,8 @@ async function fetchTeachersData(filters: Record<string, string | number> = {}):
         };
     });
 
-    const apiUrl = queryParams.toString()
-        ? `${dataURLS.filterTeachers}?${queryParams}`
+    const apiUrl = (filters?.status || filters.name)
+        ? `${dataURLS.filterTeachers}?${queryParams}&t=${new Date().getTime()}`
         : `${dataURLS.teachers}?t=${new Date().getTime()}`;
 
     const response = await fetch(apiUrl, {
