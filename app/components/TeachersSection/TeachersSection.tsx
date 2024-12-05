@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Table } from "@/app/dashboard/utils/interfaces";
 import { useSearchParams } from "next/navigation";
@@ -8,7 +8,7 @@ import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilteration
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 async function fetchTeachersData(filters: Record<string, string | number> = {}): Promise<{ data: Table[]; totalPages: number }> {
     const token = Cookies.get('JLOOMS_TOKEN');
@@ -68,7 +68,7 @@ export default function TeachersSection() {
     return (
         <div className={`${totalPages > 1 && 'pb-6'} w-full bg-white shadow-md rounded-lg overflow-hidden`}>
             <DashBoardPageHead text="Teachers" btnText="Add Teacher" haveBtn={true} btnLink="/dashboard/teachers/add-new-teacher" />
-            <DashBoardFilterations placeHolder="Find a teacher" />
+            <DashBoardFilterations page="teachers" placeHolder="Find a teacher" />
             <div className="overflow-x-auto">
                 {
                     teachers.length > 0 ?

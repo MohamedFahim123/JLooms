@@ -1,17 +1,19 @@
-'use client';
+'use client'
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface DashBoardFilterationsProps {
     placeHolder?: string;
-}
+    page?: string;
+};
 
-export default function DashBoardFilterations({ placeHolder }: DashBoardFilterationsProps) {
+export default function DashBoardFilterations({ placeHolder,page }: DashBoardFilterationsProps) {
     const router = useRouter();
     const [name, setName] = useState('');
     const [status, setStatus] = useState('');
-    const [debouncedName, setDebouncedName] = useState('');
+    const [debouncedName, setDebouncedName] = useState(name);
+    const [debouncedStatus, setDebouncedStatus] = useState(status);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -21,13 +23,22 @@ export default function DashBoardFilterations({ placeHolder }: DashBoardFilterat
     }, [name]);
 
     useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedStatus(status);
+        }, 1000);
+        return () => clearTimeout(handler);
+    }, [status]);
+
+    useEffect(() => {
         const filters: Record<string, string> = {};
-        if (status) filters.status = status;
+        if (debouncedStatus) filters.status = debouncedStatus;
         if (debouncedName) filters.name = debouncedName;
 
         const queryParams = new URLSearchParams(filters).toString();
-        router.push(`/dashboard/teachers?${queryParams}`);
-    }, [debouncedName, status, router]);
+        if(page === 'teachers'){
+            router.push(`/dashboard/teachers?${queryParams}`);
+        };
+    }, [debouncedName, status, router, debouncedStatus, page]);
 
     return (
         <div className="px-6 py-4">
@@ -63,4 +74,4 @@ export default function DashBoardFilterations({ placeHolder }: DashBoardFilterat
             </div>
         </div>
     );
-}
+};
