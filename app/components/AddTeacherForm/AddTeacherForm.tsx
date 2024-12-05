@@ -1,10 +1,12 @@
-'use client'
+'use client';
 
 import { CustomEmailInput, CustomPasswordInput, CustomPhoneNumberInput } from "@/app/auth/utils/customInputsValues";
 import { FormAuthInputs, Validation } from "@/app/auth/utils/interfaces";
 import { SubmitHandler, useForm } from "react-hook-form";
 import CustomeInput from "../CustomInput/CustomeInput";
 import CustomFileInput from "../CustomFileInput/CustomFileInput";
+import { handleMultiPartWebSiteFormData } from "@/app/utils/submitFormData";
+import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 
 interface TeacherInput {
     lableName: string;
@@ -14,10 +16,10 @@ interface TeacherInput {
     validation?: Validation;
 };
 export default function AddTeacherForm() {
-    const { register, watch, handleSubmit, formState: { errors } } = useForm<FormAuthInputs>();
+    const { register, watch, handleSubmit, setError, formState: { errors } } = useForm<FormAuthInputs>();
     const name: TeacherInput = {
         lableName: "Full Name",
-        name: "teacher_name",
+        name: "name",
         placeholder: "Enter Full Name",
         type: "text",
         validation: {
@@ -33,7 +35,7 @@ export default function AddTeacherForm() {
         CustomPhoneNumberInput,
         {
             lableName: "Profile Picture",
-            name: "teacher_profile",
+            name: "image",
             placeholder: "profile picture",
             type: "file",
             validation: {
@@ -43,8 +45,9 @@ export default function AddTeacherForm() {
     ];
 
     const onSubmit: SubmitHandler<FormAuthInputs> = (data) => {
-        console.log(data);
+        handleMultiPartWebSiteFormData(data, dataURLS.addTeacher, setError);
     };
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 mt-5">
             <CustomeInput
@@ -61,15 +64,15 @@ export default function AddTeacherForm() {
             <div>
                 <label className="block text-gray-700">Gender</label>
                 <select
-                    {...register("teacher_gender", { required: "Gender is required" })}
-                    className={`${errors?.teacher_gender?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
+                    {...register("gender", { required: "Gender is required" })}
+                    className={`${errors?.gender?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
                 >
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select>
-                {errors.teacher_gender && <p className="text-red-500 text-sm">{errors.teacher_gender.message}</p>}
+                {errors.gender && <p className="text-red-500 text-sm">{errors.gender.message}</p>}
             </div>
 
             {

@@ -1,27 +1,57 @@
-import React from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface DashBoardFilterationsProps {
     placeHolder?: string;
-};
+}
 
-export default function DashBoardFilterations({placeHolder}: DashBoardFilterationsProps) {
+export default function DashBoardFilterations({ placeHolder }: DashBoardFilterationsProps) {
+    const router = useRouter();
+    const [name, setName] = useState('');
+    const [status, setStatus] = useState('');
+    const [debouncedName, setDebouncedName] = useState('');
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedName(name);
+        }, 1000);
+        return () => clearTimeout(handler);
+    }, [name]);
+
+    useEffect(() => {
+        const filters: Record<string, string> = {};
+        if (status) filters.status = status;
+        if (debouncedName) filters.name = debouncedName;
+
+        const queryParams = new URLSearchParams(filters).toString();
+        router.push(`/dashboard/teachers?${queryParams}`);
+    }, [debouncedName, status, router]);
+
     return (
         <div className="px-6 py-4">
             <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
-                <select className="border border-gray-300 rounded-lg py-2 px-3 w-full md:w-auto focus:outline-none focus:border-indigo-500">
-                    <option value="">Filter</option>
+                <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="border border-gray-300 rounded-lg py-2 px-3 w-full md:w-auto focus:outline-none focus:border-indigo-500"
+                >
+                    <option value="">Status</option>
                     <option value="active">Active</option>
-                    <option value="sick-leave">Sick Leave</option>
-                    <option value="maternity-leave">Maternity Leave</option>
+                    <option value="deactive">Deactive</option>
                 </select>
                 <div className="relative w-full md:w-auto">
                     <input
                         type="text"
+                        name="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder={placeHolder}
                         className="w-full md:w-64 border border-gray-300 rounded-lg py-2 pl-4 pr-10 focus:outline-none focus:border-indigo-500"
                     />
                     <svg
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
                         width="20"
                         height="20"
                         fill="currentColor"
@@ -33,4 +63,4 @@ export default function DashBoardFilterations({placeHolder}: DashBoardFilteratio
             </div>
         </div>
     );
-};
+}

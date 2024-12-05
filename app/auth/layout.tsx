@@ -1,9 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './authStyles.module.css';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import RegisterStepProgress, { Step } from '../components/RegisterStepProgress/RegisterStepProgress';
-
+import Cookies from 'js-cookie';
 
 const steps2: Step[] = [
     { title: 'Your details', subtitle: 'Name and email', isCompleted: true, isActive: false },
@@ -23,6 +23,16 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     const pathName = usePathname();
+    const router = useRouter();
+
+    useEffect(() => {
+        const TOKEN = Cookies.get('JLOOMS_TOKEN');
+        if (TOKEN) {
+            router.push('/dashboard/profile');
+        }
+    }, [router]);
+
+
     return (
         <div className={`${styles.auth_layout}`}>
             <div className={`${styles.auth_container}`}>

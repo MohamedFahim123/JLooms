@@ -1,22 +1,21 @@
 import { toast } from "react-toastify";
-import { authEndPoints } from "./authEndPoints";
-import { FormAuthInputs } from "./interfaces";
 import axios from "axios";
 import { UseFormSetError } from "react-hook-form";
+import { FormAuthInputs } from '../auth/utils/interfaces';
+import Cookies from "js-cookie";
 
-type AuthEndPointType = keyof typeof authEndPoints;
-
-export const handleMultiPartFormData = async (
+export const handleMultiPartWebSiteFormData = async (
     data: FormAuthInputs,
-    type: AuthEndPointType,
+    endPoint: string,
     setError: UseFormSetError<FormAuthInputs>
 ) => {
     const loadingToastId = toast.loading('Loading...');
+    const token = Cookies.get('JLOOMS_TOKEN');
     try {
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
             const value = data[key as keyof FormAuthInputs];
-            if (key === 'official_registeration' || key === 'commercial_certification') {
+            if (key === 'image') {
                 if (value instanceof FileList && value.length > 0) {
                     formData.append(key, value[0]);
                 } else {
@@ -28,11 +27,11 @@ export const handleMultiPartFormData = async (
                 formData.append(key, String(value));
             };
         });
-        const endPoint = authEndPoints[type];
         const response = await axios.post(endPoint, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Accept': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
         });
         toast.update(loadingToastId, {
@@ -41,7 +40,6 @@ export const handleMultiPartFormData = async (
             isLoading: false,
             autoClose: 1500,
         });
-        return 'success';
     } catch (error) {
         const errorMessage = axios.isAxiosError(error)
             ? error.response?.data?.message || 'Something went wrong!'
@@ -65,6 +63,5 @@ export const handleMultiPartFormData = async (
                 });
             });
         };
-        return 'fail';
     };
 };

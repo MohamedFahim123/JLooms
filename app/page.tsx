@@ -1,10 +1,20 @@
-import { redirect } from "next/navigation";
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function Home() {
-  const token = '1';
-  if (token) {
-    redirect('/dashboard');
-  } else if (!token) {
-    redirect('/auth/login');
-  };
-};
+  const router = useRouter();
+
+  useEffect(() => {
+    const TOKEN = Cookies.get('JLOOMS_TOKEN');
+    if (TOKEN) {
+      router.push('/dashboard/profile');
+    } else {
+      router.push('/auth/login');
+    };
+  }, [router]);
+
+  return null;
+}

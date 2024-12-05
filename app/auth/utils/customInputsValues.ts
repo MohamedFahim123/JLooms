@@ -26,7 +26,7 @@ export const CustomPasswordInput: Input = {
 
 export const CustomConfirmPasswordInput: Input = {
     lableName: "Confirm Password",
-    name: "confirmPassword",
+    name: "password_confirmation",
     placeholder: "*********",
     type: "password",
     validation: {
@@ -60,7 +60,7 @@ export const CustomNameAdminInput: Input = {
 
 export const CustomNameSchoolInput: Input = {
     lableName: "School Name",
-    name: "school_name",
+    name: "name",
     placeholder: "Enter the name of school",
     type: "text",
     validation: {
@@ -80,7 +80,7 @@ export const CustomOtpInput: Input = {
 
 export const CustomFileOfficialInput: Input = {
     lableName: "Official Registration",
-    name: "official_registration",
+    name: "official_registeration",
     placeholder: "Official Registration",
     type: "file",
     validation: {
@@ -90,7 +90,7 @@ export const CustomFileOfficialInput: Input = {
 
 export const CustomFileCommercialInput: Input = {
     lableName: "Commercial Certificate",
-    name: "commercial_certificate",
+    name: "commercial_certification",
     placeholder: "Commercial Certificate",
     type: "file",
     validation: {
@@ -100,7 +100,7 @@ export const CustomFileCommercialInput: Input = {
 
 export const CustomPhoneNumberInput: Input = {
     lableName: "Phone Number",
-    name: "teacher_phone",
+    name: "phone",
     placeholder: "Phone Number",
     type: "text",
     validation: {

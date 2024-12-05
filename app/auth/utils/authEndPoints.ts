@@ -2,7 +2,9 @@ import { baseUrl } from "@/app/utils/baseUrl";
 
 interface authEndPointsInterface {
     login: string;
+    logout: string;
     register1: string;
+    prevStep: string;
     register2: string;
     register3: string;
     resetPassword: string;
@@ -10,10 +12,12 @@ interface authEndPointsInterface {
 };
 
 export const authEndPoints : authEndPointsInterface = {
-    login: `${baseUrl}/auth/login`,
-    register1: `${baseUrl}/auth/register/1`,
-    register2: `${baseUrl}/auth/register/1`,
-    register3: `${baseUrl}/auth/register/1`,
-    resetPassword: `${baseUrl}/auth/resetPassword`,
-    forgetPassword: `${baseUrl}/auth/forgotPassword`,
+    login: `${baseUrl}/school/login`,
+    logout: `${baseUrl}/school/logout`,
+    prevStep: `${baseUrl}/school/pervious-step`,
+    register1: `${baseUrl}/school/register-step-one`,
+    register2: `${baseUrl}/school/register-step-two`,
+    register3: `${baseUrl}/school/register-step-three`,
+    resetPassword: `${baseUrl}/school/reset-password`,
+    forgetPassword: `${baseUrl}/school/forget-password`,
 };

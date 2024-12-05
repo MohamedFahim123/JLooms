@@ -14,22 +14,22 @@ interface DashBoardPageHeadProps {
     haveBtn?: boolean;
     haveFilter?: boolean;
     filterOptions?: Option[];
-}
+};
 
 export default function DashBoardPageHead({ text, btnText, btnLink, haveBtn, haveFilter, filterOptions }: DashBoardPageHeadProps) {
     return (
         <>
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 {
-                    text &&
-                    (
-                        <h2 className="text-2xl font-semibold">{text}</h2>
+                    text && (
+                        <h2 className="text-2xl font-semibold leading-tight">
+                            {text || 'Loading...'}
+                        </h2>
                     )
                 }
                 {
-                    haveBtn &&
-                    (
-                        <MainDashBoardBtn text={btnText ? btnText : ''} link={btnLink ? btnLink : ''} />
+                    haveBtn && (
+                        <MainDashBoardBtn text={btnText || ''} link={btnLink || ''} />
                     )
                 }
                 {

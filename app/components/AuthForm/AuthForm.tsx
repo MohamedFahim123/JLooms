@@ -1,16 +1,18 @@
-'use client'
+'use client';
+
 import { FormAuthInputs, Input } from "@/app/auth/utils/interfaces";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from './authForm.module.css';
 import AuthBtnSubmit from "../AuthBtnSubmit/AuthBtnSubmit";
 import CustomeInput from "../CustomInput/CustomeInput";
 import { authEndPoints } from "@/app/auth/utils/authEndPoints";
-import { handleApplication_JsonData } from "@/app/auth/utils/submitJson";
-import { handleMultiPartFormData } from "@/app/auth/utils/submitFormData";
 import Link from "next/link";
 import { useEffect } from "react";
 import CustomFileInput from "../CustomFileInput/CustomFileInput";
-
+import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie';
+import { handleApplication_JsonData } from "@/app/auth/utils/submitJson";
+import { handleMultiPartFormData } from "@/app/auth/utils/submitFormData";
 type AuthType = keyof typeof authEndPoints;
 
 interface AuthFormProps {
@@ -19,28 +21,64 @@ interface AuthFormProps {
 };
 
 export default function AuthForm({ type, inputs }: AuthFormProps) {
+    const router = useRouter();
+    const currSchoolId = Cookies.get('school_registeration_id');
     const { register, setError, watch, clearErrors, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormAuthInputs>();
-
     const watchValues = watch();
 
-    const onSubmit: SubmitHandler<FormAuthInputs> = (data: FormAuthInputs) => {
+    const onSubmit: SubmitHandler<FormAuthInputs> = async (data: FormAuthInputs) => {
         if (type === 'login' || type === 'resetPassword' || type === 'forgetPassword' || type === 'register1' || type === 'register2') {
-            handleApplication_JsonData(data, type, setError);
+            if (type === 'register2') {
+                data.school_id = currSchoolId;
+            };
+            const status = await handleApplication_JsonData(data, type, setError);
+            if (status === 'success') {
+                if (type === 'login') {
+                    window.location.reload();
+                } else if (type === 'register1') {
+                    router.push('/auth/register/step2');
+                } else if (type === 'register2') {
+                    router.push('/auth/register/step3');
+                } else if (type === 'resetPassword') {
+                    router.push('/auth/login');
+                } else if (type === 'forgetPassword') {
+                    router.push('/auth/reset-password');
+                };
+            };
         } else if (type === 'register3') {
-            handleMultiPartFormData(data, type, setError);
+            data.school_id = currSchoolId;
+            const status = await handleMultiPartFormData(data, type, setError);
+            if (status === 'success') {
+                Cookies.remove('school_registeration_id');
+                Cookies.remove('current_step');
+                router.push('/auth/login');
+            };
         };
     };
 
     useEffect(() => {
-        const password = watch('password');
-        const confirmPassword = watch('confirmPassword');
-        if (password !== confirmPassword) {
-            setError('confirmPassword', { message: 'Passwords do not match' });
-        } else {
-            clearErrors("confirmPassword");
+        if (type === 'register2') {
+            const password = watch('password');
+            const confirmPassword = watch('password_confirmation');
+            if (password !== confirmPassword) {
+                setError('password_confirmation', { message: 'Passwords do not match' });
+            } else {
+                clearErrors("password_confirmation");
+            };
         };
-    }, [watch, setError, clearErrors]);
-    
+    }, [watch, setError, clearErrors, type]);
+
+    useEffect(() => {
+        if (type === 'resetPassword') {
+            const password = watch('new_password');
+            const confirmPassword = watch('new_password_confirmation');
+            if (password !== confirmPassword) {
+                setError('new_password_confirmation', { message: 'Passwords do not match' });
+            } else {
+                clearErrors("new_password_confirmation");
+            };
+        };
+    }, [watch, setError, clearErrors, type]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={`${styles.authForm}`}>

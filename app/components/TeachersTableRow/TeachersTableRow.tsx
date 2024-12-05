@@ -34,20 +34,18 @@ export default function TeachersTableRow({ cell }: TableRowProps) {
             </td>
             <td className="py-3 px-4">
                 <span className="block md:hidden font-semibold text-gray-500">Class:</span>
-                {cell.subject}
+                {cell.phone}
             </td>
             <td className="py-3 px-4">
                 <span className="block md:hidden font-semibold text-gray-500">Subject:</span>
-                {cell.class}
+                {cell.email}
             </td>
             <td className="py-3 px-4">
                 <span className="block md:hidden font-semibold text-gray-500">Status:</span>
                 <span
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${cell.status === 'Active'
                         ? 'bg-green-100 text-green-800'
-                        : cell.status === 'Sick Leave'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
+                        : 'bg-red-100 text-red-800'
                         }`}
                 >
                     {cell.status}

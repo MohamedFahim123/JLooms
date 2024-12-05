@@ -15,7 +15,7 @@ export default function AuthBtnSubmit({ type, isSubmitting, typeBtn, navigateTo 
     const handleClick = () => {
         if (navigateTo) {
             router.push(navigateTo);
-        }
+        };
     };
 
     return (
@@ -23,7 +23,7 @@ export default function AuthBtnSubmit({ type, isSubmitting, typeBtn, navigateTo 
             type={typeBtn ? typeBtn : "submit"}
             onClick={handleClick}
             disabled={isSubmitting}
-            className={`${styles.authSubmit} ${typeBtn && styles.typeBtn} text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
+            className={`${styles.authSubmit} ${typeBtn ? styles.typeBtn : ''} text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center`}
         >
             {type.toUpperCase()}
         </button>

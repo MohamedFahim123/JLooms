@@ -2,21 +2,20 @@ export interface FormAuthInputs {
     // Auth Inputs
     email?: string;
     password?: string;
-    confirmPassword?: string;
+    password_confirmation?: string;
     admin_name?: string;
-    school_name?: string;
-    school_email?: string;
-    official_registration?: File;
-    commercial_certificate?: File;
+    school_id?: string;
+    name?: string;
+    official_registeration?: File;
+    commercial_certification?: File;
     otp?: string;
+    new_password?: string;
+    new_password_confirmation?: string;
 
     // Teacher Inputs
-    teacher_name?: string;
-    teacher_gender?: string;
-    teacher_email?: string;
-    teacher_password?: string;
-    teacher_phone?: string;
-    teacher_profile?: File;
+    gender?: string;
+    phone?: string;
+    image?: File;
 
     // Student Inputs
     student_name?: string;
