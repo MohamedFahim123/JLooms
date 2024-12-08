@@ -26,7 +26,7 @@ export default function AuthLayout({
     const router = useRouter();
 
     useEffect(() => {
-        const TOKEN = Cookies.get('JLOOMS_TOKEN');
+        const TOKEN = Cookies.get('SERVER_JLOOMS_TOKEN');
         if (TOKEN) {
             router.push('/dashboard/profile');
             return;

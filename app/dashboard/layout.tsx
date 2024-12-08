@@ -15,7 +15,7 @@ export default function Layout({ children }: LayoutInterface) {
     const router = useRouter();
 
     useEffect(() => {
-        const token = Cookies.get('JLOOMS_TOKEN');
+        const token = Cookies.get('SERVER_JLOOMS_TOKEN');
         if (!token) {
             router.push('/auth/login');
             return;

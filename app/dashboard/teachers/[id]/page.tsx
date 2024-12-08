@@ -1,12 +1,12 @@
-import React from 'react';
-import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
-import Image from 'next/image';
-import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
-import Avatar from '../../../imgs/teachers/teacher1.png';
-import Link from 'next/link';
-import { Metadata } from 'next';
 import AddSubject from '@/app/components/AddSubject/AddSubject';
-import { teachers } from '../../utils/tableData';
+import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
+import { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaEnvelope, FaGraduationCap, FaPhoneAlt } from 'react-icons/fa';
+import Avatar from '../../../imgs/teachers/teacher1.png';
+import { dataURLS } from '../../utils/dataUrls';
 
 interface ParamsProps {
     id: string;
@@ -22,8 +22,19 @@ export const metadata: Metadata = {
 
 export default async function TeacherDetailsPage({ params }: TeacherDetailsProps) {
     const { id } = await params;
+    const cookiesData = await cookies();
+    const token = cookiesData.get('SERVER_JLOOMS_TOKEN')?.value;
 
-    const teacher = teachers?.find((el) => el.id === Number(id));
+    const fetchTeacher = await fetch(`${dataURLS.singleTeacher}/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    const response = await fetchTeacher.json();
+    const teacher = response?.data?.teacher;
 
     const filterOptions = [
         { label: 'Status', value: '', disabled: true },

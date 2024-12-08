@@ -11,7 +11,7 @@ import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import Cookies from 'js-cookie';
 
 async function fetchTeachersData(filters: Record<string, string | number> = {}): Promise<{ data: Table[]; totalPages: number }> {
-    const token = Cookies.get('JLOOMS_TOKEN');
+    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
 
     const queryParams = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {

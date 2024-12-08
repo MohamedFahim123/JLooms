@@ -1,69 +1,101 @@
+import axios from "axios";
+import Cookies from "js-cookie";
+import { UseFormSetError } from "react-hook-form";
 import { toast } from "react-toastify";
 import { authEndPoints } from "./authEndPoints";
-import axios from "axios";
-import { UseFormSetError } from "react-hook-form";
-import Cookies from 'js-cookie';
 import { FormAuthInputs } from "./interfaces";
+import { setServerCookie } from "./storeTokenOnServer";
+
 type AuthEndPointType = keyof typeof authEndPoints;
 
-export const handleApplication_JsonData = async (data: FormAuthInputs, type: AuthEndPointType, setError: UseFormSetError<FormAuthInputs>) => {
-    const loadingToastId = toast.loading('Loading...');
+export const handleApplication_JsonData = async (
+    data: FormAuthInputs,
+    type: AuthEndPointType,
+    setError: UseFormSetError<FormAuthInputs>
+) => {
+    const loadingToastId: string | number = toast.loading("Loading...");
+
     try {
-        console.log(type)
         const endPoint = authEndPoints[type];
         const response = await axios.post(endPoint, data, {
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
+                "Content-Type": "application/json",
+                Accept: "application/json",
             },
         });
 
         toast.update(loadingToastId, {
-            render: response?.data?.message || 'Request succeeded!',
-            type: 'success',
+            render: response?.data?.message || "Request succeeded!",
+            type: "success",
             isLoading: false,
             autoClose: 1500,
         });
 
-        // Login Cookies ( TOKEN )
-        const token = response?.data?.data?.token;
+        const { token, school } = response?.data?.data || {};
+        console.log(token)
         if (token) {
-            Cookies.set('JLOOMS_TOKEN', token, { expires: 7 });
+            setServerCookie('JLOOMS_TOKEN',token);
+            Cookies.set("SERVER_JLOOMS_TOKEN", token, { expires: 7 });
         };
 
-        // Register Cookies
-        const schoolId = response?.data?.data?.school?.id;
-        if (schoolId && type === 'register1') {
-            Cookies.set('school_registeration_id', schoolId, { expires: 7 });
-            Cookies.set('current_step', '2', { expires: 7 });
-        } else if (schoolId && type === 'register2') {
-            Cookies.set('school_registeration_id', schoolId, { expires: 7 });
-            Cookies.set('current_step', '3', { expires: 7 });
+        if (school?.id) {
+            handleRegistrationCookies(type, school.id);
         };
-        return 'success';
+
+        return "success";
     } catch (error) {
-        const errorMessage = axios.isAxiosError(error)
-            ? error.response?.data?.message || 'Something went wrong!'
-            : 'An unexpected error occurred.';
-        toast.update(loadingToastId, {
-            render: errorMessage,
-            type: 'error',
-            isLoading: false,
-            autoClose: 2000,
-        });
-        if (axios.isAxiosError(error) && error?.response?.data?.errors) {
-            const errorDetails = error.response.data.errors;
-            Object.entries(errorDetails).forEach(([field, messages]) => {
-                const messageArray = Array.isArray(messages) ? messages : [messages];
-                setError(field as keyof FormAuthInputs, {
-                    type: 'manual',
-                    message: messageArray[0]
-                });
-                toast.error(messageArray[0], {
-                    autoClose: 3000,
-                });
-            });
-        };
-        return 'fail';
+        return handleError(error, setError, loadingToastId);
     };
+};
+
+function handleRegistrationCookies(type: AuthEndPointType, schoolId: string) {
+    Cookies.set("school_registeration_id", schoolId, { expires: 7 });
+
+    const stepMapping: Record<AuthEndPointType, string> = {
+        register1: "2",
+        register2: "3",
+        login: "",
+        logout: "",
+        prevStep: "",
+        register3: "",
+        resetPassword: "",
+        forgetPassword: "",
+    };
+
+    if (stepMapping[type]) {
+        Cookies.set("current_step", stepMapping[type], { expires: 7 });
+    };
+};
+
+function handleError(
+    error: unknown,
+    setError: UseFormSetError<FormAuthInputs>,
+    toastId: string | number
+) {
+    const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.message || "Something went wrong!"
+        : "An unexpected error occurred.";
+
+    toast.update(toastId, {
+        render: errorMessage,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+    });
+
+    if (axios.isAxiosError(error) && error?.response?.data?.errors) {
+        const errorDetails = error.response.data.errors;
+        Object.entries(errorDetails).forEach(([field, messages]) => {
+            const messageArray = Array.isArray(messages) ? messages : [messages];
+            setError(field as keyof FormAuthInputs, {
+                type: "manual",
+                message: messageArray[0],
+            });
+            toast.error(messageArray[0], {
+                autoClose: 3000,
+            });
+        });
+    };
+
+    return "fail";
 };

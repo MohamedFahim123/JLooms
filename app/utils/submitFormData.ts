@@ -11,7 +11,7 @@ export const handleMultiPartWebSiteFormData = async (
     reset: () => void
 ) => {
     const loadingToastId = toast.loading('Loading...');
-    const token = Cookies.get('JLOOMS_TOKEN');
+    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
     try {
         const formData = new FormData();
         Object.keys(data).forEach((key) => {

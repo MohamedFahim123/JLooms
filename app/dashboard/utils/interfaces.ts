@@ -19,6 +19,7 @@ export interface Table {
 };
 export interface DATAURLSINTERFACE {
     teachers: string;
+    singleTeacher: string;
     addTeacher: string;
     students: string;
     classes: string;

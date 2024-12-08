@@ -3,6 +3,7 @@ import { authEndPoints } from "@/app/auth/utils/authEndPoints";
 import { FaSignOutAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { redirect } from "next/navigation";
 
 export default function LogoutBtn() {
     const TOKEN = Cookies.get('JLOOMS_TOKEN');
@@ -23,8 +24,8 @@ export default function LogoutBtn() {
             isLoading: false,
             autoClose: 1500,
         });
-        Cookies.remove('JLOOMS_TOKEN');
-        window.location.reload();
+        Cookies.remove('SERVER_JLOOMS_TOKEN');
+        redirect('/auth/login');
     };
 
     return (

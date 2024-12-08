@@ -11,7 +11,7 @@ export default function TeachersTableRow({ cell }: TableRowProps) {
     const router = useRouter();
 
     return (
-        <tr
+        <tr 
             key={cell?.id}
             onClick={() => router.push(`/dashboard/teachers/${cell?.id}`)}
             className="border-b hover:bg-gray-100 cursor-pointer md:table-row grid grid-cols-1 md:grid-cols-4 gap-2 p-3 md:p-0"
