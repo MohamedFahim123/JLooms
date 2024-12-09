@@ -24,6 +24,8 @@ export interface DATAURLSINTERFACE {
     students: string;
     classes: string;
     filterTeachers: string;
+    updateTeacherStatus: string;
+    deleteTeacher: string;
 };
 export interface teacherInterface {
     id: number | string;

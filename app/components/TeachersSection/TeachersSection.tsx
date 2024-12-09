@@ -63,7 +63,7 @@ export default function TeachersSection() {
         fetchData();
     }, [filters]);
 
-    const tableCells: string[] = ['name', 'phone', 'email', 'status'];
+    const tableCells: string[] = ['name', 'phone', 'email', 'status','action']; 
 
     return (
         <div className={`${totalPages > 1 && 'pb-6'} w-full bg-white shadow-md rounded-lg overflow-hidden`}>

@@ -33,20 +33,17 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
             'Authorization': `Bearer ${token}`,
         },
     });
-    const response = await fetchTeacher.json();
+    const response = await fetchTeacher?.json();
     const teacher = response?.data?.teacher;
 
     const filterOptions = [
-        { label: 'Status', value: '', disabled: true },
-        { label: 'Inactive', value: 'Inactive', disabled: false },
-        { label: 'Active', value: 'Active', disabled: false },
-        { label: 'Sick Leave', value: 'Sick Leave', disabled: false },
-        { label: 'Maternity Leave', value: 'Maternity Leave', disabled: false },
+        { label: 'Deactive', value: 'Deactive', disabled: false , defaultValue: teacher?.status === 'Deactive' },
+        { label: 'Active', value: 'Active', disabled: false , defaultValue: teacher?.status === 'Active'},
     ];
 
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
-            <DashBoardPageHead haveFilter={true} filterOptions={filterOptions} text={teacher?.name || ''} haveBtn={false} />
+            <DashBoardPageHead teacherId={id} haveFilter={true} filterOptions={filterOptions} text={teacher?.name || ''} haveBtn={false} />
             <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <div className="lg:col-span-4 flex flex-col items-center space-y-6">
                     <div className="w-44 h-44 rounded-full overflow-hidden border">
