@@ -22,7 +22,7 @@ export default async function page({ params }: classDetailsProps) {
 
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
-            <DashBoardPageHead text={classDetails?.className || ''} btnText='Assign Students' haveBtn={true} />
+            <DashBoardPageHead text={classDetails?.name || ''} btnText='Assign Students' haveBtn={true} />
             <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <div className="lg:col-span-8 mt-8">
                     <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">

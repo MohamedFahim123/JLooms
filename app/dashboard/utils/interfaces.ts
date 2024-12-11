@@ -4,7 +4,7 @@ export interface Table {
     subject?: string;
     class?: string;
     status?: string;
-    image?: string ;
+    image?: string;
     id?: number;
     age?: number;
     gender?: string;
@@ -12,8 +12,7 @@ export interface Table {
     address?: string;
     email?: string;
     classDetails?: string;
-    className?: string;
-    numberOfStudents?: number,
+    number_of_students?: number,
     floor?: number;
     locale?: string;
 };
@@ -26,6 +25,12 @@ export interface DATAURLSINTERFACE {
     filterTeachers: string;
     updateTeacherStatus: string;
     deleteTeacher: string;
+    getActions: string;
+    getActivities: string;
+    addNewClass: string;
+    getAllClasses: string;
+    deleteClass: string;
+    filterClasses: string;
 };
 export interface teacherInterface {
     id: number | string;
@@ -36,4 +41,16 @@ export interface teacherInterface {
     status: string;
     gender: string;
     locale: string;
-}
+};
+
+export interface Action {
+    id: number;
+    name: string;
+    icon: string;
+};
+
+export interface Activity {
+    id: number;
+    name: string;
+    icons: string;
+};

@@ -1,7 +1,12 @@
 'use client';
+
 import { FormAuthInputs, Validation } from '@/app/auth/utils/interfaces';
-import { useForm, useFieldArray, Controller, SubmitHandler } from 'react-hook-form';
+import { dataURLS } from '@/app/dashboard/utils/dataUrls';
+import { Action, Activity } from '@/app/dashboard/utils/interfaces';
+import { Controller, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import styles from './addNewClassForm.module.css';
+import { submitApplicationJson } from '@/app/utils/submitApplicationJson';
+import { useEffect } from 'react';
 
 interface ClassInput {
     lableName: string;
@@ -9,195 +14,188 @@ interface ClassInput {
     placeholder: string;
     type: string;
     validation?: Validation;
-}
+};
 
-interface FormDefaultValues {
-    class_name: string;
-    subjects: {
-        subject: string;
-        teacher: string;
-    }[];
-    activities: {
-        activity: string;
-        stuff: string;
-    }[];
-}
-export default function AddNewClassForm() {
-    const { control, handleSubmit, register, formState: { errors }, watch } = useForm<FormDefaultValues>({
+export interface FormDefaultValues {
+    name_en: string;
+    actions: { action: string }[];
+    activities: { activity: string }[];
+    options_id: { manual: string, message: string }
+    options: { id: string | number; type: string }[];
+};
+
+interface AddNewClassFormProps {
+    actions: Action[];
+    activities: Activity[];
+};
+
+interface FinalData {
+    name_en: string;
+    options: { id: string | number; type: string }[];
+};
+
+export default function AddNewClassForm({ actions, activities }: AddNewClassFormProps) {
+    const { control, handleSubmit, clearErrors, register, reset, setError, formState: { errors } } = useForm<FormDefaultValues>({
         defaultValues: {
-            class_name: "",
-            subjects: [{ subject: "", teacher: "" }],
-            activities: [{ activity: "", stuff: "" }]
-        }
+            name_en: "",
+            actions: [{ action: "" }],
+            activities: [{ activity: "" }],
+            options: [],
+        },
     });
 
     const { fields, append, remove } = useFieldArray({
         control,
-        name: "subjects"
+        name: "actions",
     });
 
     const { fields: actFields, append: appendOnAct, remove: removeAct } = useFieldArray({
         control,
-        name: "activities"
+        name: "activities",
     });
 
-    const watchSubjects = watch("subjects");
-    const watchActivities = watch('activities');
+    useEffect(() => {
+        if (errors?.options_id) {
+            clearErrors('options_id');
+        };
+    }, [clearErrors, errors?.options_id]);
 
     const classNameInput: ClassInput = {
         lableName: "Class Name",
-        name: "class_name",
+        name: "name_en",
         placeholder: "Class Name",
         type: "text",
         validation: {
             required: 'Class Name is Required',
         },
-    }
+    };
 
     const onSubmit: SubmitHandler<FormDefaultValues> = (data) => {
-        console.log(data);
+        const actionsArr = data.actions.map(action => action && { id: action.action, type: 'action' })?.filter(Boolean);
+        const activitiesArr = data.activities.map(activity => activity && { id: activity.activity, type: 'activity' })?.filter(Boolean);
+
+        const options = [...actionsArr, ...activitiesArr];
+        const finalData: FinalData = {
+            name_en: data.name_en,
+            options
+        };
+
+        submitApplicationJson(finalData, dataURLS.addNewClass, setError, reset);
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='p-6'>
-            {
-                <div key={classNameInput.name} className={`mb-1 ${styles.inputContainer}`}>
-                    <label
-                        htmlFor={'addNewClassName'}
-                        className={`${styles.authLable} block mb-2 text-sm font-medium dark:text-white`}
-                    >
-                        {classNameInput.lableName}
-                    </label>
-                    <input
-                        type={classNameInput.type}
-                        id={'addNewClassName'}
-                        placeholder={classNameInput.placeholder}
-                        {...register('class_name', classNameInput.validation)}
-                        className={`${styles.formInput} transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 ${errors?.class_name ? styles.errorInput : `border-gray-300`} bg-gray-50 border  text-sm rounded-lg block w-full p-2.5`}
-                    />
-                    {errors?.class_name && (
-                        <p className={`${styles.error} text-red-500 text-xs`}>
-                            {errors.class_name?.message as string}
-                        </p>
-                    )}
-                </div>
-            }
-            {
-                fields.map((item, index) => (
-                    <div key={item.id} className="grid grid-cols-3 sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label className="block text-sm font-medium mt-3 text-gray-600">subject #{index + 1}</label>
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 bg-white rounded-lg shadow-md">
+            <div key={classNameInput.name} className={`mb-4 ${styles.inputContainer}`}>
+                <label
+                    htmlFor={'addNewClassName'}
+                    className={`${styles.authLable} block mb-2 text-sm font-medium dark:text-white`}
+                >
+                    {classNameInput.lableName}
+                </label>
+                <input
+                    type={classNameInput.type}
+                    id={'addNewClassName'}
+                    placeholder={classNameInput.placeholder}
+                    {...register('name_en', classNameInput.validation)}
+                    className={`${styles.formInput} transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 ${errors?.name_en ? styles.errorInput : 'border-gray-300'} bg-gray-50 border text-sm rounded-lg block w-full p-2.5`}
+                />
+                {errors?.name_en && (
+                    <p className={`${styles.error} text-red-500 text-xs`}>
+                        {errors.name_en?.message as string}
+                    </p>
+                )}
+            </div>
+
+            <div>
+                {fields.map((item, index) => (
+                    <div key={item.id} className="flex items-end justify-between gap-4 mb-4">
+                        <div className="w-full">
+                            <label className="block text-sm font-medium mt-3 text-gray-600">Action #{index + 1}</label>
                             <Controller
-                                name={`subjects.${index}.subject`}
+                                name={`actions.${index}.action`}
                                 control={control}
                                 render={({ field }) => (
-                                    <select {...field} className="mt-2 w-full transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 p-2 border rounded-lg outline-none">
-                                        <option value="">Choose Subject</option>
-                                        <option value="subject 1">Subject 1</option>
-                                        <option value="subject 2">Subject 2</option>
+                                    <select {...field} className={`mt-2 w-full transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 p-2 border rounded-lg outline-none`}>
+                                        <option value="" disabled>Choose Action</option>
+                                        {
+                                            actions?.length > 0 ? (
+                                                actions?.map(action => (
+                                                    <option key={action.id} value={action.id}>{action.name}</option>
+                                                ))
+                                            ) : (
+                                                <option disabled>No Activities Available</option>
+                                            )
+                                        }
                                     </select>
                                 )}
                             />
                         </div>
-                        {
-                            watchSubjects[index]?.subject && (
-                                <div>
-                                    <label className="block text-sm mt-3 font-medium text-gray-600">Teacher</label>
-                                    <Controller
-                                        name={`subjects.${index}.teacher`}
-                                        control={control}
-                                        render={({ field }) => (
-                                            <select {...field} className="mt-2 w-full p-2 transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 border rounded-lg outline-none">
-                                                <option value="">Choose Subject</option>
-                                                <option value="Math">Mohamed</option>
-                                                <option value="Mahmoud">Mahmoud</option>
-                                                <option value="Ahmed">Ahmed</option>
-                                                <option value="Malek">Malek</option>
-                                            </select>
-                                        )}
-                                    />
-                                </div>
-                            )
-                        }
-                        <div className="col-span-2 flex justify-center">
-                            <button
-                                type="button"
-                                onClick={() => remove(index)}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                            >
-                                Remove
-                            </button>
-                        </div>
+                        <button
+                            type="button"
+                            onClick={() => remove(index)}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg ml-2 transition-all duration-300 hover:bg-red-600"
+                        >
+                            Remove
+                        </button>
                     </div>
-                ))
-            }
-            <div>
+                ))}
+            </div>
+            <div className="mb-4">
                 <button
                     type="button"
-                    onClick={() => append({ subject: "", teacher: "" })}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                    onClick={() => append({ action: "" })}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
                 >
-                    Add Subject
+                    Add Action
                 </button>
             </div>
-            {
-                actFields.map((item, index) => (
-                    <div key={item.id} className="grid grid-cols-3 sm:grid-cols-2 gap-4 mb-4 mt-5">
-                        <div>
+
+            <div>
+                {actFields.map((item, index) => (
+                    <div key={item.id} className="flex items-end justify-between gap-4 mb-4">
+                        <div className="w-full">
                             <label className="block text-sm font-medium mt-3 text-gray-600">Activity #{index + 1}</label>
                             <Controller
                                 name={`activities.${index}.activity`}
                                 control={control}
                                 render={({ field }) => (
                                     <select {...field} className="mt-2 w-full transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 p-2 border rounded-lg outline-none">
-                                        <option value="">Choose Activity</option>
-                                        <option value="Activity 1">Activity 1</option>
-                                        <option value="Activity 2">Activity 2</option>
+                                        <option value="" disabled>Choose Activity</option>
+                                        {
+                                            activities?.length > 0 ? (
+                                                activities?.map(activity =>
+                                                (
+                                                    <option key={activity.id} value={activity.id}>{activity.name}</option>
+                                                )
+                                                )
+                                            ) : (
+                                                <option disabled>No Activities Available</option>
+                                            )
+                                        }
                                     </select>
                                 )}
                             />
                         </div>
-                        {
-                            watchActivities[index]?.activity && (
-                                <div>
-                                    <label className="block text-sm mt-3 font-medium text-gray-600">Stuff</label>
-                                    <Controller
-                                        name={`activities.${index}.stuff`}
-                                        control={control}
-                                        render={({ field }) => (
-                                            <select {...field} className="mt-2 w-full transition-all duration-300 focus:border-indigo-600 hover:border-indigo-600 p-2 border rounded-lg outline-none">
-                                                <option value="">Choose Stuff</option>
-                                                <option value="Restaurant">Restaurant</option>
-                                                <option value="Cleaning">Cleaning</option>
-                                                <option value="Kids Teachers">Kids Teachers</option>
-                                                <option value="Primary Teachers">Primary Teachers</option>
-                                            </select>
-                                        )}
-                                    />
-                                </div>
-                            )
-                        }
-                        <div className="col-span-2 flex justify-center">
-                            <button
-                                type="button"
-                                onClick={() => removeAct(index)}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                            >
-                                Remove
-                            </button>
-                        </div>
+                        <button
+                            type="button"
+                            onClick={() => removeAct(index)}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg ml-2 transition-all duration-300 hover:bg-red-600"
+                        >
+                            Remove
+                        </button>
                     </div>
-                ))
-            }
-            <div>
+                ))}
+            </div>
+            <div className="mb-4">
                 <button
                     type="button"
-                    onClick={() => appendOnAct({ activity: "", stuff: "" })}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                    onClick={() => appendOnAct({ activity: "" })}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
                 >
                     Add Activity
                 </button>
             </div>
+
             <div className='mt-5 flex justify-center'>
                 <button
                     type="submit"

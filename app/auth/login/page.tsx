@@ -1,10 +1,9 @@
 'use client';
 import AuthForm from '@/app/components/AuthForm/AuthForm';
-import React from 'react';
-import { Input } from '../utils/interfaces';
-import { CustomEmailInput, CustomPasswordInput } from '../utils/customInputsValues';
-import styles from '../authStyles.module.css';
 import Link from 'next/link';
+import styles from '../authStyles.module.css';
+import { CustomEmailInput, CustomPasswordInput } from '../utils/customInputsValues';
+import { Input } from '../utils/interfaces';
 
 export default function LoginPage() {
     const loginInputs: Input[] = [

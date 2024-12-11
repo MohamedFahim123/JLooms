@@ -1,44 +1,23 @@
+import { UseFormSetError } from "react-hook-form";
+import { FormAuthInputs } from "../auth/utils/interfaces";
+import { FormDefaultValues } from "../components/AddNewClassForm/AddNewClassForm";
+import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { UseFormSetError } from "react-hook-form";
-import { FormAuthInputs } from '../auth/utils/interfaces';
-import Cookies from "js-cookie";
-import { FormDefaultValues } from "../components/AddNewClassForm/AddNewClassForm";
 
-export const handleMultiPartWebSiteFormData = async (
+export const submitApplicationJson = async (
     data: FormAuthInputs,
     endPoint: string,
     setError: UseFormSetError<FormAuthInputs> | UseFormSetError<FormDefaultValues>,
-    reset: () => void
+    reset: () => void,
 ) => {
     const loadingToastId = toast.loading('Loading...');
     const token = Cookies.get('SERVER_JLOOMS_TOKEN');
-
     try {
-        const formData = new FormData();
 
-        Object.keys(data).forEach((key) => {
-            const value = data[key as keyof FormAuthInputs];
-            if (key === 'image') {
-                if (value instanceof FileList && value.length > 0) {
-                    formData.append(key, value[0]);
-                } else {
-                    formData.append(key, '');
-                };
-            }
-            else if (typeof value === 'object' && value !== null) {
-                formData.append(key, JSON.stringify(value));
-            }
-            // else if (key === 'options') {
-            //     formData.append('options', JSON.stringify(data.options));
-            // }
-            else if (value !== undefined && value !== null) {
-                formData.append(key, String(value));
-            };
-        });
-        const response = await axios.post(endPoint, formData, {
+        const response = await axios.post(endPoint, data, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 Authorization: `Bearer ${token}`,
             },

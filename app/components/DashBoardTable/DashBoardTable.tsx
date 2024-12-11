@@ -1,8 +1,7 @@
 import { Table } from '@/app/dashboard/utils/interfaces';
-import React from 'react';
 import ClassesTableRow from '../ClassesTableRow/ClassesTableRow';
-import TeachersTableRow from '../TeachersTableRow/TeachersTableRow';
 import StudentsTableRow from '../StudentsTableRow/StudentsTableRow';
+import TeachersTableRow from '../TeachersTableRow/TeachersTableRow';
 
 interface DashBoardTableProps {
     tableData: Table[];

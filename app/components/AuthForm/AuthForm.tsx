@@ -1,18 +1,18 @@
 'use client';
 
-import { FormAuthInputs, Input } from "@/app/auth/utils/interfaces";
-import { SubmitHandler, useForm } from "react-hook-form";
-import styles from './authForm.module.css';
-import AuthBtnSubmit from "../AuthBtnSubmit/AuthBtnSubmit";
-import CustomeInput from "../CustomInput/CustomeInput";
 import { authEndPoints } from "@/app/auth/utils/authEndPoints";
-import Link from "next/link";
-import { useEffect } from "react";
-import CustomFileInput from "../CustomFileInput/CustomFileInput";
-import { useRouter } from "next/navigation";
-import Cookies from 'js-cookie';
-import { handleApplication_JsonData } from "@/app/auth/utils/submitJson";
+import { FormAuthInputs, Input } from "@/app/auth/utils/interfaces";
 import { handleMultiPartFormData } from "@/app/auth/utils/submitFormData";
+import { handleApplication_JsonData } from "@/app/auth/utils/submitJson";
+import Cookies from 'js-cookie';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import AuthBtnSubmit from "../AuthBtnSubmit/AuthBtnSubmit";
+import CustomFileInput from "../CustomFileInput/CustomFileInput";
+import CustomeInput from "../CustomInput/CustomeInput";
+import styles from './authForm.module.css';
 type AuthType = keyof typeof authEndPoints;
 
 interface AuthFormProps {

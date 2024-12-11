@@ -13,4 +13,10 @@ export const dataURLS: DATAURLSINTERFACE = {
     deleteTeacher: `${baseUrl}/school/delete-teacher`,
     students: `${baseUrl}/school/all-students`,
     classes: `${baseUrl}/school/all-classes`,
+    getActions: `${baseUrl}/school/actions`,
+    getActivities: `${baseUrl}/school/activities`,
+    addNewClass: `${baseUrl}/school/store-class`,
+    getAllClasses: `${baseUrl}/school/all-classes`,
+    filterClasses: `${baseUrl}/school/filter-classes`,
+    deleteClass: `${baseUrl}/school/delete-class`,
 };

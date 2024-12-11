@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 interface DashBoardFilterationsProps {
     placeHolder?: string;
     page?: string;
+    doesNotHaveFilterStatus?: boolean;
 };
 
-export default function DashBoardFilterations({ placeHolder,page }: DashBoardFilterationsProps) {
+export default function DashBoardFilterations({ placeHolder, page, doesNotHaveFilterStatus }: DashBoardFilterationsProps) {
     const router = useRouter();
     const [name, setName] = useState('');
     const [status, setStatus] = useState('');
@@ -35,23 +36,29 @@ export default function DashBoardFilterations({ placeHolder,page }: DashBoardFil
         if (debouncedName) filters.name = debouncedName;
 
         const queryParams = new URLSearchParams(filters).toString();
-        if(page === 'teachers'){
+        if (page === 'teachers') {
             router.push(`/dashboard/teachers?${queryParams}`);
-        };
+        } else if (page === 'classes') {
+            router.push(`/dashboard/classes?${queryParams}`);
+        }
     }, [debouncedName, status, router, debouncedStatus, page]);
 
     return (
         <div className="px-6 py-4">
             <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
-                <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="border border-gray-300 rounded-lg py-2 px-3 w-full md:w-auto focus:outline-none focus:border-indigo-500"
-                >
-                    <option value="">Status</option>
-                    <option value="active">Active</option>
-                    <option value="deactive">Deactive</option>
-                </select>
+                {
+                    !doesNotHaveFilterStatus && (
+                        <select
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="border border-gray-300 rounded-lg py-2 px-3 w-full md:w-auto focus:outline-none focus:border-indigo-500"
+                        >
+                            <option value="">Status</option>
+                            <option value="active">Active</option>
+                            <option value="deactive">Deactive</option>
+                        </select>
+                    )
+                }
                 <div className="relative w-full md:w-auto">
                     <input
                         type="text"

@@ -56,10 +56,10 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
                         />
                     </div>
                     <div className="flex space-x-4">
-                        <div className="flex items-center flex-col w-16 h-16 gap-2">
+                        {/* <div className="flex items-center flex-col w-16 h-16 gap-2">
                             <h5 className="font-bold">Age</h5>
                             <p>{teacher?.age}</p>
-                        </div>
+                        </div> */}
                         <div className="flex items-center flex-col w-16 h-16 gap-2">
                             <h5 className="font-bold">Gender</h5>
                             <p>{teacher?.gender}</p>

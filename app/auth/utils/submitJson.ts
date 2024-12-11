@@ -1,3 +1,4 @@
+import { baseUrl } from "@/app/utils/baseUrl";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { UseFormSetError } from "react-hook-form";
@@ -14,14 +15,23 @@ export const handleApplication_JsonData = async (
     setError: UseFormSetError<FormAuthInputs>
 ) => {
     const loadingToastId: string | number = toast.loading("Loading...");
+    if (type === 'login') {
+        await axios.get(`${baseUrl}/sanctum/csrf-cookie`, {
+            withCredentials: true,
+        }); 
+    };
 
     try {
         const endPoint = authEndPoints[type];
+        const XSRFTOKEN = Cookies.get('XSRF-TOKEN');
+console.log(XSRFTOKEN)
         const response = await axios.post(endPoint, data, {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
+                ...(XSRFTOKEN ? { 'X-XSRF-TOKEN': XSRFTOKEN } : {}),
             },
+            withCredentials: true,
         });
 
         toast.update(loadingToastId, {
@@ -32,9 +42,8 @@ export const handleApplication_JsonData = async (
         });
 
         const { token, school } = response?.data?.data || {};
-        console.log(token)
         if (token) {
-            setServerCookie('JLOOMS_TOKEN',token);
+            setServerCookie('JLOOMS_TOKEN', token);
             Cookies.set("SERVER_JLOOMS_TOKEN", token, { expires: 7 });
         };
 
