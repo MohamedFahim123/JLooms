@@ -20,9 +20,12 @@ interface DashBoardPageHeadProps {
     haveBtn?: boolean;
     haveFilter?: boolean;
     filterOptions?: Option[];
+    secBtnLink?: string;
+    secBtnText?: string;
+    haveSecondBtn?: boolean;
 };
 
-export default function DashBoardPageHead({ teacherId, text, btnText, btnLink, haveBtn, haveFilter, filterOptions }: DashBoardPageHeadProps) {
+export default function DashBoardPageHead({ teacherId, text, haveSecondBtn,secBtnText,secBtnLink,btnText, btnLink, haveBtn, haveFilter, filterOptions }: DashBoardPageHeadProps) {
     const token = Cookies.get('SERVER_JLOOMS_TOKEN');
 
     const handleUpdateStatus = async (e: { target: HTMLSelectElement; }): Promise<void> => {
@@ -41,14 +44,14 @@ export default function DashBoardPageHead({ teacherId, text, btnText, btnLink, h
             })
             const res = await request?.json();
             if (res?.status === 200) {
-                toast.update(toastId , {
+                toast.update(toastId, {
                     render: res?.message || 'Updated Successfully!',
                     type: 'success',
                     isLoading: false,
                     autoClose: 1500,
                 });
             } else {
-                toast.update(toastId , {
+                toast.update(toastId, {
                     render: res?.message || 'Request failed!',
                     type: 'error',
                     isLoading: false,
@@ -69,9 +72,14 @@ export default function DashBoardPageHead({ teacherId, text, btnText, btnLink, h
                     )
                 }
                 {
-                    haveBtn && (
+                    haveBtn && <div className='flex gap-2'>
                         <MainDashBoardBtn text={btnText || ''} link={btnLink || ''} />
-                    )
+                        {
+                            haveSecondBtn && (
+                                <MainDashBoardBtn text={secBtnText || ''} link={secBtnLink || ''} />
+                            )
+                        }
+                    </div>
                 }
                 {
                     haveFilter &&

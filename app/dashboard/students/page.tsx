@@ -1,25 +1,16 @@
-import DashBoardTable from '@/app/components/DashBoardTable/DashBoardTable';
-import React from 'react';
+import StudentsSection from '@/app/components/StudentsSection/StudentsSection';
 import { Metadata } from 'next';
-import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
-import DashBoardFilterations from '@/app/components/DashBoardFilterations/DashBoardFilterations';
-import { students } from '../utils/tableData';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
     title: "Our Students",
 };
 
 const StudentsPage = () => {
-    const tableCells: string[] = ['name', 'class', 'Parents'];
-
     return (
-        <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
-            <DashBoardPageHead text='Students' btnText='Add Student' haveBtn={true} btnLink='/dashboard/students/add-new-student' />
-            <DashBoardFilterations placeHolder="Find a Student" />
-            <div className="overflow-x-auto">
-                <DashBoardTable tableData={students} tableCells={tableCells} currPage={'students'} />
-            </div>
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+            <StudentsSection />
+        </Suspense>
     );
 };
 export default StudentsPage;

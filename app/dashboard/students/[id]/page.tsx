@@ -1,10 +1,11 @@
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import Image from 'next/image';
-import { FaPhoneAlt, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
+import { FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import Avatar from '../../../imgs/teachers/teacher1.png';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { students } from '../../utils/tableData';
+import { cookies } from 'next/headers';
+import { dataURLS } from '../../utils/dataUrls';
 
 interface ParamsProps {
     id: string;
@@ -18,21 +19,27 @@ export const metadata: Metadata = {
     title: `Student Details`,
 };
 
-export default async function SingleStudentPage({params}: StudentsDetailsProps) {
+export default async function SingleStudentPage({ params }: StudentsDetailsProps) {
     const { id } = await params;
+    const cookiesData = await cookies();
+    const token = cookiesData.get('SERVER_JLOOMS_TOKEN')?.value;
 
-    const student = students?.find((el) => el.id === Number(id));
+    const fetchTeacher = await fetch(`${dataURLS.singleStudent}/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    const response = await fetchTeacher?.json();
 
-    const filterOptions = [
-        { label: 'Status', value: '', disabled: true },
-        { label: 'Active', value: 'Active', disabled: false },
-        { label: 'Sick Leave', value: 'Sick Leave', disabled: false },
-        { label: 'Maternity Leave', value: 'Maternity Leave', disabled: false },
-    ];
+    const student = response?.data?.student;
+    console.log(student)
 
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
-            <DashBoardPageHead haveFilter={true} filterOptions={filterOptions} text={student?.name || ''} haveBtn={false} />
+            <DashBoardPageHead text={`code: ${student?.code}` || ''} haveBtn={false} />
             <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <div className="lg:col-span-4 flex flex-col items-center space-y-6">
                     <div className="w-44 h-44 rounded-full overflow-hidden border">
@@ -46,8 +53,8 @@ export default async function SingleStudentPage({params}: StudentsDetailsProps) 
                     </div>
                     <div className="flex space-x-4">
                         <div className="flex items-center flex-col w-16 h-16 gap-2">
-                            <h5 className="font-bold">Age</h5>
-                            <p>{student?.age}</p>
+                            <h5 className="font-bold">Blood</h5>
+                            <p>{student?.blood_type}</p>
                         </div>
                         <div className="flex items-center flex-col w-16 h-16 gap-2">
                             <h5 className="font-bold">Gender</h5>
@@ -55,11 +62,6 @@ export default async function SingleStudentPage({params}: StudentsDetailsProps) 
                         </div>
                     </div>
                     <div className="flex space-x-4">
-                        <div className="flex items-center justify-center w-10 h-10 cursor-pointer bg-[#EBECFA] rounded-lg">
-                            <Link href={`tel:${student?.phone}`}>
-                                <FaPhoneAlt size={20} className="text-[#8A8A8A]" />
-                            </Link>
-                        </div>
                         <div className="flex items-center justify-center w-10 cursor-pointer h-10 bg-[#EBECFA] rounded-lg">
                             <Link href={`mailto:${student?.email}`}>
                                 <FaEnvelope size={20} className="text-[#8A8A8A]" />
@@ -73,9 +75,38 @@ export default async function SingleStudentPage({params}: StudentsDetailsProps) 
                             <FaGraduationCap size={32} className="text-[#8A8A8A]" />
                         </span>
                         {
-                            student?.class
+                            student?.name
                         }
                     </h3>
+                    <h4 className="text-lg font-semibold text-gray-800 mb-3">Student Details:</h4>
+                    <ul className="space-y-4 text-gray-700">
+                        {student.class_name === "N/A" ? (
+                            <li className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-800">Class Name:</span>
+                                <span>Didnot join any class yet!</span>
+                            </li>
+                        ) : (
+                            <li className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-800">Class Name:</span>
+                                <span>{student.class_name}</span>
+                            </li>
+                        )}
+                        {student.class_id === "N/A" ? <li className="flex items-center gap-2">
+                            <span className="font-semibold text-gray-800">Class ID:</span>
+                            <span>Didnot join any class yet!</span>
+                        </li> : (
+                            <li className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-800">Class ID:</span>
+                                <span>{student.class_id}</span>
+                            </li>
+                        )}
+                        {student.birth_date && (
+                            <li className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-800">Birth Date:</span>
+                                <span>{new Date(student.birth_date).toLocaleDateString()}</span>
+                            </li>
+                        )}
+                    </ul>
                 </div>
             </div>
         </div>

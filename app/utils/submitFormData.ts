@@ -29,9 +29,6 @@ export const handleMultiPartWebSiteFormData = async (
             else if (typeof value === 'object' && value !== null) {
                 formData.append(key, JSON.stringify(value));
             }
-            // else if (key === 'options') {
-            //     formData.append('options', JSON.stringify(data.options));
-            // }
             else if (value !== undefined && value !== null) {
                 formData.append(key, String(value));
             };

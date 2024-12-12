@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useForm, useFieldArray, Controller, SubmitHandler } from 'react-hook-form';
+import styles from './addSubjectForm.module.css';
 
 interface FormDefaultValues {
     subjects: {
@@ -35,7 +36,7 @@ export default function AddSubject() {
                 fields.map((item, index) => (
                     <div key={item.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-600">Class #{index + 1}</label>
+                            <label className={`${styles.authLable} block text-sm font-medium text-gray-600`}>Class #{index + 1}</label>
                             <Controller
                                 name={`subjects.${index}.class`}
                                 control={control}
@@ -52,7 +53,7 @@ export default function AddSubject() {
                         {
                             watchClasses[index]?.class && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600">Subject/Activity</label>
+                                    <label className={`${styles.authLable} block text-sm font-medium text-gray-600`}>Subject/Activity</label>
                                     <Controller
                                         name={`subjects.${index}.subject`}
                                         control={control}

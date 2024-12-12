@@ -7,6 +7,7 @@ import CustomeInput from "../CustomInput/CustomeInput";
 import CustomFileInput from "../CustomFileInput/CustomFileInput";
 import { handleMultiPartWebSiteFormData } from "@/app/utils/submitFormData";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
+import styles from './addTeacherForm.module.css';
 
 interface TeacherInput {
     lableName: string;
@@ -62,15 +63,14 @@ export default function AddTeacherForm() {
             />
 
             <div>
-                <label className="block text-gray-700">Gender</label>
+                <label className={`${styles.authLable} block mb-2 text-sm font-medium dark:text-white`}>Gender</label>
                 <select
                     {...register("gender", { required: "Gender is required" })}
                     className={`${errors?.gender?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
                 >
-                    <option value="">Select gender</option>
+                    <option value="" disabled>Select gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                    <option value="other">Other</option>
                 </select>
                 {errors.gender && <p className="text-red-500 text-sm">{errors.gender.message}</p>}
             </div>

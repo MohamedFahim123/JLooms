@@ -18,14 +18,9 @@ export interface FormAuthInputs {
     image?: File;
 
     // Student Inputs
-    student_name?: string;
-    student_id?: string;
-    student_class?: string;
-    student_gender?: string;
-    student_email?: string;
-    student_password?: string;
-    student_phone?: string;
-    student_profile?: string;
+    code?: string;
+    birth_date?: string;
+    blood_type?: string;
 
     name_en?: string;
     actions?: {

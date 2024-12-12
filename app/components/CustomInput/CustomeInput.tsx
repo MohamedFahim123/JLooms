@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import styles from './customeInput.module.css';
 import { FaEye } from "react-icons/fa";

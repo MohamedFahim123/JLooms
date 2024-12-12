@@ -2,7 +2,7 @@ export interface Table {
     parents?: string;
     name?: string;
     subject?: string;
-    class?: string;
+    class_name?: string;
     status?: string;
     image?: string;
     id?: number;
@@ -15,6 +15,8 @@ export interface Table {
     number_of_students?: number,
     floor?: number;
     locale?: string;
+    birth_date?: string;
+    class?: string;
 };
 export interface DATAURLSINTERFACE {
     teachers: string;
@@ -31,6 +33,12 @@ export interface DATAURLSINTERFACE {
     getAllClasses: string;
     deleteClass: string;
     filterClasses: string;
+    singleClass: string;
+    addStudent: string;
+    allStudents: string;
+    filterStudents: string;
+    singleStudent: string;
+    deleteStudent: string;
 };
 export interface teacherInterface {
     id: number | string;
