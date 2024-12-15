@@ -1,13 +1,14 @@
-'use client'
+'use client';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaUser, FaChalkboardTeacher, FaCog, FaSignOutAlt, FaArrowAltCircleLeft, FaArrowAltCircleRight, FaBell } from 'react-icons/fa';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import styles from './sideBar.module.css';
 import { PiStudentBold } from "react-icons/pi";
 import { BsCalendar2EventFill } from "react-icons/bs";
 import { MdSubject } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
+import { useClassesStore } from '@/app/store/getAllClasses';
 
 
 interface SideBarProps {
@@ -18,6 +19,17 @@ interface SideBarProps {
 export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { classes, getClasses, classesLoading } = useClassesStore();
+
+  const getAllClasses = useCallback(() => {
+    if (classes.length === 0 && !classesLoading) {
+      getClasses();
+    };
+  }, [getClasses, classesLoading, classes.length]);
+
+  useEffect(() => {
+    getAllClasses();
+  }, [getAllClasses]);
 
   const isActive = (path: string) => pathname.includes(path);
 

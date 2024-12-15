@@ -11,7 +11,6 @@ import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import Cookies from 'js-cookie';
 import { MdDelete } from "react-icons/md";
 
-
 export default function StudentsTableRow({ cell }: TableRowProps) {
     const router = useRouter();
 
@@ -52,8 +51,6 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
             });
     };
 
-    console.log(cell)
-
     return (
         <tr
             key={cell?.id}
@@ -65,7 +62,7 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
             >
                 <Link href={`/dashboard/students/${cell?.id}`} className="whitespace-nowrap flex items-center gap-3">
                     {
-                        cell.image &&
+                        cell?.image &&
                         <Image
                             src={cell?.image || avatar}
                             alt={`${cell?.name}'s avatar`}
@@ -75,7 +72,7 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
                         />
                     }
                     <span className="block md:hidden font-semibold text-gray-500">Name:</span>
-                    {cell.name}
+                    {cell?.name}
                 </Link>
             </td>
             <td
@@ -83,16 +80,33 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
                 className="py-3 px-4"
             >
                 <span className="block md:hidden font-semibold text-gray-500">Class:</span>
-                {cell.class_name === 'N/A' ? "didn't join any class yet!" : cell.class_name}
+                {cell?.class_name === 'N/A' ? "didn't join any class yet!" : cell?.class_name}
             </td>
             <td
-                onClick={() => router.push(`/dashboard/students/${cell?.id}`)}
                 className={`py-3 px-4 cursor-default`}
             >
-                <span className={`block md:hidden font-semibold ${(cell?.parent && cell?.parent?.length > 0) ? 'text-gray-500' : 'text-blue-700 underline cursor-pointer'}`}>parent:</span>
-                <span className={`${(cell?.parent && cell?.parent?.length > 0) ? 'text-gray-500' : 'text-blue-700 underline cursor-pointer'}`}>
-                    {(cell?.parent && cell?.parent?.length > 0) ? 'Assigned' : 'Assign parent'}
-                </span>
+                {
+                    (cell?.parent && cell?.parent?.length > 0) ?
+                        <>
+                            <span className={`block md:hidden font-semibold text-gray-500`}>parent:</span>
+                            Assigned
+                        </>
+                        :
+                        <>
+                            <span className={`block md:hidden font-semibold text-blue-700 underline cursor-pointer`}>parent:</span>
+                            <span
+                                onClick={() => {
+                                    if (cell?.id) {
+                                        Cookies.set('student_id', `${cell?.id}`);
+                                        router.push(`/dashboard/students/${cell?.id}/assign-parent`);
+                                    };
+                                }}
+                                className="text-blue-700 underline cursor-pointer"
+                            >
+                                Assign parent
+                            </span>
+                        </>
+                }
             </td>
             <td className="py-3 px-4 cursor-default">
                 <span

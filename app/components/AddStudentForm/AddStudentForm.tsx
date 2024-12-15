@@ -9,7 +9,7 @@ import { handleMultiPartWebSiteFormData } from "@/app/utils/submitFormData";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import styles from './addStudentForm.module.css';
 import { useClassesStore } from "@/app/store/getAllClasses";
-import { useCallback, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 interface StudentInput {
     lableName: string;
@@ -44,17 +44,7 @@ export default function AddStudentForm() {
         },
     ];
 
-    const { classes, classesLoading, getClasses } = useClassesStore();
-
-    const getAllClasses = useCallback(() => {
-        if (classes.length === 0 && !classesLoading) {
-            getClasses();
-        };
-    }, [getClasses, classesLoading, classes.length]);
-
-    useEffect(() => {
-        getAllClasses();
-    }, [getAllClasses]);
+    const { classes} = useClassesStore();
 
     const Inputs: StudentInput[] = [
         {
