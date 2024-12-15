@@ -79,7 +79,7 @@ export default function ClassesTableRow({ cell }: TableRowProps) {
                 onClick={() => router.push(`/dashboard/classes/${cell?.id}`)}
                 className="py-3 px-4"
             >
-                <span className="block md:hidden font-semibold text-gray-500">Subject:</span>
+                <span className="block md:hidden font-semibold text-gray-500">Number Of Students:</span>
                 {cell.number_of_students}
             </td>
             <td className="py-3 px-4 cursor-default">

@@ -1,3 +1,7 @@
+interface Parent {
+    id: number;
+    name: string;
+}
 export interface Table {
     parents?: string;
     name?: string;
@@ -17,6 +21,7 @@ export interface Table {
     locale?: string;
     birth_date?: string;
     class?: string;
+    parent?: Parent[];
 };
 export interface DATAURLSINTERFACE {
     teachers: string;

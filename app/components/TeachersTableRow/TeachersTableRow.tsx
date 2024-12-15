@@ -73,11 +73,11 @@ export default function TeachersTableRow({ cell }: TableRowProps) {
                 </Link>
             </td>
             <td className="py-3 px-4" onClick={() => router.push(`/dashboard/teachers/${cell?.id}`)}>
-                <span className="block md:hidden font-semibold text-gray-500">Class:</span>
+                <span className="block md:hidden font-semibold text-gray-500">Phone:</span>
                 {cell.phone}
             </td>
             <td className="py-3 px-4" onClick={() => router.push(`/dashboard/teachers/${cell?.id}`)}>
-                <span className="block md:hidden font-semibold text-gray-500">Subject:</span>
+                <span className="block md:hidden font-semibold text-gray-500">Email:</span>
                 {cell.email}
             </td>
             <td className="py-3 px-4" onClick={() => router.push(`/dashboard/teachers/${cell?.id}`)}>

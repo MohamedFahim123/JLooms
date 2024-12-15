@@ -65,7 +65,7 @@ export default function StudentsSection() {
         };
         fetchData();
     }, [filters]);
-    const tableCells: string[] = ['name', 'Gender', 'class name', 'birth date', 'actions'];
+    const tableCells: string[] = ['name', 'class name', 'parent', 'Remove'];
 
     return (
         <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">

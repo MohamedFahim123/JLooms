@@ -21,6 +21,7 @@ export interface FormAuthInputs {
     code?: string;
     birth_date?: string;
     blood_type?: string;
+    grade_id?: string;
 
     name_en?: string;
     actions?: {

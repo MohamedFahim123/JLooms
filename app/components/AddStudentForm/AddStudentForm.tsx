@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { CustomPasswordInput } from "@/app/auth/utils/customInputsValues";
 import { FormAuthInputs, Validation } from "@/app/auth/utils/interfaces";
@@ -8,6 +8,8 @@ import CustomFileInput from "../CustomFileInput/CustomFileInput";
 import { handleMultiPartWebSiteFormData } from "@/app/utils/submitFormData";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import styles from './addStudentForm.module.css';
+import { useClassesStore } from "@/app/store/getAllClasses";
+import { useCallback, useEffect, useMemo } from "react";
 
 interface StudentInput {
     lableName: string;
@@ -19,6 +21,8 @@ interface StudentInput {
 
 export default function AddStudentForm() {
     const { register, watch, setError, reset, handleSubmit, formState: { errors } } = useForm<FormAuthInputs>();
+    const watchValues = useMemo(() => watch(), [watch]);
+
     const firstInputs: StudentInput[] = [
         {
             lableName: "Full Name",
@@ -40,7 +44,17 @@ export default function AddStudentForm() {
         },
     ];
 
-    const watchValues = watch();
+    const { classes, classesLoading, getClasses } = useClassesStore();
+
+    const getAllClasses = useCallback(() => {
+        if (classes.length === 0 && !classesLoading) {
+            getClasses();
+        };
+    }, [getClasses, classesLoading, classes.length]);
+
+    useEffect(() => {
+        getAllClasses();
+    }, [getAllClasses]);
 
     const Inputs: StudentInput[] = [
         {
@@ -76,6 +90,7 @@ export default function AddStudentForm() {
     const onSubmit: SubmitHandler<FormAuthInputs> = (data) => {
         handleMultiPartWebSiteFormData(data, dataURLS.addStudent, setError, reset);
     };
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 mt-5">
             {
@@ -96,6 +111,7 @@ export default function AddStudentForm() {
             <div>
                 <label className={`${styles.authLable} block mb-2 text-sm font-medium dark:text-white`}>Gender</label>
                 <select
+                    defaultValue={''}
                     {...register("gender", { required: "Gender is required" })}
                     className={`${errors?.gender?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
                 >
@@ -105,37 +121,50 @@ export default function AddStudentForm() {
                 </select>
                 {errors.gender && <p className="text-red-500 text-sm">{errors.gender.message}</p>}
             </div>
+            <div>
+                <label className={`${styles.authLable} block mb-2 text-sm font-medium dark:text-white`}>Class</label>
+                <select
+                    defaultValue={''}
+                    {...register("grade_id", { required: "class is required" })}
+                    className={`${errors?.grade_id?.message && 'border-red-500'} w-full px-4 py-2 border rounded-md focus:outline-none`}
+                >
+                    <option value="" disabled>Select class</option>
+                    {
+                        classes?.map(cls => (
+                            <option key={cls.id} value={cls.id}>{cls.name}</option>
+                        ))
+                    }
+                </select>
+                {errors.grade_id && <p className="text-red-500 text-sm">{errors.grade_id.message}</p>}
+            </div>
             {
                 Inputs?.map(input =>
-                    input?.type === 'file' ?
-                        (
-                            <CustomFileInput
-                                key={input.name}
-                                name={input.name}
-                                placeHolder={input.placeholder}
-                                register={register}
-                                error={errors}
-                                type={input.type}
-                                lable={input.lableName}
-                                id={`addstudent${input.name}`}
-                                validation={input.validation}
-                                fileUploaded={(watchValues[input.name] as unknown as FileList)?.length > 0}
-                            />
-                        )
-                        :
-                        (
-                            <CustomeInput
-                                key={input.name}
-                                name={input.name}
-                                placeHolder={input.placeholder}
-                                register={register}
-                                error={errors}
-                                type={input.type}
-                                lable={input.lableName}
-                                id={`addstudent${input.name}`}
-                                validation={input.validation}
-                            />
-                        )
+                    input?.type === 'file' ? (
+                        <CustomFileInput
+                            key={input.name}
+                            name={input.name}
+                            placeHolder={input.placeholder}
+                            register={register}
+                            error={errors}
+                            type={input.type}
+                            lable={input.lableName}
+                            id={`addstudent${input.name}`}
+                            validation={input.validation}
+                            fileUploaded={(watchValues[input.name] as unknown as FileList)?.length > 0}
+                        />
+                    ) : (
+                        <CustomeInput
+                            key={input.name}
+                            name={input.name}
+                            placeHolder={input.placeholder}
+                            register={register}
+                            error={errors}
+                            type={input.type}
+                            lable={input.lableName}
+                            id={`addstudent${input.name}`}
+                            validation={input.validation}
+                        />
+                    )
                 )
             }
             <button

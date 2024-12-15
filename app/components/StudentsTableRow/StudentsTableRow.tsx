@@ -52,6 +52,8 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
             });
     };
 
+    console.log(cell)
+
     return (
         <tr
             key={cell?.id}
@@ -81,21 +83,16 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
                 className="py-3 px-4"
             >
                 <span className="block md:hidden font-semibold text-gray-500">Class:</span>
-                {cell.gender}
-            </td>
-            <td
-                onClick={() => router.push(`/dashboard/students/${cell?.id}`)}
-                className="py-3 px-4"
-            >
-                <span className="block md:hidden font-semibold text-gray-500">Subject:</span>
                 {cell.class_name === 'N/A' ? "didn't join any class yet!" : cell.class_name}
             </td>
             <td
                 onClick={() => router.push(`/dashboard/students/${cell?.id}`)}
-                className="py-3 px-4"
+                className={`py-3 px-4 cursor-default`}
             >
-                <span className="block md:hidden font-semibold text-gray-500">Subject:</span>
-                {cell.birth_date}
+                <span className={`block md:hidden font-semibold ${(cell?.parent && cell?.parent?.length > 0) ? 'text-gray-500' : 'text-blue-700 underline cursor-pointer'}`}>parent:</span>
+                <span className={`${(cell?.parent && cell?.parent?.length > 0) ? 'text-gray-500' : 'text-blue-700 underline cursor-pointer'}`}>
+                    {(cell?.parent && cell?.parent?.length > 0) ? 'Assigned' : 'Assign parent'}
+                </span>
             </td>
             <td className="py-3 px-4 cursor-default">
                 <span
