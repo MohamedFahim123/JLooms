@@ -86,7 +86,7 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
                 className={`py-3 px-4 cursor-default`}
             >
                 {
-                    (cell?.parent && cell?.parent?.length > 0) ?
+                    cell?.has_parents ?
                         <>
                             <span className={`block md:hidden font-semibold text-gray-500`}>parent:</span>
                             Assigned

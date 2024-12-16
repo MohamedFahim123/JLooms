@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
-    title: `Add New Student`,
+    title: `Assign Parent`,
 };
 export default async function AssignParentPage() {
     const cookiesData = await cookies();

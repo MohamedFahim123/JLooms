@@ -9,6 +9,7 @@ import { BsCalendar2EventFill } from "react-icons/bs";
 import { MdSubject } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
 import { useClassesStore } from '@/app/store/getAllClasses';
+import { RiParentFill } from "react-icons/ri";
 
 
 interface SideBarProps {
@@ -81,6 +82,14 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           className={isActive('/dashboard/students') ? `${styles.activeMenuItem}` : ''}
         >
           Students
+        </MenuItem>
+
+        <MenuItem
+          icon={<RiParentFill />}
+          onClick={() => router.push('/dashboard/parents')}
+          className={isActive('/dashboard/parents') ? `${styles.activeMenuItem}` : ''}
+        >
+          Parents
         </MenuItem>
 
         <MenuItem

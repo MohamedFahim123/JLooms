@@ -1,15 +1,15 @@
 'use client';
 
-import Image from 'next/image';
-import { FaEnvelope, FaGraduationCap } from 'react-icons/fa';
-import Link from 'next/link';
-import Avatar from '../../imgs/teachers/teacher1.png';
-import { useClassesStore } from '@/app/store/getAllClasses';
-import { useState } from 'react';
 import { dataURLS } from '@/app/dashboard/utils/dataUrls';
+import { useClassesStore } from '@/app/store/getAllClasses';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import { FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import Avatar from '../../imgs/teachers/teacher1.png';
 
 interface SingleStudent {
     id: number | string;
@@ -27,7 +27,7 @@ interface SingleStudent {
 
 export default function SingleStudentView({ student }: { student: SingleStudent }) {
     const [currClassId, setCurrClassId] = useState<string | number>();
-    const [status, setStatus] = useState<string>( student?.class_name === "N/A" ? 'update' : 'assigned');
+    const [status, setStatus] = useState<string>(student?.class_name === "N/A" ? 'update' : 'assigned');
     const { classes } = useClassesStore();
 
     const handleAssignToClass = async () => {
@@ -97,6 +97,11 @@ export default function SingleStudentView({ student }: { student: SingleStudent 
                         </Link>
                     </div>
                 </div>
+                <div className="flex space-x-4">
+                    <Link className='text-indigo-500 underline hover:text-indigo-600 transition-all duration-300' href={`/dashboard/students/${student?.id}/assign-parent`}>
+                        Assign Parents
+                    </Link>
+                </div>
             </div>
             <div className="lg:col-span-8 mt-8">
                 <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
@@ -117,7 +122,7 @@ export default function SingleStudentView({ student }: { student: SingleStudent 
                                     {
                                         status === 'update' ?
                                             <select
-                                                defaultValue={''}
+                                                defaultValue={student?.class_name !== 'N/A' ? classes?.find(el => el?.name === student?.class_name)?.id : ''}
                                                 onChange={e => setCurrClassId(e.target.value)}
                                                 className={`w-4/12 px-4 py-2 border rounded-md focus:outline-none`}
                                             >
@@ -163,7 +168,7 @@ export default function SingleStudentView({ student }: { student: SingleStudent 
                                 onClick={() => setStatus('update')}
                                 className="bg-indigo-500 hover:bg-indigo-600 transition-all duration-300 text-white font-medium py-2 px-4 rounded"
                             >
-                                Update
+                                Update Class
                             </button>
                         </div>
                 }

@@ -2,6 +2,8 @@ import { Table } from '@/app/dashboard/utils/interfaces';
 import ClassesTableRow from '../ClassesTableRow/ClassesTableRow';
 import StudentsTableRow from '../StudentsTableRow/StudentsTableRow';
 import TeachersTableRow from '../TeachersTableRow/TeachersTableRow';
+import ParentTableRow from '../ParentTableRow/ParentTableRow';
+import MainParentTableRow from '../MainParentTableRow/MainParentTableRow';
 
 interface DashBoardTableProps {
     tableData: Table[];
@@ -38,6 +40,17 @@ export default function DashBoardTable({ currPage, tableData, tableCells }: Dash
                             {
                                 currPage === 'classes' &&
                                 <ClassesTableRow cell={cell} />
+                            }
+                            {
+                                currPage === 'parents' &&
+                                <MainParentTableRow cell={cell} />
+                            }
+                            {
+                                currPage === 'singleStudent' &&
+                                (
+                                    cell?.code &&
+                                    <ParentTableRow cell={cell} />
+                                )
                             }
                         </tbody>
                     ))

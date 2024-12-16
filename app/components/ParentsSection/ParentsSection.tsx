@@ -11,7 +11,7 @@ import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import Cookies from 'js-cookie';
 
 let loading: boolean = true;
-async function fetchTeachersData(filters: Record<string, string | number> = {}): Promise<{ data: Table[]; totalPages: number }> {
+async function fetchparentsData(filters: Record<string, string | number> = {}): Promise<{ data: Table[]; totalPages: number }> {
     loading = true;
     const token = Cookies.get('SERVER_JLOOMS_TOKEN');
 
@@ -23,8 +23,8 @@ async function fetchTeachersData(filters: Record<string, string | number> = {}):
     });
 
     const apiUrl = (filters?.status || filters.name)
-        ? `${dataURLS.filterTeachers}?${queryParams}&t=${new Date().getTime()}`
-        : `${dataURLS.teachers}?t=${new Date().getTime()}`;
+        ? `${dataURLS.filterParents}?${queryParams}&t=${new Date().getTime()}`
+        : `${dataURLS.allParents}?t=${new Date().getTime()}`;
 
     const response = await fetch(apiUrl, {
         method: 'GET',
@@ -40,12 +40,13 @@ async function fetchTeachersData(filters: Record<string, string | number> = {}):
 
     const data = await response.json();
     loading = false;
-    return { data: data?.data?.teachers || [], totalPages: data?.meta?.totalPages || 1 };
+    return { data: data?.data?.parents || [], totalPages: data?.meta?.totalPages || 1 };
 };
-export default function TeachersSection() {
+
+export default function ParentsSection() {
     const searchParams = useSearchParams();
     const [filters, setFilters] = useState<Record<string, string | number>>({});
-    const [teachers, setTeachers] = useState<Table[]>([]);
+    const [parents, setParents] = useState<Table[]>([]);
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
@@ -59,19 +60,19 @@ export default function TeachersSection() {
 
     useEffect(() => {
         async function fetchData() {
-            const { data, totalPages } = await fetchTeachersData(filters);
-            setTeachers(data);
+            const { data, totalPages } = await fetchparentsData(filters);
+            setParents(data);
             setTotalPages(totalPages);
         };
         fetchData();
     }, [filters]);
 
-    const tableCells: string[] = ['name', 'phone', 'email', 'status', 'action'];
+    const tableCells: string[] = ['Parent Name', 'Code', 'Mobile', 'Email', 'Remove'];
 
     return (
         <div className={`${totalPages > 1 && 'pb-6'} w-full bg-white shadow-md rounded-lg overflow-hidden`}>
-            <DashBoardPageHead text="Teachers" btnText="Add Teacher" haveBtn={true} btnLink="/dashboard/teachers/add-new-teacher" />
-            <DashBoardFilterations page="teachers" placeHolder="Find a teacher" />
+            <DashBoardPageHead text="Parents" btnText="Add Parent" haveBtn={true} btnLink="/dashboard/parents/add-parent" />
+            <DashBoardFilterations doesNotHaveFilterStatus={true} page="Parent" placeHolder="Find a Parent" />
             <div className="overflow-x-auto">
                 {
                     loading ?
@@ -79,15 +80,15 @@ export default function TeachersSection() {
                             <p className="text-gray-500 font-semibold pt-10 text-xl">Loading...</p>
                         </div>
                         :
-                        teachers.length > 0 ?
+                        parents.length > 0 ?
                             (
                                 <>
-                                    <DashBoardTable tableData={teachers} tableCells={tableCells} currPage="teachers" />
+                                    <DashBoardTable tableData={parents} tableCells={tableCells} currPage="parents" />
                                     <Pagination totalPages={totalPages} currentPage={Number(filters.page)} />
                                 </>
                             ) : (
                                 <div className="flex justify-center min-h-screen">
-                                    <p className="text-gray-500 font-semibold pt-10 text-xl">No Teachers!</p>
+                                    <p className="text-gray-500 font-semibold pt-10 text-xl">No Parents!</p>
                                 </div>
                             )
                 }

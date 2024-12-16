@@ -1,7 +1,3 @@
-interface Parent {
-    id: number;
-    name: string;
-}
 export interface Table {
     parents?: string;
     name?: string;
@@ -21,7 +17,9 @@ export interface Table {
     locale?: string;
     birth_date?: string;
     class?: string;
-    parent?: Parent[];
+    has_parents?: boolean;
+    code?: string;
+    relation?: string;
 };
 export interface DATAURLSINTERFACE {
     teachers: string;
@@ -45,6 +43,12 @@ export interface DATAURLSINTERFACE {
     singleStudent: string;
     deleteStudent: string;
     assignStudentToClass: string;
+    assignParentToStudent: string;
+    allParents: string;
+    addParent: string;
+    singleParent: string;
+    filterParents: string;
+    filterParentsByCode: string;
 };
 export interface teacherInterface {
     id: number | string;

@@ -22,11 +22,12 @@ export interface FormAuthInputs {
     birth_date?: string;
     blood_type?: string;
     grade_id?: string;
-    parentId?: string;
-    relation?: string;
+    parent_id?: string;
+    type?: string;
     class_id?: string;
     student_id?: string;
 
+    // Class Inputs
     name_en?: string;
     actions?: {
         action: string;
