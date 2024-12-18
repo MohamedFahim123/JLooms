@@ -15,15 +15,8 @@ async function fetchparentsData(filters: Record<string, string | number> = {}): 
     loading = true;
     const token = Cookies.get('SERVER_JLOOMS_TOKEN');
 
-    const queryParams = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
-            queryParams.append(key, String(value));
-        };
-    });
-
-    const apiUrl = (filters?.status || filters.name)
-        ? `${dataURLS.filterParents}?${queryParams}&t=${new Date().getTime()}`
+    const apiUrl = (filters.name)
+        ? `${dataURLS.filterParents}?q=${filters?.name}&t=${new Date().getTime()}`
         : `${dataURLS.allParents}?t=${new Date().getTime()}`;
 
     const response = await fetch(apiUrl, {
@@ -51,7 +44,6 @@ export default function ParentsSection() {
 
     useEffect(() => {
         const newFilters: Record<string, string | number> = {
-            status: searchParams.get('status') || '',
             name: searchParams.get('name') || '',
             page: searchParams.get('page') || 1,
         };
@@ -72,7 +64,7 @@ export default function ParentsSection() {
     return (
         <div className={`${totalPages > 1 && 'pb-6'} w-full bg-white shadow-md rounded-lg overflow-hidden`}>
             <DashBoardPageHead text="Parents" btnText="Add Parent" haveBtn={true} btnLink="/dashboard/parents/add-parent" />
-            <DashBoardFilterations doesNotHaveFilterStatus={true} page="Parent" placeHolder="Find a Parent" />
+            <DashBoardFilterations doesNotHaveFilterStatus={true} page="parents" placeHolder="Find a Parent" />
             <div className="overflow-x-auto">
                 {
                     loading ?

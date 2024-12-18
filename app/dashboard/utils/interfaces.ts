@@ -49,6 +49,8 @@ export interface DATAURLSINTERFACE {
     singleParent: string;
     filterParents: string;
     filterParentsByCode: string;
+    removeParentFromStudent: string;
+    deleteParent: string;
 };
 export interface teacherInterface {
     id: number | string;

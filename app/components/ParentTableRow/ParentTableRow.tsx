@@ -6,45 +6,53 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import avatar from '../../imgs/teachers/teacher1.png';
+import Swal from "sweetalert2";
+import axios from "axios";
+import { dataURLS } from "@/app/dashboard/utils/dataUrls";
+import Cookies from "js-cookie";
 
-export default function ParentTableRow({ cell }: TableRowProps) {
+export default function ParentTableRow({ cell, currStudentId }: TableRowProps) {
     const router = useRouter();
 
     const handleDelete = () => {
-        // Swal.fire({
-        //     title: `Do you want to Remove ${cell?.name} ?`,
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#ff2020',
-        //     confirmButtonText: "Yes, Remove",
-        // })
-        //     .then(async (result) => {
-        //         if (result.isConfirmed) {
-        //             const res = await axios.delete(
-        //                 `${dataURLS.deleteClass}/${cell?.id}`, {
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Accept': 'application/json',
-        //                     'Authorization': `Bearer ${Cookies.get('SERVER_JLOOMS_TOKEN')}`,
-        //                 }
-        //             })
-        //             if (res.status === 200) {
-        //                 Swal.fire({
-        //                     icon: 'success',
-        //                     title: `${cell?.name} has been removed successfully`,
-        //                     showConfirmButton: false,
-        //                     timer: 1000,
-        //                 });
-        //                 window.location.reload();
-        //             } else {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Failed to remove class',
-        //                     showConfirmButton: false,
-        //                     timer: 1000,
-        //                 });
-        //             };
-        //         };
-        //     });
+        const data = {
+            student_id: currStudentId,
+            parent_id: `${cell?.id}`,
+        };
+        Swal.fire({
+            title: `Do you want to Remove ${cell?.name} ?`,
+            showCancelButton: true,
+            confirmButtonColor: '#ff2020',
+            confirmButtonText: "Yes, Remove",
+        })
+            .then(async (result) => {
+                if (result.isConfirmed) {
+                    const res = await axios.post(
+                        `${dataURLS.removeParentFromStudent}`, data, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': `Bearer ${Cookies.get('SERVER_JLOOMS_TOKEN')}`,
+                        }
+                    })
+                    if (res.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: `${cell?.name} has been removed successfully`,
+                            showConfirmButton: false,
+                            timer: 1000,
+                        });
+                        window.location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to remove class',
+                            showConfirmButton: false,
+                            timer: 1000,
+                        });
+                    };
+                };
+            });
     };
 
     return (

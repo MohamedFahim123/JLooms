@@ -21,4 +21,5 @@ export interface LayoutInterface {
 
 export interface TableRowProps {
     cell: Table;
+    currStudentId?: string;
 };

@@ -42,7 +42,9 @@ export default function DashBoardFilterations({ placeHolder, page, doesNotHaveFi
             router.push(`/dashboard/classes?${queryParams}`);
         } else if (page === 'students') {
             router.push(`/dashboard/students?${queryParams}`);
-        };
+        } else if (page === 'parents') {
+            router.push(`/dashboard/parents?${queryParams}`);
+        }
     }, [debouncedName, status, router, debouncedStatus, page]);
 
     return (

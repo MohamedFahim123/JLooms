@@ -9,9 +9,10 @@ interface DashBoardTableProps {
     tableData: Table[];
     tableCells: string[];
     currPage: string;
+    currStudentId?: string;
 };
 
-export default function DashBoardTable({ currPage, tableData, tableCells }: DashBoardTableProps) {
+export default function DashBoardTable({ currPage, tableData, tableCells, currStudentId }: DashBoardTableProps) {
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full text-sm text-left text-gray-600">
@@ -49,7 +50,7 @@ export default function DashBoardTable({ currPage, tableData, tableCells }: Dash
                                 currPage === 'singleStudent' &&
                                 (
                                     cell?.code &&
-                                    <ParentTableRow cell={cell} />
+                                    <ParentTableRow currStudentId={currStudentId} cell={cell} />
                                 )
                             }
                         </tbody>

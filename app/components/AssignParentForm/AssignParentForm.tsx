@@ -10,13 +10,13 @@ import { CiSearch } from "react-icons/ci";
 import ParentCard from "../ParentCard/ParentCard";
 
 export interface ParentInterface {
-    id: number;
-    name: string;
-    code: string;
-    email: string;
-    phone: string;
-    image: string;
-    relation: string;
+    id?: number;
+    name?: string;
+    code?: string;
+    email?: string;
+    phone?: string;
+    image?: string;
+    relation?: string;
 };
 
 export default function AssignParentForm({ studentId }: { studentId?: number | string }) {
@@ -45,8 +45,10 @@ export default function AssignParentForm({ studentId }: { studentId?: number | s
         clearErrors('parent_id');
     }, [watch('parent_id')]);
 
-    const onSubmit: SubmitHandler<FormAuthInputs> = (data) => {
-        submitApplicationJson({...data,student_id: `${studentId}`,parent_id: `${currParent?.id}`}, dataURLS.assignParentToStudent, setError, reset);
+    const onSubmit: SubmitHandler<FormAuthInputs> = async (data) => {
+        await submitApplicationJson({ ...data, student_id: `${studentId}`, parent_id: `${currParent?.id}` }, dataURLS.assignParentToStudent, setError, reset);
+        setCurrParent({});
+        window.location.reload();
     };
 
     return (
@@ -72,7 +74,7 @@ export default function AssignParentForm({ studentId }: { studentId?: number | s
                 {errors.parent_id && <p className="text-red-500 text-sm mt-1">{errors.parent_id.message}</p>}
             </div>
             {
-                currParent ?
+                (currParent?.name && currParent?.code && currParent?.image) ?
                     <>
                         <ParentCard name={currParent?.name} code={currParent?.code} imageUrl={currParent?.image} />
                         <div className="mb-6">

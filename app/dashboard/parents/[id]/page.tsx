@@ -33,7 +33,7 @@ export default async function SingleParentPage({ params }: { params: Promise<Par
 
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
-            <DashBoardPageHead haveFilter={true} text={parent?.code || ''} haveBtn={false} />
+            <DashBoardPageHead text={parent?.code || ''} haveBtn={false} />
             <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <div className="lg:col-span-4 flex flex-col items-center space-y-6">
                     <div className="w-44 h-44 rounded-full overflow-hidden border">

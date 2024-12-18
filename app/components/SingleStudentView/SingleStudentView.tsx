@@ -98,7 +98,7 @@ export default function SingleStudentView({ student }: { student: SingleStudent 
                     </div>
                 </div>
                 <div className="flex space-x-4">
-                    <Link className='text-indigo-500 underline hover:text-indigo-600 transition-all duration-300' href={`/dashboard/students/${student?.id}/assign-parent`}>
+                    <Link className='text-indigo-500 underline hover:text-indigo-600 transition-all duration-300' onClick={() => { Cookies.set('student_id', `${student?.id}`) }} href={`/dashboard/students/${student?.id}/assign-parent`}>
                         Assign Parents
                     </Link>
                 </div>

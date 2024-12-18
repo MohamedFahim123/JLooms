@@ -27,9 +27,11 @@ export const dataURLS: DATAURLSINTERFACE = {
     deleteStudent: `${baseUrl}/school/delete-student`,
     assignStudentToClass: `${baseUrl}/school/assign-student-to-class`,
     assignParentToStudent: `${baseUrl}/school/assign-parent-to-student`,
+    removeParentFromStudent: `${baseUrl}/school/remove-parent-from-student`,
     allParents: `${baseUrl}/school/parents`,
     singleParent: `${baseUrl}/school/show-parent`,
     addParent: `${baseUrl}/school/store-parent`,
+    deleteParent: `${baseUrl}/school/delete-parent`,
     filterParentsByCode: `${baseUrl}/school/filter-parents`,
-    filterParents: `${baseUrl}/school/filter-parents`,
+    filterParents: `${baseUrl}/school/search-parents`,
 };
