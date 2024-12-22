@@ -51,9 +51,13 @@ export interface DATAURLSINTERFACE {
     filterParentsByCode: string;
     removeParentFromStudent: string;
     deleteParent: string;
+    allowedTeachers: string;
+    removeOptionFromClass: string;
+    updateClassOptionTeacher: string;
 };
 export interface teacherInterface {
     id: number | string;
+    class_option_teacher_id: number | string;
     name: string;
     email: string;
     phone: string;

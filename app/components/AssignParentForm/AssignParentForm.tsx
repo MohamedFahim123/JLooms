@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CiSearch } from "react-icons/ci";
 import ParentCard from "../ParentCard/ParentCard";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export interface ParentInterface {
     id?: number;
@@ -26,19 +28,45 @@ export default function AssignParentForm({ studentId }: { studentId?: number | s
 
     const handleGetParentByCode = async () => {
         const parentId = watch('parent_id');
-        if (parentId) {
-            const response = await fetch(`${dataURLS.filterParentsByCode}?code=${parentId}&t=${new Date().getTime()}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
+        const loadingToastId = toast.loading('Loading...');
+        try {
+            if (parentId) {
+                const response = await axios.get(`${dataURLS.filterParentsByCode}?code=${parentId}&t=${new Date().getTime()}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+                toast.update(loadingToastId, {
+                    render: response?.data?.data?.message || 'Parent Loaded Successfully!',
+                    type: 'success',
+                    isLoading: false,
+                    autoClose: 1500,
+                });
+                setCurrParent(response?.data?.data?.parent);
+            } else {
+                toast.update(loadingToastId, {
+                    render: 'Parent Code is required!',
+                    type: 'error',
+                    isLoading: false,
+                    autoClose: 2000,
+                });
+                setError('parent_id', { message: 'Parent Code is required' });
+            };
+        } catch (error) {
+            const errorMessage = axios.isAxiosError(error)
+                ? error.response?.data?.message || 'Something went wrong!'
+                : 'An unexpected error occurred.';
+            setCurrParent({});
+            toast.update(loadingToastId, {
+                render: errorMessage,
+                type: 'error',
+                isLoading: false,
+                autoClose: 2000,
             });
-            const data = await response.json();
-            setCurrParent(data?.data?.parent);
-        } else {
-            setError('parent_id', { message: 'Parent Code is required' });
-        };
+        }
+
     };
 
     useEffect(() => {

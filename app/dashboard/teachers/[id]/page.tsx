@@ -1,4 +1,3 @@
-import AddSubject from '@/app/components/AddSubject/AddSubject';
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
@@ -37,8 +36,8 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
     const teacher = response?.data?.teacher;
 
     const filterOptions = [
-        { label: 'Deactive', value: 'Deactive', disabled: false , defaultValue: teacher?.status === 'Deactive' },
-        { label: 'Active', value: 'Active', disabled: false , defaultValue: teacher?.status === 'Active'},
+        { label: 'Deactive', value: 'Deactive', disabled: false, defaultValue: teacher?.status === 'Deactive' },
+        { label: 'Active', value: 'Active', disabled: false, defaultValue: teacher?.status === 'Active' },
     ];
 
     return (
@@ -78,18 +77,18 @@ export default async function TeacherDetailsPage({ params }: TeacherDetailsProps
                         </div>
                     </div>
                 </div>
-                <div className="lg:col-span-8 mt-8">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
-                        <span className="flex items-center justify-center w-14 h-14 bg-[#EBECFA] rounded-lg">
-                            <FaGraduationCap size={32} className="text-[#8A8A8A]" />
-                        </span>
-                        {
-                            teacher?.class
-                        }
-                    </h3>
-                    <AddSubject />
-                </div>
+                {
+                    teacher?.class &&
+                    <div className="lg:col-span-8 mt-8">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
+                            <span className="flex items-center justify-center w-14 h-14 bg-[#EBECFA] rounded-lg">
+                                <FaGraduationCap size={32} className="text-[#8A8A8A]" />
+                            </span>
+
+                        </h3>
+                    </div>
+                }
             </div>
-        </div>
+        </div >
     );
 };
