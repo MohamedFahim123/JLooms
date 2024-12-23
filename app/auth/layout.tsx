@@ -33,10 +33,9 @@ export default function AuthLayout({
         };
     }, [router]);
 
-
     return (
         <div className={`${styles.auth_layout}`}>
-            <div className={`${styles.auth_container}`}>
+            <div className={`${pathName === '/auth/login' && styles.paddingBlockNone} ${styles.auth_container}`}>
                 {children}
             </div>
             {

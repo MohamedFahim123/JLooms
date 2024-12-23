@@ -28,3 +28,6 @@
 .registerSteps{
     width: 100%;
 }
+.auth_container.paddingBlockNone {
+    padding: 0rem 2rem !important;
+}
