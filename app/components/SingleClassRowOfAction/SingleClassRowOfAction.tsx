@@ -20,10 +20,7 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
     const [selectedTeacher, setSelectedTeacher] = useState<SelectedTeacher | null>(null);
     const token = Cookies.get('SERVER_JLOOMS_TOKEN');
 
-    const handleDelete = () => {
-        const data = {
-            class_id: classId,
-        };
+    const handleDeleteActionOrActivity = () => {
         Swal.fire({
             title: `Do you want to Remove ${option?.name} ?`,
             showCancelButton: true,
@@ -40,7 +37,6 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
                             'Accept': 'application/json',
                             'Authorization': `Bearer ${token}`,
                         },
-                        body: JSON.stringify(data)
                     })
                     const res = await request.json();
                     if (res.status === 200) {
@@ -74,9 +70,9 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
             const loadingToastId = toast.loading('Loading...');
             const data = {
                 class_id: classId,
-                class_option_teacher_id: `${selectedTeacher?.id}`,
-                class_option_id: option?.id,
-                teachers: [selectedTeacher]
+                class_option_teacher_id: option?.teachers[0]?.class_option_teacher_id ? `${option?.teachers[0]?.class_option_teacher_id}`: undefined,
+                class_option_id: `${option?.id}`,
+                teachers: [`${selectedTeacher?.id}`],
             };
             (async () => {
                 try {
@@ -87,14 +83,12 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
                             Authorization: `Bearer ${token}`,
                         },
                     });
-
                     toast.update(loadingToastId, {
-                        render: response?.data?.message || 'Request succeeded!',
+                        render: response?.data?.message || 'Updated Successfully!',
                         type: 'success',
                         isLoading: false,
                         autoClose: 1500,
                     });
-                    setCurrState('edit');
                     window.location.reload();
                 } catch (error) {
                     const errorMessage = axios.isAxiosError(error)
@@ -107,7 +101,8 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
                         autoClose: 2000,
                     });
                 };
-            })();
+            }
+            )()
         } else if (currState === 'edit') {
             setCurrState('submit');
         };
@@ -142,7 +137,7 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
             </div>
             <div className={`${styles.actions} flex gap-4`}>
                 <button
-                    onClick={handleDelete}
+                    onClick={handleDeleteActionOrActivity}
                     type="button"
                     className={`${styles.widthBtn} hover:bg-white hover:text-[#ff2020] border-x border-y border-[#ff2020] bg-[#ff2020] text-white transition-all duration-300 font-semibold rounded-lg py-2 px-4`}
                 >

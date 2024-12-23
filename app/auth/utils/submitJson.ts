@@ -18,13 +18,12 @@ export const handleApplication_JsonData = async (
     if (type === 'login') {
         await axios.get(`${baseUrl}/sanctum/csrf-cookie`, {
             withCredentials: true,
-        }); 
+        });
     };
 
     try {
         const endPoint = authEndPoints[type];
         const XSRFTOKEN = Cookies.get('XSRF-TOKEN');
-console.log(XSRFTOKEN)
         const response = await axios.post(endPoint, data, {
             headers: {
                 "Content-Type": "application/json",
