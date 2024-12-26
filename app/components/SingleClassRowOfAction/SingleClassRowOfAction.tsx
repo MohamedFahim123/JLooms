@@ -1,17 +1,15 @@
 'use client';
 
 import { OPTION } from '@/app/dashboard/classes/[id]/page';
-import { teacherInterface } from '@/app/dashboard/utils/interfaces';
-import { useEffect, useState } from "react";
-import Swal from 'sweetalert2';
 import { dataURLS } from '@/app/dashboard/utils/dataUrls';
-import Cookies from 'js-cookie';
-import { toast } from 'react-toastify';
+import { teacherInterface } from '@/app/dashboard/utils/interfaces';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { FaEdit } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
+import Cookies from 'js-cookie';
+import { useEffect, useState } from "react";
+import { FaCheck, FaEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 interface SelectedTeacher {
     class_option_teacher_id: string | number;
@@ -24,7 +22,6 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
     const [editMode, setEditMode] = useState<boolean>(false);
     const [selectedTeachers, setSelectedTeachers] = useState<SelectedTeacher[] | []>([]);
     const token = Cookies.get('SERVER_JLOOMS_TOKEN');
-    const router = useRouter();
     const [selectedUpdateData, setSelectedUpdateData] = useState<OPTION | null>(null);
 
     const handleDeleteAssignedTeacher = (id: string | number) => {
@@ -58,7 +55,7 @@ export default function SingleClassRowOfAction({ classId, option, allowedTeacher
                             showConfirmButton: false,
                             timer: 1000,
                         });
-                        router.push(`/dashboard/classes/${classId}`);
+                        window.location.reload();
                     } else {
                         Swal.fire({
                             icon: 'error',
