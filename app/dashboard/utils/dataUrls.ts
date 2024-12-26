@@ -35,6 +35,8 @@ export const dataURLS: DATAURLSINTERFACE = {
     filterParentsByCode: `${baseUrl}/school/filter-parents`,
     filterParents: `${baseUrl}/school/search-parents`,
     allowedTeachers: `${baseUrl}/school/allowed-teachers`,
-    removeOptionFromClass: `${baseUrl}/school/delete-class-option-teacher`,
-    updateClassOptionTeacher: `${baseUrl}/school/update-class-option-teacher`
+    addOptionToClass: `${baseUrl}/school/add-class-option`,
+    editOptionInsideClass: `${baseUrl}/school/update-class-option`,
+    removeOptionFromClass: `${baseUrl}/school/delete-class-option`,
+    assignTeacherToClassOption: `${baseUrl}/school/assign-teachers`,
 };

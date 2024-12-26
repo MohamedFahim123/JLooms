@@ -53,7 +53,9 @@ export interface DATAURLSINTERFACE {
     deleteParent: string;
     allowedTeachers: string;
     removeOptionFromClass: string;
-    updateClassOptionTeacher: string;
+    assignTeacherToClassOption: string;
+    addOptionToClass: string;
+    editOptionInsideClass: string;
 };
 export interface teacherInterface {
     id: number | string;

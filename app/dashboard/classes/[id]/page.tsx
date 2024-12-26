@@ -2,10 +2,9 @@
 import DashBoardPageHead from '@/app/components/DashBoardPageHead/DashBoardPageHead';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import { FaGraduationCap } from 'react-icons/fa';
 import { dataURLS } from '../../utils/dataUrls';
 import { teacherInterface } from '../../utils/interfaces';
-import SingleClassRowOfAction from '@/app/components/SingleClassRowOfAction/SingleClassRowOfAction';
+import ActionOrActivitySection from '@/app/components/ActionOrActivitySection/ActionOrActivitySection';
 
 export const metadata: Metadata = {
     title: `Class Details`,
@@ -39,7 +38,36 @@ interface ClassDetails {
     options: OPTION[];
 };
 
-export default async function page({ params }: classDetailsProps) {
+const cache: {
+    actions?: { data: unknown, timestamp: number };
+    activities?: { data: unknown, timestamp: number };
+} = {};
+
+const CACHE_EXPIRATION_TIME = 15 * 60 * 1000;
+
+async function fetchWithCache(url: string, token: string, cacheKey: "actions" | "activities") {
+    const now = Date.now();
+    if (cache[cacheKey] && (now - cache[cacheKey].timestamp) < CACHE_EXPIRATION_TIME) {
+        return cache[cacheKey].data;
+    };
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    const data = await response.json();
+    cache[cacheKey] = {
+        data,
+        timestamp: now,
+    };
+
+    return data;
+};
+
+export default async function ClassDetailsPage({ params }: classDetailsProps) {
     const { id } = await params;
     const cookiesData = await cookies();
     const token = cookiesData.get('SERVER_JLOOMS_TOKEN')?.value;
@@ -77,43 +105,13 @@ export default async function page({ params }: classDetailsProps) {
         };
     });
 
+    const actions = await fetchWithCache(dataURLS.getActions, token ? token : '', "actions");
+    const activities = await fetchWithCache(dataURLS.getActivities, token ? token : '', "activities");
+
     return (
         <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
             <DashBoardPageHead text={classDetails?.name_en || 'Class Name Unknown'} />
-            <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
-                <div className="lg:col-span-12 mt-8">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
-                        <span className="flex items-center justify-center w-14 h-14 bg-[#EBECFA] rounded-lg">
-                            <FaGraduationCap size={32} className="text-[#8A8A8A]" />
-                        </span>
-                        Actions
-                    </h3>
-                    {
-                        actionArray &&
-                        actionArray?.map((option: OPTION, idx) => (
-                            <div key={option.id} className={`${((idx + 1) !== actionArray.length) && 'border-y border-t-0'} py-6`}>
-                                <SingleClassRowOfAction classId={id} allowedTeachers={allowedTeachers} option={option} />
-                            </div>
-                        ))
-                    }
-                </div>
-                <div className="lg:col-span-12 mt-8">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
-                        <span className="flex items-center justify-center w-14 h-14 bg-[#EBECFA] rounded-lg">
-                            <FaGraduationCap size={32} className="text-[#8A8A8A]" />
-                        </span>
-                        Activities
-                    </h3>
-                    {
-                        activityArray &&
-                        activityArray?.map((option: OPTION, idx) => (
-                            <div key={option.id} className={`${((idx + 1) !== actionArray.length) && 'border-y border-t-0'} py-6`}>
-                                <SingleClassRowOfAction classId={id} allowedTeachers={allowedTeachers} option={option} />
-                            </div >
-                        ))
-                    }
-                </div>
-            </div>
+            <ActionOrActivitySection id={id} allActions={actions?.data?.actions} allActivities={activities?.data?.activities} actionArray={actionArray} activityArray={activityArray} allowedTeachers={allowedTeachers} />
         </div>
     );
 };
