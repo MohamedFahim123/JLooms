@@ -35,6 +35,7 @@ async function fetchWithCache(url: string, token: string, cacheKey: "actions" | 
 
 export const metadata: Metadata = {
     title: "Add New Class",
+    description: 'Add New Class to your school',
 };
 
 export default async function page() {

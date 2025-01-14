@@ -29,16 +29,8 @@ export interface FormAuthInputs {
 
     // Class Inputs
     name_en?: string;
-    actions?: {
-        action: string;
-    };
-    activities?: {
-        activity: string;
-    };
-    options?: {
-        id: string | number;
-        type: string;
-    }[];
+    actions?: string[];
+    activities?: string[];
 };
 
 interface Pattern {

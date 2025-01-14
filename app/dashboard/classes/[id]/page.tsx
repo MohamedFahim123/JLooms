@@ -18,16 +18,18 @@ interface classDetailsProps {
     params: Promise<ParamsProps>;
 };
 
-
 export interface OPTION {
     icon: string;
     id: number;
     type: string;
     name_ar: string;
     name_en: string;
+    action: string;
     teachers: teacherInterface[];
     name: string;
-}
+    class_activity_id?: number | string;
+    classs_action_id?: number | string;
+};
 
 interface ClassDetails {
     id: number;
@@ -35,7 +37,8 @@ interface ClassDetails {
     name_ar: string;
     name_en: string;
     number_of_students: number;
-    options: OPTION[];
+    actions: OPTION[];
+    activities: OPTION[];
 };
 
 const cache: {
@@ -44,6 +47,7 @@ const cache: {
 } = {};
 
 const CACHE_EXPIRATION_TIME = 15 * 60 * 1000;
+
 
 async function fetchWithCache(url: string, token: string, cacheKey: "actions" | "activities") {
     const now = Date.now();
@@ -82,9 +86,8 @@ export default async function ClassDetailsPage({ params }: classDetailsProps) {
     const responseData = await request.json();
     const classDetails: ClassDetails = responseData?.data;
 
-    const options: OPTION[] = classDetails?.options;
-    const actionArray: OPTION[] = [];
-    const activityArray: OPTION[] = [];
+    const actionArray: OPTION[] = classDetails?.actions;
+    const activityArray: OPTION[] = classDetails?.activities;
 
     const allowedTeachersRequest = await fetch(`${dataURLS.allowedTeachers}?t=${new Date().getTime()}`, {
         method: 'GET',
@@ -96,14 +99,6 @@ export default async function ClassDetailsPage({ params }: classDetailsProps) {
     });
     const allowedReponse = await allowedTeachersRequest.json();
     const allowedTeachers = allowedReponse?.data?.teachers;
-
-    options?.forEach((option: OPTION) => {
-        if (option.type === "action") {
-            actionArray.push(option);
-        } else if (option.type === "activity") {
-            activityArray.push(option);
-        };
-    });
 
     const actions = await fetchWithCache(dataURLS.getActions, token ? token : '', "actions");
     const activities = await fetchWithCache(dataURLS.getActivities, token ? token : '', "activities");

@@ -52,10 +52,14 @@ export interface DATAURLSINTERFACE {
     removeParentFromStudent: string;
     deleteParent: string;
     allowedTeachers: string;
-    removeOptionFromClass: string;
-    assignTeacherToClassOption: string;
-    addOptionToClass: string;
-    editOptionInsideClass: string;
+    removeActionFromClass: string;
+    removeActivityFromClass: string;
+    assignTeacherToClassAction: string;
+    assignTeacherToClassActivity: string;
+    addActionToClass: string;
+    addActivityToClass: string;
+    editActionInsideClass: string;
+    editActivityInsideClass: string;
 };
 export interface teacherInterface {
     id: number | string;
@@ -72,6 +76,7 @@ export interface teacherInterface {
 export interface Action {
     id: number;
     name: string;
+    action: string;
     icon: string;
 };
 
