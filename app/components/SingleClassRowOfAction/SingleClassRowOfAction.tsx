@@ -5,17 +5,17 @@ import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { FaCheck, FaEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-interface SelectedTeacher {
-  class_option_teacher_id: string | number;
-  id: string | number;
-  name: string;
-}
+// interface SelectedTeacher {
+//   class_option_teacher_id: string | number;
+//   id: string | number;
+//   name: string;
+// };
 
 interface SingleClassRowActionsProps {
   allActions: OPTION[];
@@ -35,7 +35,7 @@ interface SingleClassRowActionsProps {
 export default function SingleClassRowOfAction({
   classId,
   option,
-  allowedTeachers,
+  // allowedTeachers,
   type,
   allActions,
   allActivities,
@@ -46,45 +46,45 @@ export default function SingleClassRowOfAction({
   actions,
   activities,
 }: SingleClassRowActionsProps) {
-  const [currState, setCurrState] = useState<string>("Assign");
+  // const [currState, setCurrState] = useState<string>("Assign");
   const [editMode, setEditMode] = useState<boolean>(
     option?.id >= 1 ? false : true
   );
-  const [selectedTeachers, setSelectedTeachers] = useState<
-    SelectedTeacher[] | []
-  >([]);
+  // const [selectedTeachers, setSelectedTeachers] = useState<
+  //   SelectedTeacher[] | []
+  // >([]);
   const token = Cookies.get("SERVER_JLOOMS_TOKEN");
   const [selectedUpdateData, setSelectedUpdateData] = useState<OPTION | null>(
     null
   );
   const [sendingRequest, setSendingRequest] = useState<boolean>(false);
 
-  const handleDeleteAssignedTeacher = useCallback(
-    (id: string | number) => {
-      const updatedTeachers = selectedTeachers.filter(
-        (teacher) => +teacher.id !== +id
-      );
-      setSelectedTeachers(updatedTeachers);
-    },
-    [selectedTeachers]
-  );
+  // const handleDeleteAssignedTeacher = useCallback(
+  //   (id: string | number) => {
+  //     const updatedTeachers = selectedTeachers.filter(
+  //       (teacher) => +teacher.id !== +id
+  //     );
+  //     setSelectedTeachers(updatedTeachers);
+  //   },
+  //   [selectedTeachers]
+  // );
 
-  const handleSelectTeacherChange = useCallback(
-    (e: { target: { value: string } }) => {
-      const value = e.target.value;
-      if (!selectedTeachers?.find((el) => +el.id === +value)) {
-        setSelectedTeachers([
-          ...selectedTeachers,
-          allowedTeachers?.find((teacher) => +teacher?.id === +value) || {
-            id: "",
-            name: "",
-            class_option_teacher_id: "",
-          },
-        ]);
-      }
-    },
-    [selectedTeachers, allowedTeachers]
-  );
+  // const handleSelectTeacherChange = useCallback(
+  //   (e: { target: { value: string } }) => {
+  //     const value = e.target.value;
+  //     if (!selectedTeachers?.find((el) => +el.id === +value)) {
+  //       setSelectedTeachers([
+  //         ...selectedTeachers,
+  //         allowedTeachers?.find((teacher) => +teacher?.id === +value) || {
+  //           id: "",
+  //           name: "",
+  //           class_option_teacher_id: "",
+  //         },
+  //       ]);
+  //     }
+  //   },
+  //   [selectedTeachers, allowedTeachers]
+  // );
 
   const handleSelectOptionChange = useCallback(
     (e: { target: { value: string } }) => {
@@ -116,8 +116,8 @@ export default function SingleClassRowOfAction({
         if (result.isConfirmed) {
           const url: string =
             type === "action"
-              ? `${dataURLS.removeActionFromClass}/${option?.id}`
-              : `${dataURLS.removeActivityFromClass}/${option?.id}`;
+              ? `${dataURLS.removeActionFromClass}/${option?.classs_action_id}`
+              : `${dataURLS.removeActivityFromClass}/${option?.class_activity_id}`;
 
           const request = await fetch(url, {
             method: "DELETE",
@@ -138,7 +138,7 @@ export default function SingleClassRowOfAction({
               showConfirmButton: false,
               timer: 1000,
             });
-            window.location.reload();
+            // window.location.reload();
           } else {
             Swal.fire({
               icon: "error",
@@ -174,55 +174,55 @@ export default function SingleClassRowOfAction({
     activities,
   ]);
 
-  const handleAssignTeachers = useCallback(() => {
-    if (currState === "submit") {
-      setSendingRequest(true);
-      const loadingToastId = toast.loading("Loading...");
-      const data = {
-        class_id: classId,
-        class_option: `${option?.id}`,
-        teachers: selectedTeachers?.map(
-          (teacher: { id: number | string }) => `${teacher?.id}`
-        ),
-      };
-      const url: string =
-        type === "action"
-          ? `${dataURLS.assignTeacherToClassAction}`
-          : `${dataURLS.assignTeacherToClassActivity}`;
+  // const handleAssignTeachers = useCallback(() => {
+  //   if (currState === "submit") {
+  //     setSendingRequest(true);
+  //     const loadingToastId = toast.loading("Loading...");
+  //     const data = {
+  //       class_id: classId,
+  //       class_option: `${option?.id}`,
+  //       teachers: selectedTeachers?.map(
+  //         (teacher: { id: number | string }) => `${teacher?.id}`
+  //       ),
+  //     };
+  //     const url: string =
+  //       type === "action"
+  //         ? `${dataURLS.assignTeacherToClassAction}`
+  //         : `${dataURLS.assignTeacherToClassActivity}`;
 
-      (async () => {
-        try {
-          const response = await axios.post(url, data, {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          toast.update(loadingToastId, {
-            render: response?.data?.message || "Updated Successfully!",
-            type: "success",
-            isLoading: false,
-            autoClose: 1500,
-          });
-          window.location.reload();
-        } catch (error) {
-          const errorMessage = axios.isAxiosError(error)
-            ? error.response?.data?.message || "Something went wrong!"
-            : "An unexpected error occurred.";
-          toast.update(loadingToastId, {
-            render: errorMessage,
-            type: "error",
-            isLoading: false,
-            autoClose: 2000,
-          });
-        }
-        setSendingRequest(false);
-      })();
-    } else if (currState === "Assign") {
-      setCurrState("submit");
-    }
-  }, [currState, classId, option, selectedTeachers, type, token]);
+  //     (async () => {
+  //       try {
+  //         const response = await axios.post(url, data, {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Accept: "application/json",
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
+  //         toast.update(loadingToastId, {
+  //           render: response?.data?.message || "Updated Successfully!",
+  //           type: "success",
+  //           isLoading: false,
+  //           autoClose: 1500,
+  //         });
+  //         window.location.reload();
+  //       } catch (error) {
+  //         const errorMessage = axios.isAxiosError(error)
+  //           ? error.response?.data?.message || "Something went wrong!"
+  //           : "An unexpected error occurred.";
+  //         toast.update(loadingToastId, {
+  //           render: errorMessage,
+  //           type: "error",
+  //           isLoading: false,
+  //           autoClose: 2000,
+  //         });
+  //       }
+  //       setSendingRequest(false);
+  //     })();
+  //   } else if (currState === "Assign") {
+  //     setCurrState("submit");
+  //   }
+  // }, [currState, classId, option, selectedTeachers, type, token]);
 
   const handleEditORAddActionOrActivity = useCallback(() => {
     if (editMode) {
@@ -329,11 +329,11 @@ export default function SingleClassRowOfAction({
     }
   }, [editMode, option, type, selectedUpdateData, classId, token]);
 
-  useEffect(() => {
-    if (option?.teachers) {
-      setSelectedTeachers(option?.teachers);
-    }
-  }, [option]);
+  // useEffect(() => {
+  //   if (option?.teachers) {
+  //     setSelectedTeachers(option?.teachers);
+  //   }
+  // }, [option]);
 
   return (
     <form className="flex justify-between w-full">
@@ -398,7 +398,7 @@ export default function SingleClassRowOfAction({
           />
         )}
       </div>
-      <div>
+      {/* <div>
         <div className={`flex gap-3`}>
           {option?.id >= 1 && (
             <>
@@ -469,8 +469,8 @@ export default function SingleClassRowOfAction({
                   )}
                 </span>
               ))}
-        </div>
-      </div>
+        </div> 
+      </div> */}
       <div className={`flex`}>
         <button
           disabled={sendingRequest}

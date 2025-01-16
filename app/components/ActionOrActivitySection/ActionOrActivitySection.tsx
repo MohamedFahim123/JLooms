@@ -150,7 +150,7 @@ export default function ActionOrActivitySection({
           <span className="flex items-center justify-center w-14 h-14 bg-[#EBECFA] rounded-lg">
             <FaGraduationCap size={32} className="text-[#8A8A8A]" />
           </span>
-          Activities
+          Activities / Subjects
         </h3>
         {activities
           ? activities?.map((option: OPTION, idx) => (
