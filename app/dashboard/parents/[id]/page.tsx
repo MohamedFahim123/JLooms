@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default async function SingleParentPage({ params }: { params: Promise<ParamsProps> }) {
     const { id } = await params;
     const cookiesData = await cookies();
-    const token = cookiesData.get('SERVER_JLOOMS_TOKEN')?.value;
+    const token = cookiesData.get('CLIENT_JLOOMS_TOKEN')?.value;
 
     const fetchparent = await fetch(`${dataURLS.singleParent}/${id}`, {
         method: 'GET',

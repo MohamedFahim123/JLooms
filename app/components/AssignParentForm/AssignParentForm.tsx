@@ -23,7 +23,7 @@ export interface ParentInterface {
 
 export default function AssignParentForm({ studentId }: { studentId?: number | string }) {
     const { register, setError, reset, watch, clearErrors, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormAuthInputs>();
-    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
+    const token = Cookies.get('CLIENT_JLOOMS_TOKEN');
     const [currParent, setCurrParent] = useState<ParentInterface>();
 
     const handleGetParentByCode = async () => {

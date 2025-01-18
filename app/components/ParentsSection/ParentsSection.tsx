@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 let loading: boolean = true;
 async function fetchparentsData(filters: Record<string, string | number> = {}): Promise<{ data: Table[]; totalPages: number }> {
     loading = true;
-    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
+    const token = Cookies.get('CLIENT_JLOOMS_TOKEN');
 
     const apiUrl = (filters.name)
         ? `${dataURLS.filterParents}?q=${filters?.name}&t=${new Date().getTime()}`

@@ -12,7 +12,7 @@ export const submitApplicationJson = async (
     reset: () => void,
 ) => {
     const loadingToastId = toast.loading('Loading...');
-    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
+    const token = Cookies.get('CLIENT_JLOOMS_TOKEN');
     try {
 
         const response = await axios.post(endPoint, data, {

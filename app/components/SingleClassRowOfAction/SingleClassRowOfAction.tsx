@@ -53,7 +53,7 @@ export default function SingleClassRowOfAction({
   // const [selectedTeachers, setSelectedTeachers] = useState<
   //   SelectedTeacher[] | []
   // >([]);
-  const token = Cookies.get("SERVER_JLOOMS_TOKEN");
+  const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
   const [selectedUpdateData, setSelectedUpdateData] = useState<OPTION | null>(
     null
   );
@@ -116,7 +116,7 @@ export default function SingleClassRowOfAction({
         if (result.isConfirmed) {
           const url: string =
             type === "action"
-              ? `${dataURLS.removeActionFromClass}/${option?.classs_action_id}`
+              ? `${dataURLS.removeActionFromClass}/${option?.class_action_id}`
               : `${dataURLS.removeActivityFromClass}/${option?.class_activity_id}`;
 
           const request = await fetch(url, {
@@ -138,7 +138,7 @@ export default function SingleClassRowOfAction({
               showConfirmButton: false,
               timer: 1000,
             });
-            // window.location.reload();
+            window.location.reload();
           } else {
             Swal.fire({
               icon: "error",
@@ -233,7 +233,7 @@ export default function SingleClassRowOfAction({
           const data =
             type === "action"
               ? {
-                  class_action_id: `${option?.classs_action_id}`,
+                  class_action_id: `${option?.class_action_id}`,
                   action_id: `${selectedUpdateData?.id}`,
                 }
               : {
@@ -250,8 +250,8 @@ export default function SingleClassRowOfAction({
             const response = await axios.post(url, data, {
               headers: {
                 "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: `Bearer ${token}`,
+                'Accept': "application/json",
+                'Authorization': `Bearer ${token}`,
               },
             });
             toast.update(loadingToastId, {
@@ -299,8 +299,8 @@ export default function SingleClassRowOfAction({
             const response = await axios.post(url, data, {
               headers: {
                 "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: `Bearer ${token}`,
+                'Accept': "application/json",
+                'Authorization': `Bearer ${token}`,
               },
             });
             toast.update(loadingToastId, {

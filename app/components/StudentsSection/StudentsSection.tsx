@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 let loading: boolean = true;
 async function fetchTeachersData(filters: Record<string, string | number> = {}): Promise<{ data: Table[]; totalPages: number }> {
     loading = true;
-    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
+    const token = Cookies.get('CLIENT_JLOOMS_TOKEN');
 
     const queryParams = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {

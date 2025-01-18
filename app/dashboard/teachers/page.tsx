@@ -3,13 +3,13 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Our Teachers",
+  title: "Our Teachers",
 };
 
 export default function TeachersPage() {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <TeachersSection />
-        </Suspense>
-    );
-};
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TeachersSection />
+    </Suspense>
+  );
+}

@@ -97,7 +97,7 @@ export default function AddParentForm() {
                                 error={errors}
                                 type={input.type}
                                 lable={input.lableName}
-                                id={`addTeacher${input.name}`}
+                                id={`addParent${input.name}`}
                                 validation={input.validation}
                             />
                         )
@@ -108,7 +108,7 @@ export default function AddParentForm() {
                 type="submit"
                 className="bg-indigo-500 transition-all duration-300 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded"
             >
-                Add Teacher
+                Add Parent
             </button>
         </form>
     )

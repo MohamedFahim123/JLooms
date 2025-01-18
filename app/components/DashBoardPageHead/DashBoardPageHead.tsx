@@ -26,7 +26,7 @@ interface DashBoardPageHeadProps {
 };
 
 export default function DashBoardPageHead({ teacherId, text, haveSecondBtn,secBtnText,secBtnLink,btnText, btnLink, haveBtn, haveFilter, filterOptions }: DashBoardPageHeadProps) {
-    const token = Cookies.get('SERVER_JLOOMS_TOKEN');
+    const token = Cookies.get('CLIENT_JLOOMS_TOKEN');
 
     const handleUpdateStatus = async (e: { target: HTMLSelectElement; }): Promise<void> => {
         const { value } = e.target as HTMLSelectElement;

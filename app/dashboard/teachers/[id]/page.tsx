@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default async function TeacherDetailsPage({ params }: TeacherDetailsProps) {
     const { id } = await params;
     const cookiesData = await cookies();
-    const token = cookiesData.get('SERVER_JLOOMS_TOKEN')?.value;
+    const token = cookiesData.get('CLIENT_JLOOMS_TOKEN')?.value;
 
     const fetchTeacher = await fetch(`${dataURLS.singleTeacher}/${id}`, {
         method: 'GET',

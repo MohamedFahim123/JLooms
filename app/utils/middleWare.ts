@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('JLOOMS_TOKEN')?.value;
+    const token = request.cookies.get('CLIENT_JLOOMS_TOKEN')?.value;
 
     if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
         return NextResponse.redirect(new URL('/auth/login', request.url));

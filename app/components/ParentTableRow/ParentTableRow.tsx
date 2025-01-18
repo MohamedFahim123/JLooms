@@ -32,7 +32,7 @@ export default function ParentTableRow({ cell, currStudentId }: TableRowProps) {
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
-                            'Authorization': `Bearer ${Cookies.get('SERVER_JLOOMS_TOKEN')}`,
+                            'Authorization': `Bearer ${Cookies.get('CLIENT_JLOOMS_TOKEN')}`,
                         }
                     })
                     if (res.status === 200) {
