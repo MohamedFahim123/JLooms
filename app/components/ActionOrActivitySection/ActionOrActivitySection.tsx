@@ -2,9 +2,14 @@
 
 import { OPTION } from "@/app/dashboard/classes/[id]/page";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
 import SingleClassRowOfAction from "../SingleClassRowOfAction/SingleClassRowOfAction";
+import SingleClassRowOfTeacher from "../SingleClassRowOfTeacher/SingleClassRowOfTeacher";
+import axios from "axios";
+import { dataURLS } from "@/app/dashboard/utils/dataUrls";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 interface ActionOrActivitySectionProps {
   allowedTeachers: teacherInterface[];
@@ -28,70 +33,106 @@ export default function ActionOrActivitySection({
   const [currActionsState, setCurrActionsState] = useState<"adding" | "submit">(
     "adding"
   );
+  const [isAddingTeacher, setIsAddingTeacher] = useState<boolean>(false);
+  const [currTeachersState, setCurrTeachersState] = useState<
+    "adding" | "submit"
+  >("adding");
   const [currActivitiesState, setCurrActivitiesState] = useState<
     "adding" | "submit"
   >("adding");
+  const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
+
   const [actions, setActions] = useState<OPTION[]>(actionArray);
   const [activities, setActivities] = useState<OPTION[]>(activityArray);
   const [currTeachers, setCurrTeachers] =
     useState<teacherInterface[]>(teachers);
-  useState<boolean>(false);
 
-  const handleAddMoreActionOrActivityOrTeacher = (
-    type: "Action" | "Activity" | "Teacher"
-  ) => {
-    if (type === "Action") {
-      setActions([
-        ...actions,
-        {
-          id: Math.random(),
-          name_ar: "",
-          name_en: "",
-          teachers: [],
-          icon: "",
-          type: "",
-          action: "",
-          name: "",
-          class_activity_id: "",
-          class_action_id: "",
+  const handleDeleteTeacher = async (teacherId: number) => {
+    const toastLoader = toast.loading("Removing teacher...");
+    const data: { teacher_id: string; class_id: string } = {
+      teacher_id: `${teacherId}`,
+      class_id: `${id}`,
+    };
+    try {
+      const res = await axios.post(`${dataURLS.removeTeacherFromClass}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      ]);
-      setCurrActionsState("submit");
-    } else if (type === "Activity") {
-      setActivities([
-        ...activities,
-        {
-          id: Math.random(),
-          name_ar: "",
-          name_en: "",
-          teachers: [],
-          icon: "",
-          action: "",
-          type: "",
-          name: "",
-          class_activity_id: "",
-          class_action_id: "",
-        },
-      ]);
-      setCurrActivitiesState("submit");
-    } else if (type === "Teacher") {
-      setCurrTeachers([
-        ...currTeachers,
-        {
-          id: Math.random(),
-          class_option_teacher_id: Math.random(),
-          name: "",
-          email: "",
-          phone: "",
-          image: "",
-          status: "",
-          gender: "",
-          locale: "",
-        },
-      ]);
-      setCurrActivitiesState("submit");
+      });
+      if (res.status === 200) {
+        toast.dismiss(toastLoader);
+        toast.success(res.data.message || "Teacher removed successfully!");
+        window.location.reload();
+      }
+    } catch (error) {
+      const errMessage = axios.isAxiosError(error)
+        ? error.response?.data?.message || "Something went wrong!"
+        : "An unexpected error occurred.";
+        toast.dismiss(toastLoader);
+      toast.error(errMessage);
     }
   };
+
+  const handleAddMoreActionOrActivityOrTeacher = useCallback(
+    (type: "Action" | "Activity" | "Teacher") => {
+      if (type === "Action") {
+        setActions([
+          ...actions,
+          {
+            id: Math.random(),
+            name_ar: "",
+            name_en: "",
+            teachers: [],
+            icon: "",
+            type: "",
+            action: "",
+            name: "",
+            class_activity_id: "",
+            class_action_id: "",
+          },
+        ]);
+        setCurrActionsState("submit");
+      } else if (type === "Activity") {
+        setActivities([
+          ...activities,
+          {
+            id: Math.random(),
+            name_ar: "",
+            name_en: "",
+            teachers: [],
+            icon: "",
+            action: "",
+            type: "",
+            name: "",
+            class_activity_id: "",
+            class_action_id: "",
+          },
+        ]);
+        setCurrActivitiesState("submit");
+      } else if (type === "Teacher") {
+        setCurrTeachers([
+          ...currTeachers,
+          {
+            class_option_teacher_id: Math.random(),
+            name: "",
+            email: "",
+            phone: "",
+            image: "",
+            status: "",
+            gender: "",
+            locale: "",
+            id: Math.random(),
+            activities: [],
+          },
+        ]);
+        setCurrTeachersState("submit");
+        setIsAddingTeacher(true);
+      }
+    },
+    [actions, activities, currTeachers]
+  );
 
   return (
     <div className="px-6 pt-4 pb-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -102,32 +143,33 @@ export default function ActionOrActivitySection({
           </span>
           Teachers
         </h3>
-        {currTeachers
-          ? currTeachers?.map((teacher: teacherInterface, idx) => (
-              <div
-                key={teacher?.id}
-                className={`${
-                  idx + 1 !== currTeachers?.length && "border-y border-t-0"
-                } py-6`}
-              ></div>
-            ))
-          : teachers?.map((teacher: teacherInterface, idx) => (
-              <div
-                key={teacher.id}
-                className={`${
-                  idx + 1 !== teachers?.length && "border-y border-t-0"
-                } py-6`}
-              ></div>
-            ))}
-        {currActionsState === "adding" && (
+
+        {currTeachers.map((teacher, idx) => (
+          <div
+            key={teacher?.id}
+            className={`${
+              idx + 1 !== currTeachers.length && "border-y border-t-0"
+            } py-6`}
+          >
+            <SingleClassRowOfTeacher
+              allowedTeachers={allowedTeachers}
+              setIsAddingTeacher={setIsAddingTeacher}
+              isAddingTeacher={isAddingTeacher}
+              allActivities={activityArray}
+              classId={+id}
+              teacher={teacher}
+              onDeleteTeacher={handleDeleteTeacher}
+            />
+          </div>
+        ))}
+
+        {!isAddingTeacher && (
           <div className="flex justify-center mt-6">
             <button
-              onClick={() => {
-                handleAddMoreActionOrActivityOrTeacher("Teacher");
-              }}
-              type={"button"}
+              onClick={() => handleAddMoreActionOrActivityOrTeacher("Teacher")}
+              type="button"
               className={`m-auto border-y border-x ${
-                currActionsState === "adding"
+                currTeachersState === "adding"
                   ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
                   : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
               } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}

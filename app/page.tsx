@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const TOKEN = Cookies.get('SERVER_JLOOMS_TOKEN');
+    const TOKEN = Cookies.get('ClIENT_JLOOMS_TOKEN');
     if (TOKEN) {
       router.push('/dashboard/profile');
     } else {

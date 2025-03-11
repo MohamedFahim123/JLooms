@@ -41,6 +41,6 @@ export const dataURLS: DATAURLSINTERFACE = {
     editActivityInsideClass: `${baseUrl}/school/update-class-activity`,
     removeActionFromClass: `${baseUrl}/school/delete-class-action`,
     removeActivityFromClass: `${baseUrl}/school/delete-class-activity`,
-    assignTeacherToClassAction: `${baseUrl}/school/assign-teachers`,
-    assignTeacherToClassActivity: `${baseUrl}/school/assign-teachers`,
+    assignTeacherToClass: `${baseUrl}/school/assign-teachers`,
+    removeTeacherFromClass: `${baseUrl}/school/delete-teacher`,
 };

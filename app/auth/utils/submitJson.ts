@@ -42,7 +42,7 @@ export const handleApplication_JsonData = async (
 
     const { token, school } = response?.data?.data || {};
     if (token) {
-      setServerCookie("SERVER_JLOOMS_TOKEN", token);
+      setServerCookie("CLIENT_JLOOMS_TOKEN", token);
       Cookies.set("CLIENT_JLOOMS_TOKEN", token, { expires: 1 });
     }
 

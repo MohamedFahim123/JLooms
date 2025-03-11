@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 export default async function page() {
     const cookiesData = await cookies();
-    const token = cookiesData.get('SERVER_JLOOMS_TOKEN')?.value;
+    const token = cookiesData.get('CLIENT_JLOOMS_TOKEN')?.value;
 
     const actions = await fetchWithCache(dataURLS.getActions, token ? token : '', "actions");
     const activities = await fetchWithCache(dataURLS.getActivities, token ? token : '', "activities");

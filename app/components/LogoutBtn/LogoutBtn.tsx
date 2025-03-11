@@ -24,7 +24,7 @@ export default function LogoutBtn() {
             isLoading: false,
             autoClose: 1500,
         });
-        Cookies.remove('SERVER_JLOOMS_TOKEN');
+        Cookies.remove('CLIENT_JLOOMS_TOKEN');
         redirect('/auth/login');
     };
 

@@ -35,7 +35,6 @@ interface SingleClassRowActionsProps {
 export default function SingleClassRowOfAction({
   classId,
   option,
-  // allowedTeachers,
   type,
   allActions,
   allActivities,
@@ -46,45 +45,14 @@ export default function SingleClassRowOfAction({
   actions,
   activities,
 }: SingleClassRowActionsProps) {
-  // const [currState, setCurrState] = useState<string>("Assign");
   const [editMode, setEditMode] = useState<boolean>(
     option?.id >= 1 ? false : true
   );
-  // const [selectedTeachers, setSelectedTeachers] = useState<
-  //   SelectedTeacher[] | []
-  // >([]);
   const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
   const [selectedUpdateData, setSelectedUpdateData] = useState<OPTION | null>(
     null
   );
   const [sendingRequest, setSendingRequest] = useState<boolean>(false);
-
-  // const handleDeleteAssignedTeacher = useCallback(
-  //   (id: string | number) => {
-  //     const updatedTeachers = selectedTeachers.filter(
-  //       (teacher) => +teacher.id !== +id
-  //     );
-  //     setSelectedTeachers(updatedTeachers);
-  //   },
-  //   [selectedTeachers]
-  // );
-
-  // const handleSelectTeacherChange = useCallback(
-  //   (e: { target: { value: string } }) => {
-  //     const value = e.target.value;
-  //     if (!selectedTeachers?.find((el) => +el.id === +value)) {
-  //       setSelectedTeachers([
-  //         ...selectedTeachers,
-  //         allowedTeachers?.find((teacher) => +teacher?.id === +value) || {
-  //           id: "",
-  //           name: "",
-  //           class_option_teacher_id: "",
-  //         },
-  //       ]);
-  //     }
-  //   },
-  //   [selectedTeachers, allowedTeachers]
-  // );
 
   const handleSelectOptionChange = useCallback(
     (e: { target: { value: string } }) => {
@@ -174,56 +142,6 @@ export default function SingleClassRowOfAction({
     activities,
   ]);
 
-  // const handleAssignTeachers = useCallback(() => {
-  //   if (currState === "submit") {
-  //     setSendingRequest(true);
-  //     const loadingToastId = toast.loading("Loading...");
-  //     const data = {
-  //       class_id: classId,
-  //       class_option: `${option?.id}`,
-  //       teachers: selectedTeachers?.map(
-  //         (teacher: { id: number | string }) => `${teacher?.id}`
-  //       ),
-  //     };
-  //     const url: string =
-  //       type === "action"
-  //         ? `${dataURLS.assignTeacherToClassAction}`
-  //         : `${dataURLS.assignTeacherToClassActivity}`;
-
-  //     (async () => {
-  //       try {
-  //         const response = await axios.post(url, data, {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Accept: "application/json",
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         });
-  //         toast.update(loadingToastId, {
-  //           render: response?.data?.message || "Updated Successfully!",
-  //           type: "success",
-  //           isLoading: false,
-  //           autoClose: 1500,
-  //         });
-  //         window.location.reload();
-  //       } catch (error) {
-  //         const errorMessage = axios.isAxiosError(error)
-  //           ? error.response?.data?.message || "Something went wrong!"
-  //           : "An unexpected error occurred.";
-  //         toast.update(loadingToastId, {
-  //           render: errorMessage,
-  //           type: "error",
-  //           isLoading: false,
-  //           autoClose: 2000,
-  //         });
-  //       }
-  //       setSendingRequest(false);
-  //     })();
-  //   } else if (currState === "Assign") {
-  //     setCurrState("submit");
-  //   }
-  // }, [currState, classId, option, selectedTeachers, type, token]);
-
   const handleEditORAddActionOrActivity = useCallback(() => {
     if (editMode) {
       if (option?.id >= 1) {
@@ -250,8 +168,8 @@ export default function SingleClassRowOfAction({
             const response = await axios.post(url, data, {
               headers: {
                 "Content-Type": "application/json",
-                'Accept': "application/json",
-                'Authorization': `Bearer ${token}`,
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
               },
             });
             toast.update(loadingToastId, {
@@ -299,8 +217,8 @@ export default function SingleClassRowOfAction({
             const response = await axios.post(url, data, {
               headers: {
                 "Content-Type": "application/json",
-                'Accept': "application/json",
-                'Authorization': `Bearer ${token}`,
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
               },
             });
             toast.update(loadingToastId, {
@@ -328,12 +246,6 @@ export default function SingleClassRowOfAction({
       setEditMode(true);
     }
   }, [editMode, option, type, selectedUpdateData, classId, token]);
-
-  // useEffect(() => {
-  //   if (option?.teachers) {
-  //     setSelectedTeachers(option?.teachers);
-  //   }
-  // }, [option]);
 
   return (
     <form className="flex justify-between w-full">
@@ -398,79 +310,6 @@ export default function SingleClassRowOfAction({
           />
         )}
       </div>
-      {/* <div>
-        <div className={`flex gap-3`}>
-          {option?.id >= 1 && (
-            <>
-              <select
-                disabled={currState === "Assign" || sendingRequest}
-                defaultValue={""}
-                onChange={handleSelectTeacherChange}
-                id="teacherSelectedToClass"
-                className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
-              >
-                <option value={""} disabled>
-                  Select a Teacher
-                </option>
-                {allowedTeachers?.map((teacher) => (
-                  <option key={teacher?.id} value={teacher?.id}>
-                    {teacher?.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                onClick={handleAssignTeachers}
-                disabled={sendingRequest}
-                type={"button"}
-                className={`max-h-fit px-3 flex justify-center items-center ${
-                  currState === "Assign"
-                    ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
-                    : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
-                } border-x border-y transition-all duration-300 font-semibold py-3`}
-              >
-                {currState === "Assign" ? <FaEdit /> : <FaCheck />}
-              </button>
-            </>
-          )}
-        </div>
-        <div className="flex gap-2">
-          {selectedTeachers.length > 0
-            ? selectedTeachers?.map((teacher) => (
-                <span
-                  key={teacher?.id}
-                  className={`px-1 py-1 text-xs bg-blue-600 text-white rounded-sm flex justify-between items-center gap-2 max-w-fit`}
-                >
-                  {teacher?.name}
-                  {currState !== "Assign" && (
-                    <FaRegTrashCan
-                      onClick={() =>
-                        !sendingRequest &&
-                        handleDeleteAssignedTeacher(teacher?.id)
-                      }
-                      className="text-white cursor-pointer transition-all duration-300 hover:text-[#ff2020]"
-                    />
-                  )}
-                </span>
-              ))
-            : option?.teachers?.map((teacher) => (
-                <span
-                  key={teacher?.id}
-                  className={`px-1 py-1 text-xs bg-blue-600 text-white rounded-sm flex justify-between items-center gap-2 max-w-fit`}
-                >
-                  {teacher?.name}
-                  {currState !== "Assign" && (
-                    <FaRegTrashCan
-                      onClick={() =>
-                        !sendingRequest &&
-                        handleDeleteAssignedTeacher(teacher?.id)
-                      }
-                      className="text-white cursor-pointer transition-all duration-300 hover:text-[#ff2020]"
-                    />
-                  )}
-                </span>
-              ))}
-        </div> 
-      </div> */}
       <div className={`flex`}>
         <button
           disabled={sendingRequest}
