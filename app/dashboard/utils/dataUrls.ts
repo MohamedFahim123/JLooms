@@ -43,5 +43,6 @@ export const dataURLS: DATAURLSINTERFACE = {
   removeActivityFromClass: `${baseUrl}/school/delete-class-activity`,
   assignTeacherToClass: `${baseUrl}/school/assign-teachers`,
   removeTeacherFromClass: `${baseUrl}/school/delete-teacher`,
-  allCurriculums: `${baseUrl}/school/curriculums`
+  allCurriculums: `${baseUrl}/school/curriculums`,
+  addCurriculum: `${baseUrl}/school/store-curriculum`,
 };
