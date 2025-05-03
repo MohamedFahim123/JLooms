@@ -1,10 +1,8 @@
 import axios from "axios";
-import { create } from "zustand";
-import { baseUrl } from "../utils/baseUrl";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
-
-const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
+import { create } from "zustand";
+import { getTokenFromServerCookies } from "../auth/utils/storeTokenOnServer";
+import { baseUrl } from "../utils/baseUrl";
 
 interface Class {
   id: number;
@@ -26,6 +24,7 @@ export const useClassesStore = create<UseClassesStoreIterface>((set) => ({
   classesError: null,
   classesLoading: false,
   getClasses: async () => {
+    const token = await getTokenFromServerCookies();
     const currentTime = new Date().getTime();
     if (currentTime - lastFetchedTime < CACHE_EXPIRATION_TIME) {
       return;

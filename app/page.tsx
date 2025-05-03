@@ -1,20 +1,22 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { getTokenFromServerCookies } from "./auth/utils/storeTokenOnServer";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const TOKEN = Cookies.get('ClIENT_JLOOMS_TOKEN');
-    if (TOKEN) {
-      router.push('/dashboard/profile');
-    } else {
-      router.push('/auth/login');
-    };
+    (async () => {
+      const token = await getTokenFromServerCookies();
+      if (token) {
+        router.push("/dashboard/profile");
+      } else {
+        router.push("/auth/login");
+      }
+    })();
   }, [router]);
 
   return null;
-};
+}

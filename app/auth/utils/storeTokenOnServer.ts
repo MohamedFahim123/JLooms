@@ -11,3 +11,14 @@ export async function setServerCookie(name: string, value: string) {
     maxAge: 60 * 60 * 24,
   });
 }
+
+export async function getTokenFromServerCookies() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("CLIENT_JLOOMS_TOKEN")?.value;
+  return token;
+}
+
+export async function removeTokenFromServerCookies() {
+  const cookieStore = await cookies();
+  cookieStore.delete("CLIENT_JLOOMS_TOKEN");
+}

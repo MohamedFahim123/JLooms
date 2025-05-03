@@ -1,38 +1,42 @@
-
 import { authEndPoints } from "@/app/auth/utils/authEndPoints";
-import { FaSignOutAlt } from "react-icons/fa";
-import { toast } from "react-toastify";
+import {
+  getTokenFromServerCookies,
+  removeTokenFromServerCookies,
+} from "@/app/auth/utils/storeTokenOnServer";
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
+import { FaSignOutAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function LogoutBtn() {
-    const TOKEN = Cookies.get('JLOOMS_TOKEN');
-    const logout = async () => {
-        const loadingToastId = toast.loading('Loading...');
-        const fetchRes = await fetch(authEndPoints.logout, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${TOKEN}`,
-            },
-        });
-        const res = await fetchRes.json();
-        toast.update(loadingToastId, {
-            render: res?.data?.message || 'Logout Successfully!',
-            type: 'success',
-            isLoading: false,
-            autoClose: 1500,
-        });
-        Cookies.remove('CLIENT_JLOOMS_TOKEN');
-        redirect('/auth/login');
-    };
+  const logout = async () => {
+    const token = await getTokenFromServerCookies();
+    const loadingToastId = toast.loading("Loading...");
+    const fetchRes = await fetch(authEndPoints.logout, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const res = await fetchRes.json();
+    toast.update(loadingToastId, {
+      render: res?.data?.message || "Logout Successfully!",
+      type: "success",
+      isLoading: false,
+      autoClose: 1500,
+    });
+    await removeTokenFromServerCookies();
+    Cookies.remove("CLIENT_JLOOMS_TOKEN");
+    redirect("/auth/login");
+  };
 
-    return (
-        <button
-            onClick={logout}
-            type="button"
-            className={`
+  return (
+    <button
+      onClick={logout}
+      type="button"
+      className={`
                 flex items-center gap-2 
                 px-4 py-2
                 outline-none 
@@ -44,10 +48,9 @@ export default function LogoutBtn() {
                 shadow-md
                 focus:outline-none 
             `}
-        >
-            <FaSignOutAlt size={18} />
-            Logout
-        </button>
-
-    );
-};
+    >
+      <FaSignOutAlt size={18} />
+      Logout
+    </button>
+  );
+}

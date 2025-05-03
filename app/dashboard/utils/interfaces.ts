@@ -60,6 +60,8 @@ export interface DATAURLSINTERFACE {
   editActionInsideClass: string;
   editActivityInsideClass: string;
   removeTeacherFromClass: string;
+  allCurriculums: string;
+  addCurriculum: string;
 }
 export interface teacherInterface {
   id: number | string;

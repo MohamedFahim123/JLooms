@@ -124,7 +124,7 @@ export default async function ClassDetailsPage({ params }: classDetailsProps) {
     "activities"
   );
 
-  console.log(classDetails)
+  console.log(classDetails);
 
   return (
     <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">

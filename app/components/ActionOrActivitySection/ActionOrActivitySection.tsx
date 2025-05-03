@@ -1,15 +1,15 @@
 "use client";
 
+import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { OPTION } from "@/app/dashboard/classes/[id]/page";
+import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
+import axios from "axios";
 import { useCallback, useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
+import { toast } from "react-toastify";
 import SingleClassRowOfAction from "../SingleClassRowOfAction/SingleClassRowOfAction";
 import SingleClassRowOfTeacher from "../SingleClassRowOfTeacher/SingleClassRowOfTeacher";
-import axios from "axios";
-import { dataURLS } from "@/app/dashboard/utils/dataUrls";
-import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 
 interface ActionOrActivitySectionProps {
   allowedTeachers: teacherInterface[];
@@ -40,7 +40,6 @@ export default function ActionOrActivitySection({
   const [currActivitiesState, setCurrActivitiesState] = useState<
     "adding" | "submit"
   >("adding");
-  const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
 
   const [actions, setActions] = useState<OPTION[]>(actionArray);
   const [activities, setActivities] = useState<OPTION[]>(activityArray);
@@ -48,6 +47,7 @@ export default function ActionOrActivitySection({
     useState<teacherInterface[]>(teachers);
 
   const handleDeleteTeacher = async (teacherId: number) => {
+    const token = await getTokenFromServerCookies();
     const toastLoader = toast.loading("Removing teacher...");
     const data: { teacher_id: string; class_id: string } = {
       teacher_id: `${teacherId}`,
@@ -70,7 +70,7 @@ export default function ActionOrActivitySection({
       const errMessage = axios.isAxiosError(error)
         ? error.response?.data?.message || "Something went wrong!"
         : "An unexpected error occurred.";
-        toast.dismiss(toastLoader);
+      toast.dismiss(toastLoader);
       toast.error(errMessage);
     }
   };

@@ -1,21 +1,22 @@
 "use client";
 
+import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
+import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { Table } from "@/app/dashboard/utils/interfaces";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilterations";
+import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
-import { dataURLS } from "@/app/dashboard/utils/dataUrls";
-import Cookies from "js-cookie";
 
 let loading: boolean = true;
 async function fetchTeachersData(
   filters: Record<string, string | number> = {}
 ): Promise<{ data: Table[]; totalPages: number }> {
   loading = true;
-  const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
+
+  const token = await getTokenFromServerCookies();
 
   const queryParams = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {

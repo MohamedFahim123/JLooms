@@ -3,23 +3,21 @@
 import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { Table } from "@/app/dashboard/utils/interfaces";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilterations";
 import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 
 let loading: boolean = true;
-async function fetchparentsData(
-  filters: Record<string, string | number> = {}
-): Promise<{ data: Table[]; totalPages: number }> {
+async function fetchCurriculumsData(): Promise<{
+  data: Table[];
+  totalPages: number;
+  page: number;
+}> {
   loading = true;
   const token = await getTokenFromServerCookies();
 
-  const apiUrl = filters.name
-    ? `${dataURLS.filterParents}?q=${filters?.name}&t=${new Date().getTime()}`
-    : `${dataURLS.allParents}?t=${new Date().getTime()}`;
+  const apiUrl = `${dataURLS.allCurriculums}?t=${new Date().getTime()}`;
 
   const response = await fetch(apiUrl, {
     method: "GET",
@@ -30,39 +28,33 @@ async function fetchparentsData(
   });
 
   if (!response.ok) {
-    return { data: [], totalPages: 0 };
+    loading = false;
+    return { data: [], totalPages: 0, page: 0 };
   }
 
   const data = await response.json();
   loading = false;
   return {
-    data: data?.data?.parents || [],
+    data: data?.data?.curriculums || [],
     totalPages: data?.meta?.totalPages || 1,
+    page: data?.meta?.page || 1,
   };
 }
 
-export default function ParentsSection() {
-  const searchParams = useSearchParams();
-  const [filters, setFilters] = useState<Record<string, string | number>>({});
-  const [parents, setParents] = useState<Table[]>([]);
+const CurriculumsFullPagea = () => {
+  const [curriculums, setCurriculums] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-
-  useEffect(() => {
-    const newFilters: Record<string, string | number> = {
-      name: searchParams.get("name") || "",
-      page: searchParams.get("page") || 1,
-    };
-    setFilters(newFilters);
-  }, [searchParams]);
+  const [currPage, setCurrPage] = useState<number>(1);
 
   useEffect(() => {
     async function fetchData() {
-      const { data, totalPages } = await fetchparentsData(filters);
-      setParents(data);
+      const { data, totalPages, page } = await fetchCurriculumsData();
+      setCurriculums(data);
       setTotalPages(totalPages);
+      setCurrPage(page);
     }
     fetchData();
-  }, [filters]);
+  }, []);
 
   const tableCells: string[] = [
     "Parent Name",
@@ -71,6 +63,7 @@ export default function ParentsSection() {
     "Email",
     "Remove",
   ];
+  console.log(loading);
 
   return (
     <div
@@ -79,43 +72,37 @@ export default function ParentsSection() {
       } w-full bg-white shadow-md rounded-lg overflow-hidden`}
     >
       <DashBoardPageHead
-        text="Parents"
-        btnText="Add Parent"
+        text="Curriculums"
+        btnText="Add Curriculum"
         haveBtn={true}
-        btnLink="/dashboard/parents/add-parent"
-      />
-      <DashBoardFilterations
-        doesNotHaveFilterStatus={true}
-        page="parents"
-        placeHolder="Find a Parent"
+        btnLink="/dashboard/curriculums/add-curriculum"
       />
       <div className="overflow-x-auto">
         {loading ? (
           <div className="flex justify-center min-h-screen">
             <p className="text-gray-500 font-semibold pt-10 text-xl">
-              Loading...
+              {loading === true ? "Loading..." : "No Curriculums Found"}
             </p>
           </div>
-        ) : parents.length > 0 ? (
-          <>
+        ) : curriculums.length > 0 ? (
+          <div>
             <DashBoardTable
-              tableData={parents}
+              tableData={curriculums}
               tableCells={tableCells}
-              currPage="parents"
+              currPage="curriculums"
             />
-            <Pagination
-              totalPages={totalPages}
-              currentPage={Number(filters.page)}
-            />
-          </>
+            <Pagination totalPages={totalPages} currentPage={currPage} />
+          </div>
         ) : (
           <div className="flex justify-center min-h-screen">
             <p className="text-gray-500 font-semibold pt-10 text-xl">
-              No Parents!
+              No Curriculums Found!
             </p>
           </div>
         )}
       </div>
     </div>
   );
-}
+};
+
+export default CurriculumsFullPagea;

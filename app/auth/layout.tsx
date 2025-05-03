@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
-import styles from "./authStyles.module.css";
 import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import RegisterStepProgress, {
   Step,
 } from "../components/RegisterStepProgress/RegisterStepProgress";
-import Cookies from "js-cookie";
+import styles from "./authStyles.module.css";
+import { getTokenFromServerCookies } from "./utils/storeTokenOnServer";
 
 const steps2: Step[] = [
   {
@@ -58,11 +58,13 @@ export default function AuthLayout({
   const router = useRouter();
 
   useEffect(() => {
-    const TOKEN = Cookies.get("CLIENT_JLOOMS_TOKEN");
-    if (TOKEN) {
-      router.push("/dashboard/profile");
-      return;
-    }
+    (async () => {
+      const token = await getTokenFromServerCookies();
+      if (token) {
+        router.push("/dashboard/profile");
+        return;
+      }
+    })();
   }, [router]);
 
   return (

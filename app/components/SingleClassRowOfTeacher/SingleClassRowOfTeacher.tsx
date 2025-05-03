@@ -1,10 +1,10 @@
 "use client";
 
+import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { OPTION } from "@/app/dashboard/classes/[id]/page";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -42,7 +42,7 @@ export default function SingleClassRowOfTeacher({
     );
     if (!teacherToAdd) return;
 
-    const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
+    const token = await getTokenFromServerCookies();
     const data: {
       teacher_id: number | string;
       class_id: string;

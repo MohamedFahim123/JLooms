@@ -1,21 +1,15 @@
 "use client";
 
+import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { OPTION } from "@/app/dashboard/classes/[id]/page";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useCallback, useState } from "react";
 import { FaCheck, FaEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-
-// interface SelectedTeacher {
-//   class_option_teacher_id: string | number;
-//   id: string | number;
-//   name: string;
-// };
 
 interface SingleClassRowActionsProps {
   allActions: OPTION[];
@@ -48,7 +42,6 @@ export default function SingleClassRowOfAction({
   const [editMode, setEditMode] = useState<boolean>(
     option?.id >= 1 ? false : true
   );
-  const token = Cookies.get("CLIENT_JLOOMS_TOKEN");
   const [selectedUpdateData, setSelectedUpdateData] = useState<OPTION | null>(
     null
   );
@@ -87,6 +80,7 @@ export default function SingleClassRowOfAction({
               ? `${dataURLS.removeActionFromClass}/${option?.class_action_id}`
               : `${dataURLS.removeActivityFromClass}/${option?.class_activity_id}`;
 
+          const token = await getTokenFromServerCookies();
           const request = await fetch(url, {
             method: "DELETE",
             headers: {
@@ -133,7 +127,6 @@ export default function SingleClassRowOfAction({
   }, [
     option,
     type,
-    token,
     setActions,
     setCurrActionsState,
     actions,
@@ -165,6 +158,7 @@ export default function SingleClassRowOfAction({
                 ? `${dataURLS.editActionInsideClass}`
                 : `${dataURLS.editActivityInsideClass}`;
 
+            const token = await getTokenFromServerCookies();
             const response = await axios.post(url, data, {
               headers: {
                 "Content-Type": "application/json",
@@ -214,6 +208,7 @@ export default function SingleClassRowOfAction({
                   : `${dataURLS.addActivityToClass}`
                 : "";
 
+            const token = await getTokenFromServerCookies();
             const response = await axios.post(url, data, {
               headers: {
                 "Content-Type": "application/json",
@@ -245,7 +240,7 @@ export default function SingleClassRowOfAction({
     } else if (!editMode) {
       setEditMode(true);
     }
-  }, [editMode, option, type, selectedUpdateData, classId, token]);
+  }, [editMode, option, type, selectedUpdateData, classId]);
 
   return (
     <form className="flex justify-between w-full">
