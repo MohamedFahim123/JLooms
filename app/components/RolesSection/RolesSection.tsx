@@ -10,9 +10,9 @@ import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 
-let loading: boolean = true;
 async function fetchRolesData(
-  filters: Record<string, string | number> = {}
+  filters: Record<string, string | number> = {},
+  setLoading: (loading: boolean) => void
 ): Promise<{
   data: Table[];
   totalPages: number;
@@ -20,15 +20,12 @@ async function fetchRolesData(
   current_page: number;
   last_page: number;
 }> {
-  loading = true;
-
+  setLoading(true);
   const token = await getTokenFromServerCookies();
 
   const queryParams = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
-    if (value) {
-      queryParams.append(key, String(value));
-    }
+    if (value) queryParams.append(key, String(value));
   });
 
   const apiUrl =
@@ -45,6 +42,7 @@ async function fetchRolesData(
   });
 
   if (!response.ok) {
+    setLoading(false);
     return {
       data: [],
       totalPages: 0,
@@ -55,7 +53,7 @@ async function fetchRolesData(
   }
 
   const data = await response.json();
-  loading = false;
+  setLoading(false);
   return {
     data: data?.data?.roles || [],
     totalPages: data?.meta?.totalPages || 1,
@@ -70,6 +68,7 @@ export default function RolesSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [roles, setRoles] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -81,12 +80,9 @@ export default function RolesSection() {
 
   useEffect(() => {
     async function fetchData() {
-      const { data, totalPages } = await fetchRolesData(filters);
+      const { data, totalPages } = await fetchRolesData(filters, setLoading);
       setRoles(data);
       setTotalPages(totalPages);
-      //   setPerPage(per_page);
-      //   setCurrentPage(current_page);
-      //   setLastPage(last_page);
     }
     fetchData();
   }, [filters]);
@@ -105,7 +101,11 @@ export default function RolesSection() {
         haveBtn={true}
         btnLink="/dashboard/roles/add-role"
       />
-      <DashBoardFilterations page="roles" placeHolder="Find a Role" doesNotHaveFilterStatus={true} />
+      <DashBoardFilterations
+        page="roles"
+        placeHolder="Find a Role"
+        doesNotHaveFilterStatus={true}
+      />
       <div className="overflow-x-auto">
         {loading ? (
           <div className="flex justify-center min-h-screen">

@@ -1,9 +1,10 @@
 "use client";
 
 import { FormAuthInputs, Validation } from "@/app/auth/utils/interfaces";
+import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { Action, Activity } from "@/app/dashboard/utils/interfaces";
-import { submitApplicationJson } from "@/app/utils/submitApplicationJson";
+import axios from "axios";
 import { useCallback, useEffect } from "react";
 import {
   Controller,
@@ -11,6 +12,7 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./addNewClassForm.module.css";
 
 interface ClassInput {
@@ -90,7 +92,7 @@ export default function AddNewClassForm({
     [appendOnAct]
   );
 
-  const onSubmit: SubmitHandler<FormDefaultValues> = (
+  const onSubmit: SubmitHandler<FormDefaultValues> = async (
     data: FormDefaultValues
   ) => {
     const formattedData = {
@@ -98,7 +100,49 @@ export default function AddNewClassForm({
       actions: data.actions.map((action) => action.id),
       activities: data.activities.map((activity) => activity.id),
     };
-    submitApplicationJson(formattedData, dataURLS.addNewClass, setError, reset);
+    const token = await getTokenFromServerCookies();
+    const loadingToastId: string | number = toast.loading("Loading...");
+    try {
+      const response = await axios.post(dataURLS.addNewClass, formattedData, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.update(loadingToastId, {
+        render: response?.data?.message || "Request succeeded!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1500,
+      });
+      reset();
+    } catch (error) {
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.message || "Something went wrong!"
+        : "An unexpected error occurred.";
+
+      toast.update(loadingToastId, {
+        render: errorMessage,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+
+      if (axios.isAxiosError(error) && error?.response?.data?.errors) {
+        const errorDetails = error.response.data.errors;
+        Object.entries(errorDetails).forEach(([field, messages]) => {
+          const messageArray = Array.isArray(messages) ? messages : [messages];
+          setError(field as keyof FormDefaultValues, {
+            type: "manual",
+            message: messageArray[0],
+          });
+          toast.error(messageArray[0], {
+            autoClose: 3000,
+          });
+        });
+      }
+    }
   };
 
   return (

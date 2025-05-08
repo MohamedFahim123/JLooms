@@ -17,12 +17,13 @@ export default function Pagination({
     setIsClient(true);
   }, []);
 
+  const pathname = window.location.pathname;
   const changePage = (page: number) => {
     if (!isClient) return;
 
     const params = new URLSearchParams(window.location.search);
     params.set("page", String(page));
-    router.push(`/dashboard/teachers?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
