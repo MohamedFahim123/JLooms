@@ -45,4 +45,10 @@ export const dataURLS: DATAURLSINTERFACE = {
   removeTeacherFromClass: `${baseUrl}/school/delete-teacher`,
   allCurriculums: `${baseUrl}/school/curriculums`,
   addCurriculum: `${baseUrl}/school/store-curriculum`,
+  employees: `${baseUrl}/school/all-employees`,
+  filterEmployees: `${baseUrl}/school/filter-employees`,
+  addEmployee: `${baseUrl}/school/add-employee`,
+  singleEmployee: `${baseUrl}/school/show-employee`,
+  deleteEmployee: `${baseUrl}/school/delete-employee`,
+  updateEmployeeStatus: `${baseUrl}/school/update-employee-status`,
 };

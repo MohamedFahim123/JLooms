@@ -35,6 +35,13 @@ export interface FormAuthInputs {
   class?: string;
   topic?: string;
   milestoneCustom?: string;
+
+  address_ar?: string;
+  address_en?: string;
+  description_ar?: string;
+  description_en?: string;
+  country_id?: string;
+  city_id?: string;
 }
 
 interface Pattern {

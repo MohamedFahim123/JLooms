@@ -1,12 +1,15 @@
-import { Metadata } from 'next';
-import React from 'react';
+import ProfileForm from "@/app/components/ProfileForm/ProfileForm";
+import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Profile",
+  title: "Profile",
 };
 
 export default function ProfilePage() {
-    return (
-        <div>ProfilePage</div>
-    );
-};
+  return (
+    <Suspense fallback={<h1>Loading...</h1>}>
+      <ProfileForm />
+    </Suspense>
+  );
+}

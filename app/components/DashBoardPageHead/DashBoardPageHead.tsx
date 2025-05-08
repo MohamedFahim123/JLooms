@@ -15,6 +15,7 @@ interface Option {
 interface DashBoardPageHeadProps {
   text: string;
   teacherId?: string;
+  employeeId?: string;
   btnText?: string;
   btnLink?: string;
   haveBtn?: boolean;
@@ -27,6 +28,7 @@ interface DashBoardPageHeadProps {
 
 export default function DashBoardPageHead({
   teacherId,
+  employeeId,
   text,
   haveSecondBtn,
   secBtnText,
@@ -47,6 +49,38 @@ export default function DashBoardPageHead({
       const toastId = toast.loading("Loading...");
       const request = await fetch(
         `${dataURLS.updateTeacherStatus}/${teacherId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: value }),
+        }
+      );
+      const res = await request?.json();
+      if (res?.status === 200) {
+        toast.update(toastId, {
+          render: res?.message || "Updated Successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1500,
+        });
+      } else {
+        toast.update(toastId, {
+          render: res?.message || "Request failed!",
+          type: "error",
+          isLoading: false,
+          autoClose: 1500,
+        });
+      }
+    }
+
+    if (employeeId) {
+      const toastId = toast.loading("Loading...");
+      const request = await fetch(
+        `${dataURLS.updateEmployeeStatus}/${employeeId}`,
         {
           method: "POST",
           headers: {

@@ -1,18 +1,19 @@
 "use client";
 import { useClassesStore } from "@/app/store/getAllClasses";
+import { useCountriesStore } from "@/app/store/getAllCountries";
+import { useRulesStore } from "@/app/store/getAllRules";
+import { useUserStore } from "@/app/store/getLoginnedUserProfile";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
-import { BsCalendar2EventFill } from "react-icons/bs";
 import {
   FaArrowAltCircleLeft,
   FaArrowAltCircleRight,
-  FaBell,
   FaChalkboardTeacher,
   FaCog,
-  FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
-import { MdSecurity, MdSubject } from "react-icons/md";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { MdSecurity } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
 import { RiParentFill } from "react-icons/ri";
 import { SiGoogleclassroom } from "react-icons/si";
@@ -28,6 +29,27 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { classes, getClasses, classesLoading } = useClassesStore();
+  const { rules, getRules, rulesLoading } = useRulesStore();
+  const { user, getUser, userLoading } = useUserStore();
+  const { countries, getCountries, countriesLoading } = useCountriesStore();
+
+  const getUserProfile = useCallback(() => {
+    if (!user && !userLoading) {
+      getUser();
+    }
+  }, [getUser, user, userLoading]);
+
+  const getAllCountries = useCallback(() => {
+    if (countries.length === 0 && !countriesLoading) {
+      getCountries();
+    }
+  }, [getCountries, countriesLoading, countries.length]);
+
+  const getAllRules = useCallback(() => {
+    if (rules.length === 0 && !rulesLoading) {
+      getRules();
+    }
+  }, [getRules, rulesLoading, rules.length]);
 
   const getAllClasses = useCallback(() => {
     if (classes.length === 0 && !classesLoading) {
@@ -36,8 +58,11 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   }, [getClasses, classesLoading, classes.length]);
 
   useEffect(() => {
+    getAllRules();
     getAllClasses();
-  }, [getAllClasses]);
+    getUserProfile();
+    getAllCountries();
+  }, [getAllClasses, getAllCountries, getAllRules, getUserProfile]);
 
   const isActive = (path: string) => pathname.includes(path);
 
@@ -128,10 +153,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           Classes
         </MenuItem>
 
-        <SubMenu
-          label="Curriculums"
-          icon={<MdSecurity />}
-        >
+        <SubMenu label="Curriculums" icon={<MdSecurity />}>
           <MenuItem
             onClick={() => router.push("/dashboard/curriculums")}
             className={
@@ -155,51 +177,16 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
         </SubMenu>
 
         <MenuItem
-          icon={<MdSubject />}
-          onClick={() => router.push("/dashboard/subjects")}
+          icon={<FaPeopleGroup />}
+          onClick={() => router.push("/dashboard/employees")}
           className={
-            isActive("/dashboard/subjects") ? `${styles.activeMenuItem}` : ""
+            isActive("/dashboard/employees") ? `${styles.activeMenuItem}` : ""
           }
         >
-          Subjects
+          Employees
         </MenuItem>
 
-        <MenuItem
-          icon={<BsCalendar2EventFill />}
-          onClick={() => router.push("/dashboard/events")}
-          className={
-            isActive("/dashboard/events") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Events
-        </MenuItem>
-
-        <MenuItem
-          icon={<FaBell />}
-          onClick={() => router.push("/dashboard/notifications")}
-          className={
-            isActive("/dashboard/notifications")
-              ? `${styles.activeMenuItem}`
-              : ""
-          }
-        >
-          Notifications
-        </MenuItem>
-
-        <MenuItem
-          icon={<FaSignOutAlt />}
-          onClick={() => router.push("/dashboard/requests")}
-          className={
-            isActive("/dashboard/requests") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Requests
-        </MenuItem>
-
-        <SubMenu
-          label="Settings"
-          icon={<FaCog />}
-        >
+        <SubMenu label="Settings" icon={<FaCog />}>
           <MenuItem
             onClick={() => router.push("/dashboard/settings/school-details")}
             className={

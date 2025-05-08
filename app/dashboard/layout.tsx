@@ -9,10 +9,12 @@ import LogoutBtn from "../components/LogoutBtn/LogoutBtn";
 import SideBar from "../components/SideBar/SideBar";
 import { LayoutInterface } from "../utils/interfaces";
 import styles from "./dashboardMain.module.css";
+import { useUserStore } from "../store/getLoginnedUserProfile";
 
 export default function Layout({ children }: LayoutInterface) {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
+  const { user } = useUserStore();
 
   useEffect(() => {
     (async () => {
@@ -30,13 +32,23 @@ export default function Layout({ children }: LayoutInterface) {
         className={`${styles.sideBarContainer} ${collapsed ? "w-20" : "w-62"}`}
       >
         <div className={`flex flex-col items-center py-4`}>
-          <Image src={logo} alt="Join Looms Logo" />
+          <Image
+            width={100}
+            height={100}
+            src={user?.image ? (user?.image !== "N/A" ? user?.image : logo) :logo}
+            alt="Join Looms Logo"
+            className="rounded-full mb-1"
+          />
           <h2
             className={`font-semibold ${styles.dashBoardMainColor} ${
               collapsed && "hidden"
             }`}
           >
-            Sample Inter. school
+            {user?.admin_name
+              ? user?.admin_name !== "N/A"
+                ? user?.admin_name
+                : ""
+              : ""}
           </h2>
         </div>
         <SideBar collapsed={collapsed} setCollapsed={setCollapsed} />
@@ -44,7 +56,7 @@ export default function Layout({ children }: LayoutInterface) {
       <div className={`flex flex-col flex-1 ${styles.sideBarContainer}`}>
         <header className="flex justify-between items-center px-6 py-4">
           <h1 className={`text-2xl font-bold ${styles.dashBoardMainColor}`}>
-            Hello, Moe 👋
+            Hello, {user?.name} 👋
           </h1>
           <div className="flex items-center gap-4">
             <button
