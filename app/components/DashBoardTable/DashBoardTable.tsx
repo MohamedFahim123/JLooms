@@ -5,6 +5,7 @@ import MainParentTableRow from "../MainParentTableRow/MainParentTableRow";
 import ParentTableRow from "../ParentTableRow/ParentTableRow";
 import StudentsTableRow from "../StudentsTableRow/StudentsTableRow";
 import TeachersTableRow from "../TeachersTableRow/TeachersTableRow";
+import RolesTableRow from "../RolesTableRow/RolesTableRow";
 
 interface DashBoardTableProps {
   tableData: Table[];
@@ -41,6 +42,7 @@ export default function DashBoardTable({
               <ParentTableRow currStudentId={currStudentId} cell={cell} />
             )}
             {currPage === "employees" && <EmployeesTableRow cell={cell} />}
+            {currPage === "Roles" && <RolesTableRow cell={cell} />}
           </tbody>
         ))}
       </table>

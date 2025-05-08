@@ -19,6 +19,7 @@ import { RiParentFill } from "react-icons/ri";
 import { SiGoogleclassroom } from "react-icons/si";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
 import styles from "./sideBar.module.css";
+import { GrUserSettings } from "react-icons/gr";
 
 interface SideBarProps {
   collapsed: boolean;
@@ -184,6 +185,16 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           }
         >
           Employees
+        </MenuItem>
+
+        <MenuItem
+          icon={<GrUserSettings />}
+          onClick={() => router.push("/dashboard/roles")}
+          className={
+            isActive("/dashboard/roles") ? `${styles.activeMenuItem}` : ""
+          }
+        >
+          Roles
         </MenuItem>
 
         <SubMenu label="Settings" icon={<FaCog />}>

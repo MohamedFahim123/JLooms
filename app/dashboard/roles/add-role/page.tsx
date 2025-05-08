@@ -1,15 +1,18 @@
-import AddStudentForm from "@/app/components/AddStudentForm/AddStudentForm";
+import AddRoleForm from "@/app/components/AddRoleForm/AddRoleForm";
 import DashBoardPageHead from "@/app/components/DashBoardPageHead/DashBoardPageHead";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `Add New Student`,
+  title: "Add Role",
 };
-export default function AddNewStudentPage() {
+
+const AddRolePage = () => {
   return (
     <div className="mx-auto py-6 bg-white rounded-lg">
-      <DashBoardPageHead text="Add Student" />
-      <AddStudentForm />
+      <DashBoardPageHead text="Add Role" />
+      <AddRoleForm />
     </div>
   );
-}
+};
+
+export default AddRolePage;

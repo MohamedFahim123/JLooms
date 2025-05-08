@@ -1,12 +1,12 @@
-import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
-import { FormAuthInputs } from "../auth/utils/interfaces";
 import { ReactNode } from "react";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FormAuthInputs } from "../auth/utils/interfaces";
 import { Table } from "../dashboard/utils/interfaces";
 
 export interface CustomeInputProps {
     name: keyof FormAuthInputs;
     placeHolder: string;
-    register: UseFormRegister<FieldValues>;
+    register: UseFormRegister<FormAuthInputs>;
     type: string;
     lable: string;
     id: string;

@@ -42,6 +42,8 @@ export interface FormAuthInputs {
   description_en?: string;
   country_id?: string;
   city_id?: string;
+
+  permission_id: number[];
 }
 
 interface Pattern {

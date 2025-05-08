@@ -51,4 +51,10 @@ export const dataURLS: DATAURLSINTERFACE = {
   singleEmployee: `${baseUrl}/school/show-employee`,
   deleteEmployee: `${baseUrl}/school/delete-employee`,
   updateEmployeeStatus: `${baseUrl}/school/update-employee-status`,
+  allRoles: `${baseUrl}/school/roles`,
+  addRole: `${baseUrl}/school/roles-create`,
+  deleteRole: `${baseUrl}/school/roles-delete`,
+  filterRoles: `${baseUrl}/school/roles-search`,
+  singleRole: `${baseUrl}/school/roles-show`,
+  allPermissions: `${baseUrl}/school/permissions`,
 };

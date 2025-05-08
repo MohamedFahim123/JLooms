@@ -75,7 +75,7 @@ function handleRegistrationCookies(type: AuthEndPointType, schoolId: string) {
   }
 }
 
-function handleError(
+export function handleError(
   error: unknown,
   setError: UseFormSetError<FormAuthInputs>,
   toastId: string | number

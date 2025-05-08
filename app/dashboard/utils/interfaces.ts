@@ -68,6 +68,12 @@ export interface DATAURLSINTERFACE {
   singleEmployee: string;
   deleteEmployee: string;
   updateEmployeeStatus: string;
+  allRoles: string;
+  addRole: string;
+  deleteRole: string;
+  filterRoles: string;
+  singleRole: string;
+  allPermissions: string;
 }
 export interface teacherInterface {
   id: number | string;
