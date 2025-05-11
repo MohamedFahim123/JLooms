@@ -3,6 +3,7 @@ import DashBoardPageHead from "@/app/components/DashBoardPageHead/DashBoardPageH
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { dataURLS } from "../../utils/dataUrls";
+import Loader from "@/app/components/Loader/Loader";
 
 const cache: {
   actions?: { data: unknown; timestamp: number };
@@ -59,6 +60,13 @@ export default async function page() {
     token ? token : "",
     "activities"
   );
+
+  if (
+    actions?.data?.actions?.length === 0 ||
+    activities?.data?.activities?.length === 0
+  ) {
+    return <Loader />;
+  }
 
   return (
     <div className="mx-auto py-6 bg-white rounded-lg">

@@ -41,7 +41,7 @@ export const useRulesStore = create<UseRulesStoreIterface>((set) => ({
         },
       });
 
-      const rules = res?.data?.data?.rules || [];
+      const rules = res?.data?.data?.roles || [];
       lastFetchedTime = currentTime;
 
       set({

@@ -1,8 +1,10 @@
 import DashBoardPageHead from "@/app/components/DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "@/app/components/DashBoardTable/DashBoardTable";
+import Loader from "@/app/components/Loader/Loader";
 import SingleStudentView from "@/app/components/SingleStudentView/SingleStudentView";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 import { dataURLS } from "../../utils/dataUrls";
 
 interface ParamsProps {
@@ -44,20 +46,22 @@ export default async function SingleStudentPage({
   ];
 
   return (
-    <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
-      <DashBoardPageHead
-        text={`code: ${student?.code}` || ""}
-        haveBtn={false}
-      />
-      <SingleStudentView student={student} />
-      {student?.parents?.length > 0 && (
-        <DashBoardTable
-          currPage="singleStudent"
-          tableCells={tableCells}
-          tableData={student?.parents}
-          currStudentId={id}
+    <Suspense fallback={<Loader />}>
+      <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
+        <DashBoardPageHead
+          text={`code: ${student?.code}` || ""}
+          haveBtn={false}
         />
-      )}
-    </div>
+        <SingleStudentView student={student} />
+        {student?.parents?.length > 0 && (
+          <DashBoardTable
+            currPage="singleStudent"
+            tableCells={tableCells}
+            tableData={student?.parents}
+            currStudentId={id}
+          />
+        )}
+      </div>
+    </Suspense>
   );
 }

@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { dataURLS } from "../../utils/dataUrls";
 import { teacherInterface } from "../../utils/interfaces";
+import Loader from "@/app/components/Loader/Loader";
 
 export const metadata: Metadata = {
   title: `Class Details`,
@@ -124,7 +125,17 @@ export default async function ClassDetailsPage({ params }: classDetailsProps) {
     "activities"
   );
 
-  console.log(classDetails);
+  if(actionArray?.length === 0 && activityArray?.length === 0 && allowedTeachers?.length === 0){ 
+    return <Loader />
+  }
+
+  if (!classDetails) {
+    return (
+      <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">
+        <DashBoardPageHead text="Class Not Found" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">

@@ -44,6 +44,10 @@ export interface FormAuthInputs {
   city_id?: string;
 
   permission_id: number[];
+
+  // employee
+  title?: string;
+  role_id?: string;
 }
 
 interface Pattern {

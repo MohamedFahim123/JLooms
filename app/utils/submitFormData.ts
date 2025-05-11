@@ -24,9 +24,10 @@ export const handleMultiPartWebSiteFormData = async (
       if (key === "image") {
         if (value instanceof FileList && value.length > 0) {
           formData.append(key, value[0]);
-        } else {
-          formData.append(key, "");
+        } else if (value instanceof File && value.name) {
+          formData.append(key, value);
         }
+        
       } else if (typeof value === "object" && value !== null) {
         formData.append(key, JSON.stringify(value));
       } else if (value !== undefined && value !== null) {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FaEnvelope, FaGraduationCap, FaPhoneAlt } from "react-icons/fa";
 import Avatar from "../../../imgs/teachers/teacher1.png";
 import { dataURLS } from "../../utils/dataUrls";
+import Loader from "@/app/components/Loader/Loader";
 
 interface ParamsProps {
   id: string;
@@ -51,6 +52,10 @@ export default async function EmployeeDetailsPage({
       defaultValue: employee?.status === "Active",
     },
   ];
+
+  if (employee === undefined) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden">

@@ -1,38 +1,86 @@
 "use client";
 import { FormAuthInputs } from "@/app/auth/utils/interfaces";
 import {
-    UserInterface,
-    useUserStore,
+  UserInterface,
+  useUserStore,
 } from "@/app/store/getLoginnedUserProfile";
 import { baseUrl } from "@/app/utils/baseUrl";
 import { handleMultiPartWebSiteFormData } from "@/app/utils/submitFormData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Loader from "../Loader/Loader";
+import Image from "next/image";
 
 export default function ProfileForm() {
   const [isEditing, setIsEditing] = useState(false);
   const { user } = useUserStore();
   const { register, handleSubmit, reset, setError, setValue } =
     useForm<FormAuthInputs>();
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  let imageInputRef = useState<HTMLInputElement | null>(null)[0];
+
+  useEffect(() => {
+    if (user?.image) {
+      setPreviewImage(user.image);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user) {
       Object.entries(user).forEach(([key, value]) => {
-        setValue(key as keyof FormAuthInputs, value);
+        if (
+          key === "name" ||
+          key === "phone" ||
+          key === "address_ar" ||
+          key === "address_en" ||
+          key === "description_ar" ||
+          key === "description_en" ||
+          key === "email" ||
+          key === "admin_name"
+        ) {
+          if (value !== "N/A") {
+            setValue(key as keyof FormAuthInputs, value);
+          }
+        }
       });
     }
   }, [user, setValue]);
 
   const onSubmit = async (data: FormAuthInputs) => {
-    handleMultiPartWebSiteFormData(
-      data,
+    data.image = imageInputRef?.files?.[0];
+
+    const finalData = data.image
+      ? {
+          phone: data.phone || "",
+          address_ar: data.address_ar || "",
+          address_en: data.address_en || "",
+          description_ar: data.description_ar || "",
+          description_en: data.description_en || "",
+          image: data.image,
+        }
+      : {
+          phone: data.phone || "",
+          address_ar: data.address_ar || "",
+          address_en: data.address_en || "",
+          description_ar: data.description_ar || "",
+          description_en: data.description_en || "",
+        };
+
+    await handleMultiPartWebSiteFormData(
+      finalData as FormAuthInputs,
       `${baseUrl}/school/update-profile`,
       setError,
       reset
     );
+    window.location.reload();
   };
 
-  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file));
+    }
+  };
 
   const handleCancel = () => {
     if (user) {
@@ -70,7 +118,7 @@ export default function ProfileForm() {
         <input
           {...register(field as keyof FormAuthInputs)}
           type={field === "email" ? "email" : "text"}
-          disabled={field === "admin_name" || field === "email"}
+          disabled={field === "admin_name" || field === "email" || field === "name"}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       );
@@ -79,11 +127,7 @@ export default function ProfileForm() {
   };
 
   if (!user) {
-    return (
-      <div className="bg-white min-h-screen flex items-center justify-center">
-        <p>Loading profile data...</p>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
@@ -120,6 +164,38 @@ export default function ProfileForm() {
       </div>
       <div className="px-6 py-4">
         <form onSubmit={handleSubmit(onSubmit)}>
+          {isEditing && (
+            <div className="w-full flex gap-6 flex-wrap mb-10 space-y-2 relative">
+              <Image
+                src={previewImage || "/profile.png"}
+                alt={user?.name}
+                width={200}
+                height={200}
+                className="rounded-full border border-gray-300 object-cover"
+              />
+
+              <div className="flex flex-col justify-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  {...register("image")}
+                  onChange={handleImageChange}
+                  className="hidden"
+                  ref={(e) => {
+                    register("image").ref(e);
+                    imageInputRef = e;
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => imageInputRef?.click()}
+                  className="text-indigo-500 border-indigo-500 border rounded-md px-4 py-2 hover:bg-indigo-500 hover:underline hover:text-white transition-all text-sm"
+                >
+                  Change Image
+                </button>
+              </div>
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <label className="block text-md font-semibold text-gray-700">

@@ -1,4 +1,5 @@
 import EmployeesSection from "@/app/components/EmployeesSection/EmployeesSection";
+import Loader from "@/app/components/Loader/Loader";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 const EmployeesPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loader />}>
       <EmployeesSection />
     </Suspense>
   );

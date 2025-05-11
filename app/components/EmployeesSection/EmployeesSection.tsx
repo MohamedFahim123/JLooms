@@ -9,6 +9,7 @@ import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilteration
 import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
+import Loader from "../Loader/Loader";
 
 let loading: boolean = true;
 async function fetchEmployeesData(
@@ -90,11 +91,7 @@ export default function EmployeesSection() {
       <DashBoardFilterations page="employees" placeHolder="Find an employee" />
       <div className="overflow-x-auto">
         {loading ? (
-          <div className="flex justify-center min-h-screen">
-            <p className="text-gray-500 font-semibold pt-10 text-xl">
-              Loading...
-            </p>
-          </div>
+          <Loader />
         ) : employees.length > 0 ? (
           <>
             <DashBoardTable

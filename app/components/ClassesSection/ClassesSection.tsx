@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilterations";
 import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
+import Loader from "../Loader/Loader";
 import Pagination from "../Pagination/Pagination";
 
 let loading: boolean = true;
@@ -91,11 +92,7 @@ export default function ClassesSection() {
       />
       <div className="overflow-x-auto">
         {loading ? (
-          <div className="flex justify-center min-h-screen">
-            <p className="text-gray-500 font-semibold pt-10 text-xl">
-              Loading...
-            </p>
-          </div>
+          <Loader />
         ) : classes?.length > 0 ? (
           <>
             <DashBoardTable

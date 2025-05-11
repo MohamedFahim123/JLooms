@@ -133,7 +133,7 @@ const AddRoleForm = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-6">
+          <div className="flex justify-center py-6 min-h-[600px] items-center">
             <svg
               className="animate-spin h-6 w-6 text-indigo-600"
               xmlns="http://www.w3.org/2000/svg"
