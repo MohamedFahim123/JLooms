@@ -240,7 +240,7 @@ const AddEmployeeForm = () => {
         type="submit"
         className="bg-indigo-500 transition-all duration-300 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded"
       >
-        Add Parent
+        Add Employee
       </button>
     </form>
   );

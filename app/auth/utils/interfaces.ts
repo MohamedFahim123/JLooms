@@ -48,6 +48,7 @@ export interface FormAuthInputs {
   // employee
   title?: string;
   role_id?: string;
+  user_type?: string;
 }
 
 interface Pattern {

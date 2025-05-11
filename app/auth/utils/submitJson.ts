@@ -68,6 +68,10 @@ function handleRegistrationCookies(type: AuthEndPointType, schoolId: string) {
     register3: "",
     resetPassword: "",
     forgetPassword: "",
+    employee_login: "",
+    employee_logout: "",
+    employee_resetPassword: "",
+    employee_forgetPassword: ""
   };
 
   if (stepMapping[type]) {
