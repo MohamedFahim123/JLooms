@@ -11,15 +11,21 @@ import { toast } from "react-toastify";
 export default function LogoutBtn() {
   const logout = async () => {
     const token = await getTokenFromServerCookies();
+    const userType = localStorage.getItem("userType");
     const loadingToastId = toast.loading("Loading...");
-    const fetchRes = await fetch(authEndPoints.logout, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const fetchRes = await fetch(
+      userType === "Admin"
+        ? authEndPoints.logout
+        : authEndPoints.employee_logout,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     const res = await fetchRes.json();
     toast.update(loadingToastId, {
       render: res?.data?.message || "Logout Successfully!",

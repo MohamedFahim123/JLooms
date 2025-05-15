@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { create } from "zustand";
 import { getTokenFromServerCookies } from "../auth/utils/storeTokenOnServer";
 import { baseUrl } from "../utils/baseUrl";
-import { useLoginnedUserStore } from "./useCurrLoginnedUser";
 
 export interface UserInterface {
   id: number;
@@ -42,15 +41,15 @@ export const useUserStore = create<UseUserStoreIterface>((set) => ({
   userError: null,
   userLoading: false,
   getUser: async () => {
-    const token = await getTokenFromServerCookies();
-    const { userLoginned } = useLoginnedUserStore.getState();
-    const currentTime = new Date().getTime();
-    if (currentTime - lastFetchedTime < CACHE_EXPIRATION_TIME) {
-      return;
-    }
+    const userType = localStorage.getItem("userType");
+    if (userType === "Admin") {
+      const token = await getTokenFromServerCookies();
+      const currentTime = new Date().getTime();
+      if (currentTime - lastFetchedTime < CACHE_EXPIRATION_TIME) {
+        return;
+      }
 
-    set({ userLoading: true });
-    if (userLoginned?.admin_name) {
+      set({ userLoading: true });
       try {
         const res = await axios.get(
           `${baseUrl}/school/my-profile?t=${currentTime}`,

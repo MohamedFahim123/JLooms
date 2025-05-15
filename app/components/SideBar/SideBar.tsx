@@ -3,6 +3,7 @@ import { useClassesStore } from "@/app/store/getAllClasses";
 import { useCountriesStore } from "@/app/store/getAllCountries";
 import { useRulesStore } from "@/app/store/getAllRules";
 import { useUserStore } from "@/app/store/getLoginnedUserProfile";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import {
@@ -13,14 +14,13 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { GrUserSettings } from "react-icons/gr";
 import { MdSecurity } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
 import { RiParentFill } from "react-icons/ri";
 import { SiGoogleclassroom } from "react-icons/si";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
 import styles from "./sideBar.module.css";
-import { GrUserSettings } from "react-icons/gr";
-import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 interface SideBarProps {
   collapsed: boolean;
@@ -29,6 +29,7 @@ interface SideBarProps {
 
 export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const router = useRouter();
+  const userType = localStorage.getItem("userType");
   const pathname = usePathname();
   const { classes, getClasses, classesLoading } = useClassesStore();
   const { rules, getRules, rulesLoading } = useRulesStore();
@@ -106,7 +107,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
         )}
       </div>
       <Menu>
-        {userLoginned?.admin_name ? (
+        {userType === "Admin" ? (
           <MenuItem
             icon={<FaUser />}
             onClick={() => router.push("/dashboard/profile")}
@@ -130,7 +131,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           </MenuItem>
         )}
 
-        {userLoginned?.permissions?.includes("View Teachers") && (
+        {userType === "Admin" ? (
           <MenuItem
             icon={<FaChalkboardTeacher />}
             onClick={() => router.push("/dashboard/teachers")}
@@ -140,9 +141,23 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           >
             Teachers
           </MenuItem>
+        ) : (
+          userLoginned?.permissions?.includes("View Teachers") && (
+            <MenuItem
+              icon={<FaChalkboardTeacher />}
+              onClick={() => router.push("/dashboard/teachers")}
+              className={
+                isActive("/dashboard/teachers")
+                  ? `${styles.activeMenuItem}`
+                  : ""
+              }
+            >
+              Teachers
+            </MenuItem>
+          )
         )}
 
-        {userLoginned?.permissions?.includes("View Students") && (
+        {userType === "Admin" ? (
           <MenuItem
             icon={<PiStudentBold />}
             onClick={() => router.push("/dashboard/students")}
@@ -152,9 +167,23 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           >
             Students
           </MenuItem>
+        ) : (
+          userLoginned?.permissions?.includes("View Students") && (
+            <MenuItem
+              icon={<PiStudentBold />}
+              onClick={() => router.push("/dashboard/students")}
+              className={
+                isActive("/dashboard/students")
+                  ? `${styles.activeMenuItem}`
+                  : ""
+              }
+            >
+              Students
+            </MenuItem>
+          )
         )}
 
-        {userLoginned?.permissions?.includes("View Parents") && (
+        {userType === "Admin" ? (
           <MenuItem
             icon={<RiParentFill />}
             onClick={() => router.push("/dashboard/parents")}
@@ -164,9 +193,21 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           >
             Parents
           </MenuItem>
+        ) : (
+          userLoginned?.permissions?.includes("View Parents") && (
+            <MenuItem
+              icon={<RiParentFill />}
+              onClick={() => router.push("/dashboard/parents")}
+              className={
+                isActive("/dashboard/parents") ? `${styles.activeMenuItem}` : ""
+              }
+            >
+              Parents
+            </MenuItem>
+          )
         )}
 
-        {userLoginned?.permissions?.includes("View Classes") && (
+        {userType === "Admin" ? (
           <MenuItem
             icon={<SiGoogleclassroom />}
             onClick={() => router.push("/dashboard/classes")}
@@ -176,6 +217,18 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           >
             Classes
           </MenuItem>
+        ) : (
+          userLoginned?.permissions?.includes("View Classes") && (
+            <MenuItem
+              icon={<SiGoogleclassroom />}
+              onClick={() => router.push("/dashboard/classes")}
+              className={
+                isActive("/dashboard/classes") ? `${styles.activeMenuItem}` : ""
+              }
+            >
+              Classes
+            </MenuItem>
+          )
         )}
 
         <SubMenu label="Curriculums" icon={<MdSecurity />}>
@@ -201,7 +254,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           </MenuItem>
         </SubMenu>
 
-        {userLoginned?.permissions?.includes("View Employee") && (
+        {userType === "Admin" ? (
           <MenuItem
             icon={<FaPeopleGroup />}
             onClick={() => router.push("/dashboard/employees")}
@@ -211,18 +264,45 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           >
             Employees
           </MenuItem>
+        ) : (
+          userLoginned?.permissions?.includes("View Employee") && (
+            <MenuItem
+              icon={<FaPeopleGroup />}
+              onClick={() => router.push("/dashboard/employees")}
+              className={
+                isActive("/dashboard/employees")
+                  ? `${styles.activeMenuItem}`
+                  : ""
+              }
+            >
+              Employees
+            </MenuItem>
+          )
         )}
 
-        {
-          userLoginned?.permissions?.includes("View Roles") && <MenuItem
-          icon={<GrUserSettings />}
-          onClick={() => router.push("/dashboard/roles")}
-          className={
-            isActive("/dashboard/roles") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Roles
-        </MenuItem>}
+        {userType === "Admin" ? (
+          <MenuItem
+            icon={<GrUserSettings />}
+            onClick={() => router.push("/dashboard/roles")}
+            className={
+              isActive("/dashboard/roles") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            Roles
+          </MenuItem>
+        ) : (
+          userLoginned?.permissions?.includes("View Roles") && (
+            <MenuItem
+              icon={<GrUserSettings />}
+              onClick={() => router.push("/dashboard/roles")}
+              className={
+                isActive("/dashboard/roles") ? `${styles.activeMenuItem}` : ""
+              }
+            >
+              Roles
+            </MenuItem>
+          )
+        )}
 
         <SubMenu label="Settings" icon={<FaCog />}>
           <MenuItem

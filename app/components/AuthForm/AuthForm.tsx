@@ -59,8 +59,9 @@ export default function AuthForm({
           userType === "Admin" ? type : "employee_login",
           setError
         );
-        if (status === "success") {
-          router.push("/dashboard");
+        if (status === "success" && userType) {
+          localStorage.setItem("userType", userType);
+          router.push(userType === "Admin" ? "/dashboard/profile" : "/dashboard/employee-profile");
         }
       }
       const status = await handleApplication_JsonData(data, type, setError);
