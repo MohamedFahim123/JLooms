@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-interface Permission {
+export interface Permission {
   id: number;
   name: string;
 }

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { authEndPoints } from "./authEndPoints";
 import { FormAuthInputs } from "./interfaces";
 import { setServerCookie } from "./storeTokenOnServer";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 type AuthEndPointType = keyof typeof authEndPoints;
 
@@ -40,14 +41,28 @@ export const handleApplication_JsonData = async (
       autoClose: 1500,
     });
 
-    const { token, school } = response?.data?.data || {};
+    const { token, school, employee } = response?.data?.data || {};
     if (token) {
       setServerCookie("CLIENT_JLOOMS_TOKEN", token);
       Cookies.set("CLIENT_JLOOMS_TOKEN", token, { expires: 1 });
     }
 
+    const { setUserLoginned } = useLoginnedUserStore.getState();
     if (school?.id) {
+      Cookies.set(`CurrUserLoginned`, JSON.stringify(school), {
+        expires: 1,
+        secure: true,
+      });
+      setUserLoginned(school);
       handleRegistrationCookies(type, school.id);
+    }
+
+    if (employee?.id) {
+      Cookies.set(`CurrUserLoginned`, JSON.stringify(employee), {
+        expires: 1,
+        secure: true,
+      });
+      setUserLoginned(employee);
     }
 
     return "success";
@@ -71,7 +86,7 @@ function handleRegistrationCookies(type: AuthEndPointType, schoolId: string) {
     employee_login: "",
     employee_logout: "",
     employee_resetPassword: "",
-    employee_forgetPassword: ""
+    employee_forgetPassword: "",
   };
 
   if (stepMapping[type]) {

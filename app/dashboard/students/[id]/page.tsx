@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { dataURLS } from "../../utils/dataUrls";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 interface ParamsProps {
   id: string;
@@ -25,6 +26,7 @@ export default async function SingleStudentPage({
   const { id } = await params;
   const cookiesData = await cookies();
   const token = cookiesData.get("CLIENT_JLOOMS_TOKEN")?.value;
+  const { userLoginned } = useLoginnedUserStore.getState();
 
   const fetchTeacher = await fetch(`${dataURLS.singleStudent}/${id}`, {
     method: "GET",
@@ -37,13 +39,9 @@ export default async function SingleStudentPage({
   const response = await fetchTeacher?.json();
 
   const student = response?.data?.student;
-  const tableCells = [
-    "Parent Name",
-    "Parent Code",
-    "Relation",
-    "Mobile",
-    "Remove",
-  ];
+  const tableCells = userLoginned?.permissions?.includes("Un Assign Parents")
+    ? ["Parent Name", "Parent Code", "Relation", "Mobile", "Remove"]
+    : ["Parent Name", "Parent Code", "Relation", "Mobile"];
 
   return (
     <Suspense fallback={<Loader />}>
@@ -53,14 +51,15 @@ export default async function SingleStudentPage({
           haveBtn={false}
         />
         <SingleStudentView student={student} />
-        {student?.parents?.length > 0 && (
-          <DashBoardTable
-            currPage="singleStudent"
-            tableCells={tableCells}
-            tableData={student?.parents}
-            currStudentId={id}
-          />
-        )}
+        {userLoginned?.permissions?.includes("Assign Parents") &&
+          student?.parents?.length > 0 && (
+            <DashBoardTable
+              currPage="singleStudent"
+              tableCells={tableCells}
+              tableData={student?.parents}
+              currStudentId={id}
+            />
+          )}
       </div>
     </Suspense>
   );

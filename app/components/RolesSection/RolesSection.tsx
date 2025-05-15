@@ -10,6 +10,7 @@ import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 import Loader from "../Loader/Loader";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 async function fetchRolesData(
   filters: Record<string, string | number> = {},
@@ -70,6 +71,7 @@ export default function RolesSection() {
   const [roles, setRoles] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const { userLoginned } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -88,7 +90,7 @@ export default function RolesSection() {
     fetchData();
   }, [filters]);
 
-  const tableCells: string[] = ["name", "action"];
+  const tableCells: string[] = userLoginned?.permissions?.includes("Delete Roles") ? ["name", "action"] : ["name"];
 
   return (
     <div
@@ -99,7 +101,7 @@ export default function RolesSection() {
       <DashBoardPageHead
         text="Roles"
         btnText="Add Role"
-        haveBtn={true}
+        haveBtn={userLoginned?.permissions?.includes("Create Roles") ? true : false}
         btnLink="/dashboard/roles/add-role"
       />
       <DashBoardFilterations

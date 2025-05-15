@@ -64,7 +64,6 @@ const CurriculumsFullPagea = () => {
     "Email",
     "Remove",
   ];
-  console.log(loading);
 
   return (
     <div

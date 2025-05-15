@@ -2,6 +2,7 @@
 
 import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import { TableRowProps } from "@/app/utils/interfaces";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ import Swal from "sweetalert2";
 
 const RolesTableRow = ({ cell }: TableRowProps) => {
   const router = useRouter();
+  const { userLoginned } = useLoginnedUserStore();
 
   const handleDelete = () => {
     Swal.fire({
@@ -20,16 +22,13 @@ const RolesTableRow = ({ cell }: TableRowProps) => {
     }).then(async (result) => {
       const token = await getTokenFromServerCookies();
       if (result.isConfirmed) {
-        const res = await axios.delete(
-          `${dataURLS.deleteRole}/${cell?.id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.delete(`${dataURLS.deleteRole}/${cell?.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (res.status === 200) {
           Swal.fire({
             icon: "success",
@@ -62,21 +61,21 @@ const RolesTableRow = ({ cell }: TableRowProps) => {
         <span className="block md:hidden font-semibold text-gray-500">
           Name:
         </span>
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-semibold`}
-        >
+        <span className={`px-2 py-1 rounded-full text-xs font-semibold`}>
           {cell?.name}
         </span>
       </td>
-      <td className="py-3 px-4 cursor-default">
-        <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
-          <MdDelete
-            onClick={handleDelete}
-            size={20}
-            className="cursor-pointer"
-          />
-        </span>
-      </td>
+      {userLoginned?.permissions?.includes("Delete Roles") && (
+        <td className="py-3 px-4 cursor-default">
+          <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
+            <MdDelete
+              onClick={handleDelete}
+              size={20}
+              className="cursor-pointer"
+            />
+          </span>
+        </td>
+      )}
     </tr>
   );
 };

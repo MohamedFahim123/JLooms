@@ -4,6 +4,7 @@ import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { OPTION } from "@/app/dashboard/classes/[id]/page";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { FaCheck, FaEdit } from "react-icons/fa";
@@ -46,6 +47,7 @@ export default function SingleClassRowOfAction({
     null
   );
   const [sendingRequest, setSendingRequest] = useState<boolean>(false);
+  const { userLoginned } = useLoginnedUserStore();
 
   const handleSelectOptionChange = useCallback(
     (e: { target: { value: string } }) => {
@@ -247,53 +249,59 @@ export default function SingleClassRowOfAction({
       <div>
         {editMode ? (
           type === "action" ? (
-            <select
-              defaultValue={
-                allActions?.find((action) => action?.action === option?.action)
-                  ? allActions?.find(
-                      (action) => action?.action === option?.action
-                    )?.id
-                  : ""
-              }
-              disabled={sendingRequest}
-              onChange={handleSelectOptionChange}
-              id="actionSelectedToClass"
-              className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
-            >
-              <option value={""} disabled>
-                Select an Action
-              </option>
-              {allActions?.map((action) => (
-                <option key={action?.id} value={action?.id}>
-                  {action?.action}
+            userLoginned?.permissions?.includes("Update School Actions") && (
+              <select
+                defaultValue={
+                  allActions?.find(
+                    (action) => action?.action === option?.action
+                  )
+                    ? allActions?.find(
+                        (action) => action?.action === option?.action
+                      )?.id
+                    : ""
+                }
+                disabled={sendingRequest}
+                onChange={handleSelectOptionChange}
+                id="actionSelectedToClass"
+                className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
+              >
+                <option value={""} disabled>
+                  Select an Action
                 </option>
-              ))}
-            </select>
+                {allActions?.map((action) => (
+                  <option key={action?.id} value={action?.id}>
+                    {action?.action}
+                  </option>
+                ))}
+              </select>
+            )
           ) : (
-            <select
-              defaultValue={
-                allActivities?.find(
-                  (activity) => activity.name === option?.name
-                )
-                  ? allActivities?.find(
-                      (activity) => activity.name === option?.name
-                    )?.id
-                  : ""
-              }
-              disabled={sendingRequest}
-              onChange={handleSelectOptionChange}
-              id="activitySelectedToClass"
-              className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
-            >
-              <option value={""} disabled>
-                Select ab Activity
-              </option>
-              {allActivities?.map((activity) => (
-                <option key={activity?.id} value={activity?.id}>
-                  {activity?.name}
+            userLoginned?.permissions?.includes("Update School Activities") && (
+              <select
+                defaultValue={
+                  allActivities?.find(
+                    (activity) => activity.name === option?.name
+                  )
+                    ? allActivities?.find(
+                        (activity) => activity.name === option?.name
+                      )?.id
+                    : ""
+                }
+                disabled={sendingRequest}
+                onChange={handleSelectOptionChange}
+                id="activitySelectedToClass"
+                className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
+              >
+                <option value={""} disabled>
+                  Select an Activity
                 </option>
-              ))}
-            </select>
+                {allActivities?.map((activity) => (
+                  <option key={activity?.id} value={activity?.id}>
+                    {activity?.name}
+                  </option>
+                ))}
+              </select>
+            )
           )
         ) : (
           <input
@@ -306,24 +314,52 @@ export default function SingleClassRowOfAction({
         )}
       </div>
       <div className={`flex`}>
-        <button
-          disabled={sendingRequest}
-          onClick={handleDeleteActionOrActivity}
-          type="button"
-          className={`text-[#ff2020] py-2 px-4`}
-        >
-          <FaRegTrashCan size={22} />
-        </button>
-        <button
-          disabled={sendingRequest}
-          onClick={handleEditORAddActionOrActivity}
-          type={"button"}
-          className={`${
-            editMode ? "text-green-700" : "text-blue-700"
-          } py-2 px-4`}
-        >
-          {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
-        </button>
+        {type === "action"
+          ? userLoginned?.permissions?.includes("Remove School Actions") && (
+              <button
+                disabled={sendingRequest}
+                onClick={handleDeleteActionOrActivity}
+                type="button"
+                className={`text-[#ff2020] py-2 px-4`}
+              >
+                <FaRegTrashCan size={22} />
+              </button>
+            )
+          : userLoginned?.permissions?.includes("Remove School Activities") && (
+              <button
+                disabled={sendingRequest}
+                onClick={handleDeleteActionOrActivity}
+                type="button"
+                className={`text-[#ff2020] py-2 px-4`}
+              >
+                <FaRegTrashCan size={22} />
+              </button>
+            )}
+        {type === "action"
+          ? userLoginned?.permissions?.includes("Update School Actions") && (
+              <button
+                disabled={sendingRequest}
+                onClick={handleEditORAddActionOrActivity}
+                type={"button"}
+                className={`${
+                  editMode ? "text-green-700" : "text-blue-700"
+                } py-2 px-4`}
+              >
+                {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
+              </button>
+            )
+          : userLoginned?.permissions?.includes("Update School Activities") && (
+              <button
+                disabled={sendingRequest}
+                onClick={handleEditORAddActionOrActivity}
+                type={"button"}
+                className={`${
+                  editMode ? "text-green-700" : "text-blue-700"
+                } py-2 px-4`}
+              >
+                {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
+              </button>
+            )}
       </div>
     </form>
   );

@@ -11,9 +11,11 @@ import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import avatar from "../../imgs/teachers/teacher1.png";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 export default function StudentsTableRow({ cell }: TableRowProps) {
   const router = useRouter();
+  const { userLoginned } = useLoginnedUserStore();
 
   const handleDelete = () => {
     Swal.fire({
@@ -110,9 +112,13 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
             </span>
             <span
               onClick={() => {
-                if (cell?.id) {
-                  Cookies.set("student_id", `${cell?.id}`);
-                  router.push(`/dashboard/students/${cell?.id}/assign-parent`);
+                if (userLoginned?.permissions?.includes("Assign Parents")) {
+                  if (cell?.id) {
+                    Cookies.set("student_id", `${cell?.id}`);
+                    router.push(
+                      `/dashboard/students/${cell?.id}/assign-parent`
+                    );
+                  }
                 }
               }}
               className="text-blue-700 underline cursor-pointer"
@@ -122,15 +128,17 @@ export default function StudentsTableRow({ cell }: TableRowProps) {
           </>
         )}
       </td>
-      <td className="py-3 px-4 cursor-default">
-        <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
-          <MdDelete
-            onClick={handleDelete}
-            size={20}
-            className="cursor-pointer"
-          />
-        </span>
-      </td>
+      {userLoginned?.permissions?.includes("Delete Students") && (
+        <td className="py-3 px-4 cursor-default">
+          <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
+            <MdDelete
+              onClick={handleDelete}
+              size={20}
+              className="cursor-pointer"
+            />
+          </span>
+        </td>
+      )}
     </tr>
   );
 }

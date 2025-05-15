@@ -10,6 +10,7 @@ import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 import Loader from "../Loader/Loader";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 let loading: boolean = true;
 async function fetchTeachersData(
@@ -53,6 +54,7 @@ export default function StudentsSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [students, setStudents] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const { userLoginned } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -71,14 +73,18 @@ export default function StudentsSection() {
     }
     fetchData();
   }, [filters]);
-  const tableCells: string[] = ["name", "class name", "parent", "Remove"];
+  const tableCells: string[] = userLoginned?.permissions?.includes(
+    "Delete Students"
+  )
+    ? ["name", "class name", "parent", "action"]
+    : ["name", "class name", "parent"];
 
   return (
     <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
       <DashBoardPageHead
         text="Students"
         btnText="Add Student"
-        haveBtn={true}
+        haveBtn={userLoginned?.permissions?.includes("Create Students") ? true : false}
         btnLink="/dashboard/students/add-new-student"
       />
       <DashBoardFilterations

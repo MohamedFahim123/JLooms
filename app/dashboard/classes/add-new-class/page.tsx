@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { dataURLS } from "../../utils/dataUrls";
 import Loader from "@/app/components/Loader/Loader";
+import { Suspense } from "react";
 
 const cache: {
   actions?: { data: unknown; timestamp: number };
@@ -61,20 +62,15 @@ export default async function page() {
     "activities"
   );
 
-  if (
-    actions?.data?.actions?.length === 0 ||
-    activities?.data?.activities?.length === 0
-  ) {
-    return <Loader />;
-  }
-
   return (
-    <div className="mx-auto py-6 bg-white rounded-lg">
-      <DashBoardPageHead text="Add New Class" />
-      <AddNewClassForm
-        actions={actions?.data?.actions}
-        activities={activities?.data?.activities}
-      />
-    </div>
+    <Suspense fallback={<Loader />}>
+      <div className="mx-auto py-6 bg-white rounded-lg">
+        <DashBoardPageHead text="Add New Class" />
+        <AddNewClassForm
+          actions={actions?.data?.actions}
+          activities={activities?.data?.activities}
+        />
+      </div>
+    </Suspense>
   );
 }

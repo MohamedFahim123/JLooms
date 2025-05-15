@@ -10,6 +10,7 @@ import { FaGraduationCap } from "react-icons/fa";
 import { toast } from "react-toastify";
 import SingleClassRowOfAction from "../SingleClassRowOfAction/SingleClassRowOfAction";
 import SingleClassRowOfTeacher from "../SingleClassRowOfTeacher/SingleClassRowOfTeacher";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 interface ActionOrActivitySectionProps {
   allowedTeachers: teacherInterface[];
@@ -33,6 +34,7 @@ export default function ActionOrActivitySection({
   const [currActionsState, setCurrActionsState] = useState<"adding" | "submit">(
     "adding"
   );
+  const { userLoginned } = useLoginnedUserStore();
   const [isAddingTeacher, setIsAddingTeacher] = useState<boolean>(false);
   const [currTeachersState, setCurrTeachersState] = useState<
     "adding" | "submit"
@@ -163,21 +165,25 @@ export default function ActionOrActivitySection({
           </div>
         ))}
 
-        {!isAddingTeacher && (
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => handleAddMoreActionOrActivityOrTeacher("Teacher")}
-              type="button"
-              className={`m-auto border-y border-x ${
-                currTeachersState === "adding"
-                  ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
-                  : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
-              } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}
-            >
-              Add Teacher
-            </button>
-          </div>
-        )}
+        {userLoginned?.permissions?.includes("Update Classes") &&
+          userLoginned?.permissions?.includes("Assign Teachers") &&
+          !isAddingTeacher && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() =>
+                  handleAddMoreActionOrActivityOrTeacher("Teacher")
+                }
+                type="button"
+                className={`m-auto border-y border-x ${
+                  currTeachersState === "adding"
+                    ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
+                    : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
+                } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}
+              >
+                Add Teacher
+              </button>
+            </div>
+          )}
       </div>
       <div className="lg:col-span-12 mt-8">
         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
@@ -233,23 +239,24 @@ export default function ActionOrActivitySection({
                 />
               </div>
             ))}
-        {currActionsState === "adding" && (
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => {
-                handleAddMoreActionOrActivityOrTeacher("Action");
-              }}
-              type={"button"}
-              className={`m-auto border-y border-x ${
-                currActionsState === "adding"
-                  ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
-                  : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
-              } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}
-            >
-              Add Action
-            </button>
-          </div>
-        )}
+        {userLoginned?.permissions?.includes("Update Classes") && userLoginned?.permissions?.includes("Assign School Actions") &&
+          currActionsState === "adding" && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => {
+                  handleAddMoreActionOrActivityOrTeacher("Action");
+                }}
+                type={"button"}
+                className={`m-auto border-y border-x ${
+                  currActionsState === "adding"
+                    ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
+                    : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
+                } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}
+              >
+                Add Action
+              </button>
+            </div>
+          )}
       </div>
       <div className="lg:col-span-12 mt-8">
         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
@@ -305,23 +312,24 @@ export default function ActionOrActivitySection({
                 />
               </div>
             ))}
-        {currActivitiesState === "adding" && (
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => {
-                handleAddMoreActionOrActivityOrTeacher("Activity");
-              }}
-              type={"button"}
-              className={`m-auto border-y border-x ${
-                currActivitiesState === "adding"
-                  ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
-                  : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
-              } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}
-            >
-              Add Activity
-            </button>
-          </div>
-        )}
+        {userLoginned?.permissions?.includes("Update Classes") && userLoginned?.permissions?.includes("Assign School Activities") &&
+          currActivitiesState === "adding" && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => {
+                  handleAddMoreActionOrActivityOrTeacher("Activity");
+                }}
+                type={"button"}
+                className={`m-auto border-y border-x ${
+                  currActivitiesState === "adding"
+                    ? "hover:bg-white border-blue-700 text-white hover:text-blue-700 rounded-lg bg-blue-700"
+                    : "hover:bg-white text-white hover:text-green-700 rounded-lg bg-green-700 border-green-700"
+                } border-x border-y transition-all duration-300 font-semibold py-2 px-4`}
+              >
+                Add Activity
+              </button>
+            </div>
+          )}
       </div>
     </div>
   );

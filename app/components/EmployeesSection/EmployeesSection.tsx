@@ -10,13 +10,13 @@ import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 import Loader from "../Loader/Loader";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 let loading: boolean = true;
 async function fetchEmployeesData(
   filters: Record<string, string | number> = {}
 ): Promise<{ data: Table[]; totalPages: number }> {
   loading = true;
-
   const token = await getTokenFromServerCookies();
 
   const queryParams = new URLSearchParams();
@@ -51,6 +51,7 @@ async function fetchEmployeesData(
   };
 }
 export default function EmployeesSection() {
+  const { userLoginned } = useLoginnedUserStore();
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [employees, setEmployees] = useState<Table[]>([]);
@@ -74,7 +75,7 @@ export default function EmployeesSection() {
     fetchData();
   }, [filters]);
 
-  const tableCells: string[] = ["name", "phone", "email", "status", "action"];
+  const tableCells: string[] = userLoginned?.permissions?.includes("Delete Employee") ? ["name", "phone", "email", "status", "action"] : ["name", "phone", "email", "status"];
 
   return (
     <div
@@ -85,7 +86,9 @@ export default function EmployeesSection() {
       <DashBoardPageHead
         text="Employees"
         btnText="Add Employee"
-        haveBtn={true}
+        haveBtn={
+          userLoginned?.permissions?.includes("Create Employee") ? true : false
+        }
         btnLink="/dashboard/employees/add-employee"
       />
       <DashBoardFilterations page="employees" placeHolder="Find an employee" />

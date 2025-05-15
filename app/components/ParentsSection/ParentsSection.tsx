@@ -10,6 +10,7 @@ import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
 import Pagination from "../Pagination/Pagination";
 import Loader from "../Loader/Loader";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 let loading: boolean = true;
 async function fetchparentsData(
@@ -47,6 +48,7 @@ export default function ParentsSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [parents, setParents] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const { userLoginned } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -65,13 +67,12 @@ export default function ParentsSection() {
     fetchData();
   }, [filters]);
 
-  const tableCells: string[] = [
-    "Parent Name",
-    "Code",
-    "Mobile",
-    "Email",
-    "Remove",
-  ];
+  const tableCells: string[] = userLoginned?.permissions?.includes(
+    "Delete Parents"
+  )
+    ? ["Parent Name", "Code", "Mobile", "Email", "Action"]
+    : ["Parent Name", "Code", "Mobile", "Email"];
+
 
   return (
     <div
@@ -82,7 +83,9 @@ export default function ParentsSection() {
       <DashBoardPageHead
         text="Parents"
         btnText="Add Parent"
-        haveBtn={true}
+        haveBtn={
+          userLoginned?.permissions?.includes("Create Parents") ? true : false
+        }
         btnLink="/dashboard/parents/add-parent"
       />
       <DashBoardFilterations

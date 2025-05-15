@@ -3,6 +3,7 @@
 import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { Table } from "@/app/dashboard/utils/interfaces";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilterations";
@@ -54,6 +55,7 @@ export default function ClassesSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [classes, setClasses] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const { userLoginned } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -72,7 +74,12 @@ export default function ClassesSection() {
     fetchData();
   }, [filters]);
 
-  const tableCells: string[] = ["Class Name", "Number of Students", "Actions"];
+  const tableCells: string[] = userLoginned?.permissions?.includes(
+    "Delete Classes"
+  )
+    ? ["Class Name", "Number of Students", "Actions"]
+    : ["Class Name", "Number of Students"];
+
   return (
     <div
       className={`${
@@ -82,7 +89,9 @@ export default function ClassesSection() {
       <DashBoardPageHead
         text="Classes"
         btnText="Add Class"
-        haveBtn={true}
+        haveBtn={
+          userLoginned?.permissions?.includes("Create Classes") ? true : false
+        }
         btnLink="/dashboard/classes/add-new-class"
       />
       <DashBoardFilterations

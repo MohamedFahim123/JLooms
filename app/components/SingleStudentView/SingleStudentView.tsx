@@ -11,6 +11,7 @@ import { useState } from "react";
 import { FaEnvelope, FaGraduationCap } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Avatar from "../../imgs/teachers/teacher1.png";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 interface SingleStudent {
   id: number | string;
@@ -32,6 +33,7 @@ export default function SingleStudentView({
   student: SingleStudent;
 }) {
   const [currClassId, setCurrClassId] = useState<string | number>();
+  const { userLoginned } = useLoginnedUserStore();
   const [status, setStatus] = useState<string>(
     student?.class_name === "N/A" ? "update" : "assigned"
   );
@@ -104,17 +106,19 @@ export default function SingleStudentView({
             </Link>
           </div>
         </div>
-        <div className="flex space-x-4">
-          <Link
-            className="text-indigo-500 underline hover:text-indigo-600 transition-all duration-300"
-            onClick={() => {
-              Cookies.set("student_id", `${student?.id}`);
-            }}
-            href={`/dashboard/students/${student?.id}/assign-parent`}
-          >
-            Assign Parents
-          </Link>
-        </div>
+        {userLoginned?.permissions?.includes("Un Assign Parents") && (
+          <div className="flex space-x-4">
+            <Link
+              className="text-indigo-500 underline hover:text-indigo-600 transition-all duration-300"
+              onClick={() => {
+                Cookies.set("student_id", `${student?.id}`);
+              }}
+              href={`/dashboard/students/${student?.id}/assign-parent`}
+            >
+              Assign Parents
+            </Link>
+          </div>
+        )}
       </div>
       <div className="lg:col-span-8 mt-8">
         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center gap-2">
@@ -132,26 +136,30 @@ export default function SingleStudentView({
               <li className="flex items-center gap-2">
                 <span className="font-semibold text-gray-800">Class Name:</span>
                 {status === "update" ? (
-                  <select
-                    defaultValue={
-                      student?.class_name !== "N/A"
-                        ? classes?.find(
-                            (el) => el?.name === student?.class_name
-                          )?.id
-                        : ""
-                    }
-                    onChange={(e) => setCurrClassId(e.target.value)}
-                    className={`w-4/12 px-4 py-2 border rounded-md focus:outline-none`}
-                  >
-                    <option value="" disabled>
-                      Assign a Class
-                    </option>
-                    {classes?.map((el) => (
-                      <option key={el?.id} value={el?.id}>
-                        {el?.name}
+                  userLoginned?.permissions?.includes("Assign Students") ? (
+                    <select
+                      defaultValue={
+                        student?.class_name !== "N/A"
+                          ? classes?.find(
+                              (el) => el?.name === student?.class_name
+                            )?.id
+                          : ""
+                      }
+                      onChange={(e) => setCurrClassId(e.target.value)}
+                      className={`w-4/12 px-4 py-2 border rounded-md focus:outline-none`}
+                    >
+                      <option value="" disabled>
+                        Assign a Class
                       </option>
-                    ))}
-                  </select>
+                      {classes?.map((el) => (
+                        <option key={el?.id} value={el?.id}>
+                          {el?.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span>{student?.class_name}</span>
+                  )
                 ) : (
                   <span>{student?.class_name}</span>
                 )}
@@ -169,25 +177,27 @@ export default function SingleStudentView({
             </li>
           )}
         </ul>
-        {status === "update" ? (
-          <div className="mt-4 flex items-center gap-2">
-            <button
-              onClick={handleAssignToClass}
-              className="px-6 py-2 border rounded-md text-white bg-[#10B981]"
-            >
-              Assign to Class
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 mt-4">
-            <button
-              onClick={() => setStatus("update")}
-              className="bg-indigo-500 hover:bg-indigo-600 transition-all duration-300 text-white font-medium py-2 px-4 rounded"
-            >
-              Update Class
-            </button>
-          </div>
-        )}
+        {status === "update"
+          ? userLoginned?.permissions?.includes("Assign Students") && (
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  onClick={handleAssignToClass}
+                  className="px-6 py-2 border rounded-md text-white bg-[#10B981]"
+                >
+                  Assign to Class
+                </button>
+              </div>
+            )
+          : userLoginned?.permissions?.includes("Assign Students") && (
+              <div className="flex items-center gap-2 mt-4">
+                <button
+                  onClick={() => setStatus("update")}
+                  className="bg-indigo-500 hover:bg-indigo-600 transition-all duration-300 text-white font-medium py-2 px-4 rounded"
+                >
+                  Update Class
+                </button>
+              </div>
+            )}
       </div>
     </div>
   );

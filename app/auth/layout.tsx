@@ -6,6 +6,7 @@ import RegisterStepProgress, {
 } from "../components/RegisterStepProgress/RegisterStepProgress";
 import styles from "./authStyles.module.css";
 import { getTokenFromServerCookies } from "./utils/storeTokenOnServer";
+import { useLoginnedUserStore } from "../store/useCurrLoginnedUser";
 
 const steps2: Step[] = [
   {
@@ -54,6 +55,7 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { userLoginned } = useLoginnedUserStore();
   const pathName = usePathname();
   const router = useRouter();
 
@@ -61,11 +63,15 @@ export default function AuthLayout({
     (async () => {
       const token = await getTokenFromServerCookies();
       if (token) {
-        router.push("/dashboard/profile");
+        if (userLoginned?.admin_name) {
+          router.push("/dashboard/profile");
+        } else {
+          router.push("/dashboard/employee-profile");
+        }
         return;
       }
     })();
-  }, [router]);
+  }, [router, userLoginned?.admin_name]);
 
   return (
     <div className={`${styles.auth_layout}`}>

@@ -60,7 +60,7 @@ export default function AuthForm({
           setError
         );
         if (status === "success") {
-          window.location.reload();
+          router.push("/dashboard");
         }
       }
       const status = await handleApplication_JsonData(data, type, setError);

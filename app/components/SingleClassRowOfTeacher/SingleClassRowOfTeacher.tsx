@@ -4,6 +4,7 @@ import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { OPTION } from "@/app/dashboard/classes/[id]/page";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { teacherInterface } from "@/app/dashboard/utils/interfaces";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -33,6 +34,7 @@ export default function SingleClassRowOfTeacher({
     setNewTeacher("");
     setSelectedActivities([]);
   };
+  const { userLoginned } = useLoginnedUserStore();
 
   const handleSubmitNewTeacher = async () => {
     if (!newTeacher) return toast.error("Please select a teacher.");
@@ -113,14 +115,16 @@ export default function SingleClassRowOfTeacher({
                 ))}
               </ul>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={handleDeleteTeacher}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
+            {userLoginned?.permissions?.includes("Assign Teachers") && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleDeleteTeacher}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
         </div>
       ) : (

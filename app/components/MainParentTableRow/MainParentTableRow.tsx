@@ -10,9 +10,11 @@ import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import avatar from "../../imgs/teachers/teacher1.png";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 export default function MainParentTableRow({ cell }: TableRowProps) {
   const router = useRouter();
+  const { userLoginned } = useLoginnedUserStore();
 
   const handleDelete = () => {
     Swal.fire({
@@ -105,15 +107,17 @@ export default function MainParentTableRow({ cell }: TableRowProps) {
         </span>
         {cell?.email}
       </td>
-      <td className="py-3 px-4 cursor-default">
-        <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
-          <MdDelete
-            onClick={handleDelete}
-            size={20}
-            className="cursor-pointer"
-          />
-        </span>
-      </td>
+      {userLoginned?.permissions?.includes("Delete Parents") && (
+        <td className="py-3 px-4 cursor-default">
+          <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
+            <MdDelete
+              onClick={handleDelete}
+              size={20}
+              className="cursor-pointer"
+            />
+          </span>
+        </td>
+      )}
     </tr>
   );
 }

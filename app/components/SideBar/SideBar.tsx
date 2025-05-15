@@ -20,6 +20,7 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
 import styles from "./sideBar.module.css";
 import { GrUserSettings } from "react-icons/gr";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 interface SideBarProps {
   collapsed: boolean;
@@ -33,6 +34,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const { rules, getRules, rulesLoading } = useRulesStore();
   const { user, getUser, userLoading } = useUserStore();
   const { countries, getCountries, countriesLoading } = useCountriesStore();
+  const { userLoginned } = useLoginnedUserStore();
 
   const getUserProfile = useCallback(() => {
     if (!user && !userLoading) {
@@ -104,55 +106,77 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
         )}
       </div>
       <Menu>
-        <MenuItem
-          icon={<FaUser />}
-          onClick={() => router.push("/dashboard/profile")}
-          className={
-            isActive("/dashboard/profile") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Profile
-        </MenuItem>
+        {userLoginned?.admin_name ? (
+          <MenuItem
+            icon={<FaUser />}
+            onClick={() => router.push("/dashboard/profile")}
+            className={
+              isActive("/dashboard/profile") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            School Profile
+          </MenuItem>
+        ) : (
+          <MenuItem
+            icon={<FaUser />}
+            onClick={() => router.push("/dashboard/employee-profile")}
+            className={
+              isActive("/dashboard/employee-profile")
+                ? `${styles.activeMenuItem}`
+                : ""
+            }
+          >
+            My Profile
+          </MenuItem>
+        )}
 
-        <MenuItem
-          icon={<FaChalkboardTeacher />}
-          onClick={() => router.push("/dashboard/teachers")}
-          className={
-            isActive("/dashboard/teachers") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Teachers
-        </MenuItem>
+        {userLoginned?.permissions?.includes("View Teachers") && (
+          <MenuItem
+            icon={<FaChalkboardTeacher />}
+            onClick={() => router.push("/dashboard/teachers")}
+            className={
+              isActive("/dashboard/teachers") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            Teachers
+          </MenuItem>
+        )}
 
-        <MenuItem
-          icon={<PiStudentBold />}
-          onClick={() => router.push("/dashboard/students")}
-          className={
-            isActive("/dashboard/students") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Students
-        </MenuItem>
+        {userLoginned?.permissions?.includes("View Students") && (
+          <MenuItem
+            icon={<PiStudentBold />}
+            onClick={() => router.push("/dashboard/students")}
+            className={
+              isActive("/dashboard/students") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            Students
+          </MenuItem>
+        )}
 
-        <MenuItem
-          icon={<RiParentFill />}
-          onClick={() => router.push("/dashboard/parents")}
-          className={
-            isActive("/dashboard/parents") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Parents
-        </MenuItem>
+        {userLoginned?.permissions?.includes("View Parents") && (
+          <MenuItem
+            icon={<RiParentFill />}
+            onClick={() => router.push("/dashboard/parents")}
+            className={
+              isActive("/dashboard/parents") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            Parents
+          </MenuItem>
+        )}
 
-        <MenuItem
-          icon={<SiGoogleclassroom />}
-          onClick={() => router.push("/dashboard/classes")}
-          className={
-            isActive("/dashboard/classes") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Classes
-        </MenuItem>
+        {userLoginned?.permissions?.includes("View Classes") && (
+          <MenuItem
+            icon={<SiGoogleclassroom />}
+            onClick={() => router.push("/dashboard/classes")}
+            className={
+              isActive("/dashboard/classes") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            Classes
+          </MenuItem>
+        )}
 
         <SubMenu label="Curriculums" icon={<MdSecurity />}>
           <MenuItem
@@ -177,17 +201,20 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           </MenuItem>
         </SubMenu>
 
-        <MenuItem
-          icon={<FaPeopleGroup />}
-          onClick={() => router.push("/dashboard/employees")}
-          className={
-            isActive("/dashboard/employees") ? `${styles.activeMenuItem}` : ""
-          }
-        >
-          Employees
-        </MenuItem>
+        {userLoginned?.permissions?.includes("View Employee") && (
+          <MenuItem
+            icon={<FaPeopleGroup />}
+            onClick={() => router.push("/dashboard/employees")}
+            className={
+              isActive("/dashboard/employees") ? `${styles.activeMenuItem}` : ""
+            }
+          >
+            Employees
+          </MenuItem>
+        )}
 
-        <MenuItem
+        {
+          userLoginned?.permissions?.includes("View Roles") && <MenuItem
           icon={<GrUserSettings />}
           onClick={() => router.push("/dashboard/roles")}
           className={
@@ -195,7 +222,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           }
         >
           Roles
-        </MenuItem>
+        </MenuItem>}
 
         <SubMenu label="Settings" icon={<FaCog />}>
           <MenuItem

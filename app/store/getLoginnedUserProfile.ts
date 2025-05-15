@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { create } from "zustand";
 import { getTokenFromServerCookies } from "../auth/utils/storeTokenOnServer";
 import { baseUrl } from "../utils/baseUrl";
+import { useLoginnedUserStore } from "./useCurrLoginnedUser";
 
 export interface UserInterface {
   id: number;
@@ -42,44 +43,46 @@ export const useUserStore = create<UseUserStoreIterface>((set) => ({
   userLoading: false,
   getUser: async () => {
     const token = await getTokenFromServerCookies();
+    const { userLoginned } = useLoginnedUserStore.getState();
     const currentTime = new Date().getTime();
     if (currentTime - lastFetchedTime < CACHE_EXPIRATION_TIME) {
       return;
     }
 
     set({ userLoading: true });
+    if (userLoginned?.admin_name) {
+      try {
+        const res = await axios.get(
+          `${baseUrl}/school/my-profile?t=${currentTime}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-    try {
-      const res = await axios.get(
-        `${baseUrl}/school/my-profile?t=${currentTime}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        const user = res?.data?.data?.school || {};
+        lastFetchedTime = currentTime;
+
+        set({
+          user,
+          userError: null,
+          userLoading: false,
+        });
+      } catch (err) {
+        set({
+          user: null,
+          userError: axios.isAxiosError(err)
+            ? err.response?.data?.message || "Error fetching user profile"
+            : "Unexpected error occurred!",
+          userLoading: false,
+        });
+
+        if (!axios.isAxiosError(err)) {
+          toast.error("Unexpected error occurred!");
         }
-      );
-
-      const user = res?.data?.data?.school || {};
-      lastFetchedTime = currentTime;
-
-      set({
-        user,
-        userError: null,
-        userLoading: false,
-      });
-    } catch (err) {
-      set({
-        user: null,
-        userError: axios.isAxiosError(err)
-          ? err.response?.data?.message || "Error fetching user profile"
-          : "Unexpected error occurred!",
-        userLoading: false,
-      });
-
-      if (!axios.isAxiosError(err)) {
-        toast.error("Unexpected error occurred!");
       }
     }
   },

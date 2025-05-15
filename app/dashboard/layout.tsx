@@ -1,4 +1,5 @@
 "use client";
+
 import logo from "@/public/Ellipse6.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -9,12 +10,22 @@ import LogoutBtn from "../components/LogoutBtn/LogoutBtn";
 import SideBar from "../components/SideBar/SideBar";
 import { LayoutInterface } from "../utils/interfaces";
 import styles from "./dashboardMain.module.css";
+import { useLoginnedUserStore } from "../store/useCurrLoginnedUser";
+import Cookies from "js-cookie";
 import { useUserStore } from "../store/getLoginnedUserProfile";
 
 export default function Layout({ children }: LayoutInterface) {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
-  const { user } = useUserStore();
+  const { userLoginned, setUserLoginned } = useLoginnedUserStore();
+  const {user} = useUserStore();
+
+  useEffect(() => {
+    if (!userLoginned) {
+      const userCookies = Cookies.get("CurrUserLoginned");
+      setUserLoginned(JSON.parse(userCookies || "{}"));
+    }
+  }, [setUserLoginned, userLoginned]);
 
   useEffect(() => {
     (async () => {
@@ -35,7 +46,13 @@ export default function Layout({ children }: LayoutInterface) {
           <Image
             width={100}
             height={100}
-            src={user?.image ? (user?.image !== "N/A" ? user?.image : logo) :logo}
+            src={
+              user?.image
+                ? user?.image !== "N/A"
+                  ? user?.image
+                  : logo
+                : logo
+            }
             alt="Join Looms Logo"
             className="rounded-full mb-1"
           />
@@ -56,7 +73,7 @@ export default function Layout({ children }: LayoutInterface) {
       <div className={`flex flex-col flex-1 ${styles.sideBarContainer}`}>
         <header className="flex justify-between items-center px-6 py-4">
           <h1 className={`text-2xl font-bold ${styles.dashBoardMainColor}`}>
-            Hello, {user?.name} 👋
+            Hello, {userLoginned?.name} 👋
           </h1>
           <div className="flex items-center gap-4">
             <button
