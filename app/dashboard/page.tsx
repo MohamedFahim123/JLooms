@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
+import { useLoginnedUserStore } from "../store/useCurrLoginnedUser";
 
 export default function DashBoardPage() {
-  const userType = localStorage.getItem("userType");
+  const { userLoginnedType } = useLoginnedUserStore.getState();
   const redirectedRoute =
-    userType === "Admin" ? "/dashboard/profile" : "/dashboard/employee-profile";
+    userLoginnedType === "Admin"
+      ? "/dashboard/profile"
+      : "/dashboard/employee-profile";
   redirect(redirectedRoute);
 }

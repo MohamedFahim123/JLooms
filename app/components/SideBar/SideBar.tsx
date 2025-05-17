@@ -29,13 +29,12 @@ interface SideBarProps {
 
 export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const router = useRouter();
-  const userType = localStorage.getItem("userType");
   const pathname = usePathname();
   const { classes, getClasses, classesLoading } = useClassesStore();
   const { rules, getRules, rulesLoading } = useRulesStore();
   const { user, getUser, userLoading } = useUserStore();
   const { countries, getCountries, countriesLoading } = useCountriesStore();
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   const getUserProfile = useCallback(() => {
     if (!user && !userLoading) {
@@ -107,7 +106,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
         )}
       </div>
       <Menu>
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<FaUser />}
             onClick={() => router.push("/dashboard/profile")}
@@ -131,7 +130,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           </MenuItem>
         )}
 
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<FaChalkboardTeacher />}
             onClick={() => router.push("/dashboard/teachers")}
@@ -157,7 +156,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           )
         )}
 
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<PiStudentBold />}
             onClick={() => router.push("/dashboard/students")}
@@ -183,7 +182,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           )
         )}
 
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<RiParentFill />}
             onClick={() => router.push("/dashboard/parents")}
@@ -207,7 +206,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           )
         )}
 
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<SiGoogleclassroom />}
             onClick={() => router.push("/dashboard/classes")}
@@ -254,7 +253,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           </MenuItem>
         </SubMenu>
 
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<FaPeopleGroup />}
             onClick={() => router.push("/dashboard/employees")}
@@ -280,7 +279,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           )
         )}
 
-        {userType === "Admin" ? (
+        {userLoginnedType === "Admin" ? (
           <MenuItem
             icon={<GrUserSettings />}
             onClick={() => router.push("/dashboard/roles")}

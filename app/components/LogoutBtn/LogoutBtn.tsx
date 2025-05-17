@@ -3,6 +3,7 @@ import {
   getTokenFromServerCookies,
   removeTokenFromServerCookies,
 } from "@/app/auth/utils/storeTokenOnServer";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -11,10 +12,10 @@ import { toast } from "react-toastify";
 export default function LogoutBtn() {
   const logout = async () => {
     const token = await getTokenFromServerCookies();
-    const userType = localStorage.getItem("userType");
+    const { userLoginnedType } = useLoginnedUserStore.getState();
     const loadingToastId = toast.loading("Loading...");
     const fetchRes = await fetch(
-      userType === "Admin"
+      userLoginnedType === "Admin"
         ? authEndPoints.logout
         : authEndPoints.employee_logout,
       {

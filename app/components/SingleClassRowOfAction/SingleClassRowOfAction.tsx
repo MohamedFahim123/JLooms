@@ -47,7 +47,7 @@ export default function SingleClassRowOfAction({
     null
   );
   const [sendingRequest, setSendingRequest] = useState<boolean>(false);
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   const handleSelectOptionChange = useCallback(
     (e: { target: { value: string } }) => {
@@ -249,7 +249,7 @@ export default function SingleClassRowOfAction({
       <div>
         {editMode ? (
           type === "action" ? (
-            userLoginned?.permissions?.includes("Update School Actions") && (
+            userLoginnedType === "Admin" ? (
               <select
                 defaultValue={
                   allActions?.find(
@@ -274,7 +274,59 @@ export default function SingleClassRowOfAction({
                   </option>
                 ))}
               </select>
+            ) : (
+              userLoginned?.permissions?.includes("Update School Actions") && (
+                <select
+                  defaultValue={
+                    allActions?.find(
+                      (action) => action?.action === option?.action
+                    )
+                      ? allActions?.find(
+                          (action) => action?.action === option?.action
+                        )?.id
+                      : ""
+                  }
+                  disabled={sendingRequest}
+                  onChange={handleSelectOptionChange}
+                  id="actionSelectedToClass"
+                  className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
+                >
+                  <option value={""} disabled>
+                    Select an Action
+                  </option>
+                  {allActions?.map((action) => (
+                    <option key={action?.id} value={action?.id}>
+                      {action?.action}
+                    </option>
+                  ))}
+                </select>
+              )
             )
+          ) : userLoginnedType === "Admin" ? (
+            <select
+              defaultValue={
+                allActivities?.find(
+                  (activity) => activity.name === option?.name
+                )
+                  ? allActivities?.find(
+                      (activity) => activity.name === option?.name
+                    )?.id
+                  : ""
+              }
+              disabled={sendingRequest}
+              onChange={handleSelectOptionChange}
+              id="activitySelectedToClass"
+              className="mb-3 block focus:outline-none appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 leading-tight focus:shadow-outline"
+            >
+              <option value={""} disabled>
+                Select an Activity
+              </option>
+              {allActivities?.map((activity) => (
+                <option key={activity?.id} value={activity?.id}>
+                  {activity?.name}
+                </option>
+              ))}
+            </select>
           ) : (
             userLoginned?.permissions?.includes("Update School Activities") && (
               <select
@@ -314,8 +366,18 @@ export default function SingleClassRowOfAction({
         )}
       </div>
       <div className={`flex`}>
-        {type === "action"
-          ? userLoginned?.permissions?.includes("Remove School Actions") && (
+        {type === "action" ? (
+          userLoginnedType === "Admin" ? (
+            <button
+              disabled={sendingRequest}
+              onClick={handleDeleteActionOrActivity}
+              type="button"
+              className={`text-[#ff2020] py-2 px-4`}
+            >
+              <FaRegTrashCan size={22} />
+            </button>
+          ) : (
+            userLoginned?.permissions?.includes("Remove School Actions") && (
               <button
                 disabled={sendingRequest}
                 onClick={handleDeleteActionOrActivity}
@@ -325,18 +387,42 @@ export default function SingleClassRowOfAction({
                 <FaRegTrashCan size={22} />
               </button>
             )
-          : userLoginned?.permissions?.includes("Remove School Activities") && (
-              <button
-                disabled={sendingRequest}
-                onClick={handleDeleteActionOrActivity}
-                type="button"
-                className={`text-[#ff2020] py-2 px-4`}
-              >
-                <FaRegTrashCan size={22} />
-              </button>
-            )}
-        {type === "action"
-          ? userLoginned?.permissions?.includes("Update School Actions") && (
+          )
+        ) : userLoginnedType === "Admin" ? (
+          <button
+            disabled={sendingRequest}
+            onClick={handleDeleteActionOrActivity}
+            type="button"
+            className={`text-[#ff2020] py-2 px-4`}
+          >
+            <FaRegTrashCan size={22} />
+          </button>
+        ) : (
+          userLoginned?.permissions?.includes("Remove School Activities") && (
+            <button
+              disabled={sendingRequest}
+              onClick={handleDeleteActionOrActivity}
+              type="button"
+              className={`text-[#ff2020] py-2 px-4`}
+            >
+              <FaRegTrashCan size={22} />
+            </button>
+          )
+        )}
+        {type === "action" ? (
+          userLoginnedType === "Admin" ? (
+            <button
+              disabled={sendingRequest}
+              onClick={handleEditORAddActionOrActivity}
+              type={"button"}
+              className={`${
+                editMode ? "text-green-700" : "text-blue-700"
+              } py-2 px-4`}
+            >
+              {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
+            </button>
+          ) : (
+            userLoginned?.permissions?.includes("Update School Actions") && (
               <button
                 disabled={sendingRequest}
                 onClick={handleEditORAddActionOrActivity}
@@ -348,18 +434,32 @@ export default function SingleClassRowOfAction({
                 {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
               </button>
             )
-          : userLoginned?.permissions?.includes("Update School Activities") && (
-              <button
-                disabled={sendingRequest}
-                onClick={handleEditORAddActionOrActivity}
-                type={"button"}
-                className={`${
-                  editMode ? "text-green-700" : "text-blue-700"
-                } py-2 px-4`}
-              >
-                {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
-              </button>
-            )}
+          )
+        ) : userLoginnedType === "Admin" ? (
+          <button
+            disabled={sendingRequest}
+            onClick={handleEditORAddActionOrActivity}
+            type={"button"}
+            className={`${
+              editMode ? "text-green-700" : "text-blue-700"
+            } py-2 px-4`}
+          >
+            {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
+          </button>
+        ) : (
+          userLoginned?.permissions?.includes("Update School Activities") && (
+            <button
+              disabled={sendingRequest}
+              onClick={handleEditORAddActionOrActivity}
+              type={"button"}
+              className={`${
+                editMode ? "text-green-700" : "text-blue-700"
+              } py-2 px-4`}
+            >
+              {editMode ? <FaCheck size={22} /> : <FaEdit size={22} />}
+            </button>
+          )
+        )}
       </div>
     </form>
   );

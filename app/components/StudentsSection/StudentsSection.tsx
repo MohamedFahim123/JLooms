@@ -3,14 +3,14 @@
 import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { Table } from "@/app/dashboard/utils/interfaces";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilterations";
 import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
-import Pagination from "../Pagination/Pagination";
 import Loader from "../Loader/Loader";
-import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
+import Pagination from "../Pagination/Pagination";
 
 let loading: boolean = true;
 async function fetchTeachersData(
@@ -54,7 +54,7 @@ export default function StudentsSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [students, setStudents] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -73,18 +73,26 @@ export default function StudentsSection() {
     }
     fetchData();
   }, [filters]);
-  const tableCells: string[] = userLoginned?.permissions?.includes(
-    "Delete Students"
-  )
-    ? ["name", "class name", "parent", "action"]
-    : ["name", "class name", "parent"];
+
+  const tableCells: string[] =
+    userLoginnedType === "Admin"
+      ? ["name", "class name", "parent", "action"]
+      : userLoginned?.permissions?.includes("Delete Students")
+      ? ["name", "class name", "parent", "action"]
+      : ["name", "class name", "parent"];
 
   return (
     <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
       <DashBoardPageHead
         text="Students"
         btnText="Add Student"
-        haveBtn={userLoginned?.permissions?.includes("Create Students") ? true : false}
+        haveBtn={
+          userLoginnedType === "Admin"
+            ? true
+            : userLoginned?.permissions?.includes("Create Students")
+            ? true
+            : false
+        }
         btnLink="/dashboard/students/add-new-student"
       />
       <DashBoardFilterations

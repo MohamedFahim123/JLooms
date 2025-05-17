@@ -2,6 +2,7 @@
 
 import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import { TableRowProps } from "@/app/utils/interfaces";
 import axios from "axios";
 import Image from "next/image";
@@ -10,11 +11,10 @@ import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import avatar from "../../imgs/teachers/teacher1.png";
-import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 
 export default function TeachersTableRow({ cell }: TableRowProps) {
   const router = useRouter();
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   const handleDelete = () => {
     Swal.fire({
@@ -118,7 +118,7 @@ export default function TeachersTableRow({ cell }: TableRowProps) {
           {cell.status}
         </span>
       </td>
-      {userLoginned?.permissions?.includes("Delete Teachers") && (
+      {userLoginnedType === "Admin" ? (
         <td className="py-3 px-4 cursor-default">
           <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
             <MdDelete
@@ -128,6 +128,18 @@ export default function TeachersTableRow({ cell }: TableRowProps) {
             />
           </span>
         </td>
+      ) : (
+        userLoginned?.permissions?.includes("Delete Teachers") && (
+          <td className="py-3 px-4 cursor-default">
+            <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
+              <MdDelete
+                onClick={handleDelete}
+                size={20}
+                className="cursor-pointer"
+              />
+            </span>
+          </td>
+        )
       )}
     </tr>
   );

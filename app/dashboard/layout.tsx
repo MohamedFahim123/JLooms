@@ -1,6 +1,7 @@
 "use client";
 
 import logo from "@/public/Ellipse6.svg";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,17 +9,17 @@ import { FaBell } from "react-icons/fa";
 import { getTokenFromServerCookies } from "../auth/utils/storeTokenOnServer";
 import LogoutBtn from "../components/LogoutBtn/LogoutBtn";
 import SideBar from "../components/SideBar/SideBar";
+import { useUserStore } from "../store/getLoginnedUserProfile";
+import { useLoginnedUserStore } from "../store/useCurrLoginnedUser";
 import { LayoutInterface } from "../utils/interfaces";
 import styles from "./dashboardMain.module.css";
-import { useLoginnedUserStore } from "../store/useCurrLoginnedUser";
-import Cookies from "js-cookie";
-import { useUserStore } from "../store/getLoginnedUserProfile";
 
 export default function Layout({ children }: LayoutInterface) {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
-  const { userLoginned, setUserLoginned } = useLoginnedUserStore();
-  const {user} = useUserStore();
+  const { userLoginned, setUserLoginned, setUserLoginnedType } =
+    useLoginnedUserStore();
+  const { user } = useUserStore();
 
   useEffect(() => {
     if (!userLoginned) {
@@ -26,6 +27,14 @@ export default function Layout({ children }: LayoutInterface) {
       setUserLoginned(JSON.parse(userCookies || "{}"));
     }
   }, [setUserLoginned, userLoginned]);
+
+  useEffect(() => {
+    const userType =
+      typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+    if (userType) {
+      setUserLoginnedType(userType);
+    }
+  }, [setUserLoginnedType]);
 
   useEffect(() => {
     (async () => {
@@ -47,11 +56,7 @@ export default function Layout({ children }: LayoutInterface) {
             width={100}
             height={100}
             src={
-              user?.image
-                ? user?.image !== "N/A"
-                  ? user?.image
-                  : logo
-                : logo
+              user?.image ? (user?.image !== "N/A" ? user?.image : logo) : logo
             }
             alt="Join Looms Logo"
             className="rounded-full mb-1"

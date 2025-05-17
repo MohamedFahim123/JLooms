@@ -3,14 +3,14 @@
 import { getTokenFromServerCookies } from "@/app/auth/utils/storeTokenOnServer";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
 import { Table } from "@/app/dashboard/utils/interfaces";
+import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DashBoardFilterations from "../DashBoardFilterations/DashBoardFilterations";
 import DashBoardPageHead from "../DashBoardPageHead/DashBoardPageHead";
 import DashBoardTable from "../DashBoardTable/DashBoardTable";
-import Pagination from "../Pagination/Pagination";
 import Loader from "../Loader/Loader";
-import { useLoginnedUserStore } from "@/app/store/useCurrLoginnedUser";
+import Pagination from "../Pagination/Pagination";
 
 let loading: boolean = true;
 async function fetchparentsData(
@@ -48,7 +48,7 @@ export default function ParentsSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [parents, setParents] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -67,12 +67,12 @@ export default function ParentsSection() {
     fetchData();
   }, [filters]);
 
-  const tableCells: string[] = userLoginned?.permissions?.includes(
-    "Delete Parents"
-  )
-    ? ["Parent Name", "Code", "Mobile", "Email", "Action"]
-    : ["Parent Name", "Code", "Mobile", "Email"];
-
+  const tableCells: string[] =
+    userLoginnedType === "Admin"
+      ? ["Parent Name", "Code", "Mobile", "Email", "Action"]
+      : userLoginned?.permissions?.includes("Delete Parents")
+      ? ["Parent Name", "Code", "Mobile", "Email", "Action"]
+      : ["Parent Name", "Code", "Mobile", "Email"];
 
   return (
     <div
@@ -84,7 +84,11 @@ export default function ParentsSection() {
         text="Parents"
         btnText="Add Parent"
         haveBtn={
-          userLoginned?.permissions?.includes("Create Parents") ? true : false
+          userLoginnedType === "Admin"
+            ? true
+            : userLoginned?.permissions?.includes("Create Parents")
+            ? true
+            : false
         }
         btnLink="/dashboard/parents/add-parent"
       />

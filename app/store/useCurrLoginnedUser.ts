@@ -20,12 +20,21 @@ interface EmpLoginned {
 
 export interface UseLoginnedUserStoreIterface {
   userLoginned: EmpLoginned | null;
+  userLoginnedType: string | null;
+  setUserLoginnedType: (user: string) => void;
   setUserLoginned: (user: EmpLoginned | null) => void;
 }
 
 export const useLoginnedUserStore = create<UseLoginnedUserStoreIterface>(
   (set) => ({
     userLoginned: null,
+    userLoginnedType: null,
+    setUserLoginnedType: (user) => {
+      if (typeof window !== "undefined" && user) {
+        localStorage.setItem("userType", user);
+      }
+      set({ userLoginnedType: user });
+    },
     setUserLoginned: (user: EmpLoginned | null) => {
       set({ userLoginned: user });
     },

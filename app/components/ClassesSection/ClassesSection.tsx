@@ -55,7 +55,7 @@ export default function ClassesSection() {
   const [filters, setFilters] = useState<Record<string, string | number>>({});
   const [classes, setClasses] = useState<Table[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   useEffect(() => {
     const newFilters: Record<string, string | number> = {
@@ -74,11 +74,12 @@ export default function ClassesSection() {
     fetchData();
   }, [filters]);
 
-  const tableCells: string[] = userLoginned?.permissions?.includes(
-    "Delete Classes"
-  )
-    ? ["Class Name", "Number of Students", "Actions"]
-    : ["Class Name", "Number of Students"];
+  const tableCells: string[] =
+    userLoginnedType === "Admin"
+      ? ["Class Name", "Number of Students", "Actions"]
+      : userLoginned?.permissions?.includes("Delete Classes")
+      ? ["Class Name", "Number of Students", "Actions"]
+      : ["Class Name", "Number of Students"];
 
   return (
     <div
@@ -90,7 +91,11 @@ export default function ClassesSection() {
         text="Classes"
         btnText="Add Class"
         haveBtn={
-          userLoginned?.permissions?.includes("Create Classes") ? true : false
+          userLoginnedType === "Admin"
+            ? true
+            : userLoginned?.permissions?.includes("Create Classes")
+            ? true
+            : false
         }
         btnLink="/dashboard/classes/add-new-class"
       />

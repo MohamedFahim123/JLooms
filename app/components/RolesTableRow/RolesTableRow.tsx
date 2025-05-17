@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 
 const RolesTableRow = ({ cell }: TableRowProps) => {
   const router = useRouter();
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   const handleDelete = () => {
     Swal.fire({
@@ -65,7 +65,7 @@ const RolesTableRow = ({ cell }: TableRowProps) => {
           {cell?.name}
         </span>
       </td>
-      {userLoginned?.permissions?.includes("Delete Roles") && (
+      {userLoginnedType === "Admin" ? (
         <td className="py-3 px-4 cursor-default">
           <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
             <MdDelete
@@ -75,6 +75,18 @@ const RolesTableRow = ({ cell }: TableRowProps) => {
             />
           </span>
         </td>
+      ) : (
+        userLoginned?.permissions?.includes("Delete Roles") && (
+          <td className="py-3 px-4 cursor-default">
+            <span className={`px-2 py-1 text-xs font-semibold text-red-600`}>
+              <MdDelete
+                onClick={handleDelete}
+                size={20}
+                className="cursor-pointer"
+              />
+            </span>
+          </td>
+        )
       )}
     </tr>
   );

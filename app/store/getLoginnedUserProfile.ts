@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { create } from "zustand";
 import { getTokenFromServerCookies } from "../auth/utils/storeTokenOnServer";
 import { baseUrl } from "../utils/baseUrl";
+import { useLoginnedUserStore } from "./useCurrLoginnedUser";
 
 export interface UserInterface {
   id: number;
@@ -41,7 +42,7 @@ export const useUserStore = create<UseUserStoreIterface>((set) => ({
   userError: null,
   userLoading: false,
   getUser: async () => {
-    const userType = localStorage.getItem("userType");
+    const { userLoginnedType: userType } = useLoginnedUserStore.getState();
     if (userType === "Admin") {
       const token = await getTokenFromServerCookies();
       const currentTime = new Date().getTime();

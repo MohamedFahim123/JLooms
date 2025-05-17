@@ -34,7 +34,7 @@ export default function SingleClassRowOfTeacher({
     setNewTeacher("");
     setSelectedActivities([]);
   };
-  const { userLoginned } = useLoginnedUserStore();
+  const { userLoginned, userLoginnedType } = useLoginnedUserStore();
 
   const handleSubmitNewTeacher = async () => {
     if (!newTeacher) return toast.error("Please select a teacher.");
@@ -115,7 +115,7 @@ export default function SingleClassRowOfTeacher({
                 ))}
               </ul>
             </div>
-            {userLoginned?.permissions?.includes("Assign Teachers") && (
+            {userLoginnedType === "Admin" ? (
               <div className="flex gap-2">
                 <button
                   onClick={handleDeleteTeacher}
@@ -124,6 +124,17 @@ export default function SingleClassRowOfTeacher({
                   Delete
                 </button>
               </div>
+            ) : (
+              userLoginned?.permissions?.includes("Assign Teachers") && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleDeleteTeacher}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )
             )}
           </div>
         </div>

@@ -1,16 +1,16 @@
 "use client";
 
 import AuthForm from "@/app/components/AuthForm/AuthForm";
+import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import Logo from "../../imgs/auth/BlueAndWhiteIllustrativeKidsApparelLogoBlue.png";
 import styles from "../authStyles.module.css";
 import {
   CustomEmailInput,
   CustomPasswordInput,
 } from "../utils/customInputsValues";
 import { Input } from "../utils/interfaces";
-import Image from "next/image";
-import Logo from "../../imgs/auth/BlueAndWhiteIllustrativeKidsApparelLogoBlue.png";
-import { useCallback, useEffect, useState } from "react";
 
 export default function LoginPage() {
   const [userType, setUserType] = useState<string>("Admin");
@@ -18,7 +18,9 @@ export default function LoginPage() {
   const loginInputs: Input[] = [CustomEmailInput, CustomPasswordInput];
 
   useEffect(() => {
-    if (localStorage.getItem("userType") === "Admin") {
+    const userType =
+      typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+    if (userType === "Admin") {
       setUserType("Admin");
     }
   }, []);
