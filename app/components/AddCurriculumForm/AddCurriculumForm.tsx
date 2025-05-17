@@ -99,7 +99,7 @@ const AddCurriculumForm = () => {
       <div className="grid md:grid-cols-3 gap-4">
         <div>
           <label className="block mb-2 text-sm font-medium text-dark">
-            Type
+            Curriculum Type
           </label>
           <select
             {...register("type", { required: "Type is required" })}
@@ -121,7 +121,7 @@ const AddCurriculumForm = () => {
         </div>
         <div>
           <label className="block mb-2 text-sm font-medium text-dark">
-            Topic/Activity
+            Curriculum Category
           </label>
           <select
             {...register("topic", { required: "Topic is required" })}
@@ -131,7 +131,29 @@ const AddCurriculumForm = () => {
             defaultValue=""
           >
             <option value="" disabled>
-              Select Topic
+              Select Category
+            </option>
+            <option value="subject">Subject</option>
+            <option value="activity">Activity</option>
+            <option value="action">Action</option>
+          </select>
+          {errors.topic && (
+            <p className="text-red-500 text-sm">{errors.topic.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="block mb-2 text-sm font-medium text-dark">
+            Curriculum Sub-Category
+          </label>
+          <select
+            {...register("topic", { required: "Topic is required" })}
+            className={`${
+              errors?.topic ? "border-red-500" : ""
+            } w-full px-4 py-2 border rounded-md focus:outline-none`}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select Sub-Category
             </option>
             <option value="subject">Subject</option>
             <option value="activity">Activity</option>
@@ -148,7 +170,9 @@ const AddCurriculumForm = () => {
             key={row.id}
             className="items-center border-b border-indigo-500 py-4"
           >
-            <h3 className="text-lg font-semibold mb-3">Milestone #{index + 1}</h3>
+            <h3 className="text-lg font-semibold mb-3">
+              Milestone #{index + 1}
+            </h3>
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"
