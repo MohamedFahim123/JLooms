@@ -43,8 +43,6 @@ export const dataURLS: DATAURLSINTERFACE = {
   removeActivityFromClass: `${baseUrl}/school/delete-class-activity`,
   assignTeacherToClass: `${baseUrl}/school/assign-teachers`,
   removeTeacherFromClass: `${baseUrl}/school/delete-teacher`,
-  allCurriculums: `${baseUrl}/school/curriculums`,
-  addCurriculum: `${baseUrl}/school/store-curriculum`,
   employees: `${baseUrl}/school/all-employees`,
   filterEmployees: `${baseUrl}/school/filter-employees`,
   addEmployee: `${baseUrl}/school/add-employee`,
@@ -57,4 +55,9 @@ export const dataURLS: DATAURLSINTERFACE = {
   filterRoles: `${baseUrl}/school/roles-search`,
   singleRole: `${baseUrl}/school/roles-show`,
   allPermissions: `${baseUrl}/school/permissions`,
+  allCurriculums: `${baseUrl}/school/all-curriculums`,
+  singleCurriculum: `${baseUrl}/school/show-curriculum`,
+  addCurriculum: `${baseUrl}/school/store-curriculum`,
+  removeCurriculum: `${baseUrl}/school/delete-curriculum`,
+  curriculumsFilter: `${baseUrl}/school/filter-curriculums`,
 };

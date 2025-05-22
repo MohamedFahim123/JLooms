@@ -1,11 +1,12 @@
 import { Table } from "@/app/dashboard/utils/interfaces";
 import ClassesTableRow from "../ClassesTableRow/ClassesTableRow";
+import CurriculumsTableRow from "../CurriculumsTableRow/CurriculumsTableRow";
 import EmployeesTableRow from "../EmployeesTableRow/EmployeesTableRow";
 import MainParentTableRow from "../MainParentTableRow/MainParentTableRow";
 import ParentTableRow from "../ParentTableRow/ParentTableRow";
+import RolesTableRow from "../RolesTableRow/RolesTableRow";
 import StudentsTableRow from "../StudentsTableRow/StudentsTableRow";
 import TeachersTableRow from "../TeachersTableRow/TeachersTableRow";
-import RolesTableRow from "../RolesTableRow/RolesTableRow";
 
 interface DashBoardTableProps {
   tableData: Table[];
@@ -43,6 +44,7 @@ export default function DashBoardTable({
             )}
             {currPage === "employees" && <EmployeesTableRow cell={cell} />}
             {currPage === "Roles" && <RolesTableRow cell={cell} />}
+            {currPage === "curriculums" && <CurriculumsTableRow cell={cell} />}
           </tbody>
         ))}
       </table>

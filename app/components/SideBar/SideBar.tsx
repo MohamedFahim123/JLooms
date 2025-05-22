@@ -1,4 +1,5 @@
 "use client";
+import { useActionsAndActivityStore } from "@/app/store/getActivitiesAndActions";
 import { useClassesStore } from "@/app/store/getAllClasses";
 import { useCountriesStore } from "@/app/store/getAllCountries";
 import { useRulesStore } from "@/app/store/getAllRules";
@@ -35,6 +36,18 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
   const { user, getUser, userLoading } = useUserStore();
   const { countries, getCountries, countriesLoading } = useCountriesStore();
   const { userLoginned, userLoginnedType } = useLoginnedUserStore();
+  const { activities, getActivities, dataLoading } =
+    useActionsAndActivityStore();
+
+  const getAllActivities = useCallback(() => {
+    if (activities.length === 0 && !dataLoading) {
+      getActivities();
+    }
+  }, [getActivities, dataLoading, activities.length]);
+
+  useEffect(() => {
+    getAllActivities();
+  }, [getAllActivities]);
 
   const getUserProfile = useCallback(() => {
     if (!user && !userLoading) {

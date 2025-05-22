@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useActionsAndActivityStore } from "@/app/store/getActivitiesAndActions";
+import { useClassesStore } from "@/app/store/getAllClasses";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface DashBoardFilterationsProps {
   placeHolder?: string;
@@ -19,6 +21,13 @@ export default function DashBoardFilterations({
   const [status, setStatus] = useState("");
   const [debouncedName, setDebouncedName] = useState(name);
   const [debouncedStatus, setDebouncedStatus] = useState(status);
+  const [activityId, setActivityId] = useState<number | string>("");
+  const [classId, setClassId] = useState<number | string>("");
+  const { classes } = useClassesStore();
+  const { activities } = useActionsAndActivityStore();
+
+  const [debouncedAct, setDebouncedAct] = useState(activityId);
+  const [debouncedClass, setDebouncedClass] = useState(classId);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -35,9 +44,25 @@ export default function DashBoardFilterations({
   }, [status]);
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedAct(activityId);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [activityId]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedClass(classId);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [classId]);
+
+  useEffect(() => {
     const filters: Record<string, string> = {};
     if (debouncedStatus) filters.status = debouncedStatus;
     if (debouncedName) filters.name = debouncedName;
+    if (debouncedAct) filters.activity = String(debouncedAct);
+    if (debouncedClass) filters.class = String(debouncedClass);
 
     const queryParams = new URLSearchParams(filters).toString();
     if (page === "teachers") {
@@ -52,8 +77,18 @@ export default function DashBoardFilterations({
       router.push(`/dashboard/employees?${queryParams}`);
     } else if (page === "roles") {
       router.push(`/dashboard/roles?${queryParams}`);
+    } else if (page === "curriculums") {
+      router.push(`/dashboard/curriculums?${queryParams}`);
     }
-  }, [debouncedName, status, router, debouncedStatus, page]);
+  }, [
+    debouncedName,
+    status,
+    router,
+    debouncedStatus,
+    page,
+    debouncedAct,
+    debouncedClass,
+  ]);
 
   return (
     <div className="px-6 py-4">
@@ -88,6 +123,34 @@ export default function DashBoardFilterations({
             <path d="M10 2a8 8 0 0 1 8 8c0 1.74-.57 3.37-1.53 4.68l5.85 5.85a1 1 0 1 1-1.42 1.42l-5.85-5.85A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
           </svg>
         </div>
+        {page === "curriculums" && (
+          <div className="flex gap-6">
+            <select
+              value={classId}
+              onChange={(e) => setClassId(e.target.value)}
+              className="border border-gray-300 rounded-lg py-2 px-3 w-full md:w-auto focus:outline-none focus:border-indigo-500"
+            >
+              <option value="">Filter With Class</option>
+              {classes?.map((cls) => (
+                <option key={cls.id} value={cls.id}>
+                  {cls.name}
+                </option>
+              ))}
+            </select>
+            <select
+              value={activityId}
+              onChange={(e) => setActivityId(e.target.value)}
+              className="border border-gray-300 rounded-lg py-2 px-3 w-full md:w-auto focus:outline-none focus:border-indigo-500"
+            >
+              <option value="">Filter With Activity</option>
+              {activities.map((activity) => (
+                <option key={activity.id} value={activity.id}>
+                  {activity.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
     </div>
   );

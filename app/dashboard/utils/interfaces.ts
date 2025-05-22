@@ -20,6 +20,11 @@ export interface Table {
   has_parents?: boolean;
   code?: string;
   relation?: string;
+  date_from?: string;
+  date_to?: string;
+  type: string;
+  category: string;
+  sub_category: string;
 }
 export interface DATAURLSINTERFACE {
   teachers: string;
@@ -74,6 +79,9 @@ export interface DATAURLSINTERFACE {
   filterRoles: string;
   singleRole: string;
   allPermissions: string;
+  removeCurriculum: string;
+  singleCurriculum: string;
+  curriculumsFilter: string;
 }
 export interface teacherInterface {
   id: number | string;

@@ -49,6 +49,14 @@ export interface FormAuthInputs {
   title?: string;
   role_id?: string;
   user_type?: string;
+
+  // curriculum
+  category_id?: string;
+  type_id?: string;
+  date_from?: string;
+  date_to?: string;
+  activity_id?: string;
+  curriculum_sub_category_id?: string;
 }
 
 interface Pattern {

@@ -43,7 +43,7 @@ export const handleApplication_JsonData = async (
 
     const { token, school, employee } = response?.data?.data || {};
     if (token) {
-      setServerCookie("CLIENT_JLOOMS_TOKEN", token);
+      await setServerCookie("CLIENT_JLOOMS_TOKEN", token);
       Cookies.set("CLIENT_JLOOMS_TOKEN", token, { expires: 1 });
     }
 
@@ -55,9 +55,7 @@ export const handleApplication_JsonData = async (
       });
       setUserLoginned(school);
       handleRegistrationCookies(type, school.id);
-    }
-
-    if (employee?.id) {
+    }else if (employee?.id) {
       Cookies.set(`CurrUserLoginned`, JSON.stringify(employee), {
         expires: 1,
         secure: true,

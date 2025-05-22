@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { FormAuthInputs } from "@/app/auth/utils/interfaces";
 import { dataURLS } from "@/app/dashboard/utils/dataUrls";
+import { useCurriculumsDataStore } from "@/app/store/CurriculumData";
+import { useActionsAndActivityStore } from "@/app/store/getActivitiesAndActions";
 import { useClassesStore } from "@/app/store/getAllClasses";
 import { handleMultiPartWebSiteFormData } from "@/app/utils/submitFormData";
+import { useCallback, useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const AddCurriculumForm = () => {
   const {
@@ -13,10 +15,48 @@ const AddCurriculumForm = () => {
     handleSubmit,
     reset,
     setError,
+    watch,
     formState: { errors },
   } = useForm<FormAuthInputs>();
 
+  const {
+    types,
+    categories,
+    subCategories,
+    dataLoading,
+    getTypes,
+    getCategories,
+    getSubCategories,
+    dataTypesError,
+    dataCatError,
+    dataSubCatError,
+  } = useCurriculumsDataStore();
+
+  const getAllTypes = useCallback(() => {
+    if (types.length === 0 && !dataLoading && !dataTypesError) {
+      getTypes();
+    }
+  }, [dataLoading, dataTypesError, getTypes, types.length]);
+
+  useEffect(() => {
+    const type = watch("type_id");
+    if (type && !dataCatError) {
+      getCategories(type);
+    }
+  }, [dataCatError, getCategories, watch]);
+  useEffect(() => {
+    const category = watch("category_id");
+    if (category && !dataSubCatError) {
+      getSubCategories(category);
+    }
+  }, [dataSubCatError, getSubCategories, watch]);
+
+  useEffect(() => {
+    getAllTypes();
+  }, [getAllTypes]);
+
   const { classes } = useClassesStore();
+  const { activities } = useActionsAndActivityStore();
 
   const [milestoneRows, setMilestoneRows] = useState([
     {
@@ -74,6 +114,23 @@ const AddCurriculumForm = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
       <div>
         <label className="block mb-2 text-sm font-medium text-dark">
+          Curriculum Name
+        </label>
+        <input
+          type="text"
+          placeholder="Curriculum Name"
+          {...register("name_en", { required: "Name is required" })}
+          className={`${
+            errors?.name_en ? "border-red-500" : ""
+          } w-full px-4 py-2 border rounded-md focus:outline-none`}
+          defaultValue=""
+        />
+        {errors.name_en && (
+          <p className="text-red-500 text-sm">{errors.name_en.message}</p>
+        )}
+      </div>
+      <div>
+        <label className="block mb-2 text-sm font-medium text-dark">
           Select Class
         </label>
         <select
@@ -96,73 +153,29 @@ const AddCurriculumForm = () => {
           <p className="text-red-500 text-sm">{errors.class.message}</p>
         )}
       </div>
-      <div className="grid md:grid-cols-3 gap-4">
-        <div>
-          <label className="block mb-2 text-sm font-medium text-dark">
-            Curriculum Type
-          </label>
-          <select
-            {...register("type", { required: "Type is required" })}
-            className={`${
-              errors?.type ? "border-red-500" : ""
-            } w-full px-4 py-2 border rounded-md focus:outline-none`}
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select Type
+      <div>
+        <label className="block mb-2 text-sm font-medium text-dark">
+          Select Activity
+        </label>
+        <select
+          {...register("activity_id", { required: "Activity is required" })}
+          className={`${
+            errors?.activity_id ? "border-red-500" : ""
+          } w-full px-4 py-2 border rounded-md focus:outline-none`}
+          defaultValue=""
+        >
+          <option value="" disabled>
+            Select Activity
+          </option>
+          {activities.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
             </option>
-            <option value="subject">Subject</option>
-            <option value="activity">Activity</option>
-            <option value="action">Action</option>
-          </select>
-          {errors.type && (
-            <p className="text-red-500 text-sm">{errors.type.message}</p>
-          )}
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-dark">
-            Curriculum Category
-          </label>
-          <select
-            {...register("topic", { required: "Topic is required" })}
-            className={`${
-              errors?.topic ? "border-red-500" : ""
-            } w-full px-4 py-2 border rounded-md focus:outline-none`}
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select Category
-            </option>
-            <option value="subject">Subject</option>
-            <option value="activity">Activity</option>
-            <option value="action">Action</option>
-          </select>
-          {errors.topic && (
-            <p className="text-red-500 text-sm">{errors.topic.message}</p>
-          )}
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-dark">
-            Curriculum Sub-Category
-          </label>
-          <select
-            {...register("topic", { required: "Topic is required" })}
-            className={`${
-              errors?.topic ? "border-red-500" : ""
-            } w-full px-4 py-2 border rounded-md focus:outline-none`}
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select Sub-Category
-            </option>
-            <option value="subject">Subject</option>
-            <option value="activity">Activity</option>
-            <option value="action">Action</option>
-          </select>
-          {errors.topic && (
-            <p className="text-red-500 text-sm">{errors.topic.message}</p>
-          )}
-        </div>
+          ))}
+        </select>
+        {errors.activity_id && (
+          <p className="text-red-500 text-sm">{errors.activity_id.message}</p>
+        )}
       </div>
       <div className="space-y-6">
         {milestoneRows.map((row, index) => (
@@ -173,6 +186,90 @@ const AddCurriculumForm = () => {
             <h3 className="text-lg font-semibold mb-3">
               Milestone #{index + 1}
             </h3>
+            <div className="grid md:grid-cols-3 gap-4 my-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-dark">
+                  Curriculum Type
+                </label>
+                <select
+                  {...register("type_id", { required: "Type is required" })}
+                  className={`${
+                    errors?.type_id ? "border-red-500" : ""
+                  } w-full px-4 py-2 border rounded-md focus:outline-none`}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Select Type
+                  </option>
+                  {types.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.type_id && (
+                  <p className="text-red-500 text-sm">
+                    {errors.type_id.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-dark">
+                  Curriculum Category
+                </label>
+                <select
+                  {...register("category_id", {
+                    required: "Category is required",
+                  })}
+                  className={`${
+                    errors?.category_id ? "border-red-500" : ""
+                  } w-full px-4 py-2 border rounded-md focus:outline-none`}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.category_id && (
+                  <p className="text-red-500 text-sm">
+                    {errors.category_id.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-dark">
+                  Curriculum Sub-Category
+                </label>
+                <select
+                  {...register("curriculum_sub_category_id", {
+                    required: "Sub-Category is required",
+                  })}
+                  className={`${
+                    errors?.curriculum_sub_category_id ? "border-red-500" : ""
+                  } w-full px-4 py-2 border rounded-md focus:outline-none`}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Select Sub-Category
+                  </option>
+                  {subCategories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.curriculum_sub_category_id && (
+                  <p className="text-red-500 text-sm">
+                    {errors.curriculum_sub_category_id.message}
+                  </p>
+                )}
+              </div>
+            </div>
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"
