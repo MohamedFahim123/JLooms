@@ -57,7 +57,7 @@ export const dataURLS: DATAURLSINTERFACE = {
   allPermissions: `${baseUrl}/school/permissions`,
   allCurriculums: `${baseUrl}/school/all-curriculums`,
   singleCurriculum: `${baseUrl}/school/show-curriculum`,
-  addCurriculum: `${baseUrl}/school/store-curriculum`,
+  addCurriculum: `${baseUrl}/school/add-curriculum`,
   removeCurriculum: `${baseUrl}/school/delete-curriculum`,
   curriculumsFilter: `${baseUrl}/school/filter-curriculums`,
 };

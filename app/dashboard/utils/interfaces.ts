@@ -22,9 +22,10 @@ export interface Table {
   relation?: string;
   date_from?: string;
   date_to?: string;
-  type: string;
-  category: string;
-  sub_category: string;
+  type?: string;
+  category?: string;
+  sub_category?: string;
+  activity?: string;
 }
 export interface DATAURLSINTERFACE {
   teachers: string;

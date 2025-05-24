@@ -86,11 +86,10 @@ const CurriculumsFullPagea = () => {
 
   const tableCells: string[] = [
     "Name",
+    "Class Name",
+    "Activity Name",
     "Date From",
     "Date To",
-    "type",
-    "category",
-    "subcategory",
     "Remove",
   ];
 

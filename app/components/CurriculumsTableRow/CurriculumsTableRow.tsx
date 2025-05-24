@@ -71,6 +71,24 @@ const CurriculumsTableRow = ({ cell }: TableRowProps) => {
         onClick={() => router.push(`/dashboard/curriculums/${cell?.id}`)}
       >
         <span className="block md:hidden font-semibold text-gray-500">
+          Class Name:
+        </span>
+        {cell.class_name}
+      </td>
+      <td
+        className="py-3 px-4"
+        onClick={() => router.push(`/dashboard/curriculums/${cell?.id}`)}
+      >
+        <span className="block md:hidden font-semibold text-gray-500">
+          Activity Name:
+        </span>
+        {cell.activity}
+      </td>
+      <td
+        className="py-3 px-4"
+        onClick={() => router.push(`/dashboard/curriculums/${cell?.id}`)}
+      >
+        <span className="block md:hidden font-semibold text-gray-500">
           Date From:
         </span>
         {cell.date_from}
@@ -83,33 +101,6 @@ const CurriculumsTableRow = ({ cell }: TableRowProps) => {
           Date To:
         </span>
         {cell.date_to}
-      </td>
-      <td
-        className="py-3 px-4"
-        onClick={() => router.push(`/dashboard/curriculums/${cell?.id}`)}
-      >
-        <span className="block md:hidden font-semibold text-gray-500">
-          Type:
-        </span>
-        {cell.type}
-      </td>
-      <td
-        className="py-3 px-4"
-        onClick={() => router.push(`/dashboard/curriculums/${cell?.id}`)}
-      >
-        <span className="block md:hidden font-semibold text-gray-500">
-          Category:
-        </span>
-        {cell.category}
-      </td>
-      <td
-        className="py-3 px-4"
-        onClick={() => router.push(`/dashboard/curriculums/${cell?.id}`)}
-      >
-        <span className="block md:hidden font-semibold text-gray-500">
-          Sub Category:
-        </span>
-        {cell.sub_category}
       </td>
       {userLoginnedType === "Admin" ? (
         <td className="py-3 px-4 cursor-default">

@@ -31,7 +31,7 @@ const CurriculumDetails = async ({
     },
   });
   const response = await fetchparent?.json();
-  const curriculum = response?.data?.curriculum;
+  const curriculum = response?.data;
 
   if (!curriculum) {
     return (
