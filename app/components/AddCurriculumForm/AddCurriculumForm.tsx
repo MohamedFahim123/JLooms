@@ -178,7 +178,10 @@ const AddCurriculumForm = () => {
       row.milestones.map((milestone) =>
         milestone.id
           ? { milestone_id: milestone.id }
-          : { name_en: milestone.name }
+          : {
+              name_en: milestone.name,
+              curriculum_sub_category_id: row?.subCategoryId,
+            }
       )
     );
     const formData = {
@@ -446,11 +449,11 @@ const AddCurriculumForm = () => {
             )}
           </div>
 
-          {row.selectedMilestoneId === undefined && (
+          {row?.subCategoryId && (
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                disabled={row.isCustomMilestone}
+                disabled={row?.selectedMilestoneId ? true : false}
                 placeholder="Add your own milestone"
                 value={row.custom}
                 onChange={(e) => handleCustomChange(index, e.target.value)}
