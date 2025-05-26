@@ -254,7 +254,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
           >
             Curriculums
           </MenuItem>
-          <MenuItem
+          {/* <MenuItem
             onClick={() => router.push("/dashboard/curriculums/track")}
             className={
               isActive("/dashboard/curriculums/track")
@@ -263,7 +263,7 @@ export default function SideBar({ collapsed, setCollapsed }: SideBarProps) {
             }
           >
             Track
-          </MenuItem>
+          </MenuItem> */}
         </SubMenu>
 
         {userLoginnedType === "Admin" ? (

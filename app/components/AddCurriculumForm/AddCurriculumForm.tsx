@@ -30,6 +30,7 @@ const AddCurriculumForm = () => {
     handleSubmit,
     reset,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm<FormAuthInputs>();
 
@@ -173,6 +174,12 @@ const AddCurriculumForm = () => {
     setMilestoneRows(newRows);
   };
 
+  useEffect(() => {
+    if (errors.milestones) {
+      clearErrors("milestones");
+    }
+  }, [clearErrors, errors.milestones]);
+
   const onSubmit: SubmitHandler<FormAuthInputs> = async (data) => {
     const milestonesData = milestoneRows.flatMap((row) =>
       row.milestones.map((milestone) =>
@@ -226,7 +233,7 @@ const AddCurriculumForm = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.update(toastLoading, {
-          render: error.response?.data?.message || "Something went wrong!",
+          render: error?.response?.data?.message || "Something went wrong!",
           type: "error",
           isLoading: false,
           autoClose: 1500,
@@ -296,7 +303,7 @@ const AddCurriculumForm = () => {
 
         <div>
           <label className="block mb-2 text-sm font-medium text-dark">
-            Select Activity
+            Select Subject/Activity
           </label>
           <select
             defaultValue={""}
@@ -412,9 +419,31 @@ const AddCurriculumForm = () => {
             </div>
           </div>
 
+          {row?.subCategoryId && (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                disabled={
+                  row?.selectedMilestoneId ? true : row?.isCustomMilestone
+                }
+                placeholder="Add your own milestone"
+                value={row.custom}
+                onChange={(e) => handleCustomChange(index, e.target.value)}
+                className="flex-grow px-4 py-2 border rounded-md focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => handleAddCustomMilestone(index)}
+                className="bg-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-800"
+              >
+                +
+              </button>
+            </div>
+          )}
+
           <div className="mb-4 flex gap-2">
             {row.selectedMilestoneId || row.isCustomMilestone ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mt-3">
                 <span className="bg-indigo-500 text-white px-3 py-1 rounded-full">
                   {row.milestones[0]?.name}
                 </span>
@@ -430,54 +459,46 @@ const AddCurriculumForm = () => {
                 </button>
               </div>
             ) : loadingMileStones ? (
-              <LoaderSpinner className="text-center" />
+              <div className="mt-4">
+                <LoaderSpinner className="text-center" />
+              </div>
             ) : (
-              row?.milestones?.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => handleSelectMilestone(index, m)}
-                  className={`px-4 py-2 rounded-full text-sm border ${
-                    row.selectedMilestoneId === m.id
-                      ? "bg-indigo-500 text-white border-indigo-500"
-                      : "bg-white text-gray-700 border-gray-300"
-                  }`}
-                >
-                  {m.name}
-                </button>
-              ))
+              <div className="mt-4">
+                {row?.milestones?.length > 0 && (
+                  <h6 className="text-md mb-2 font-semibold">
+                    Suggested MileStones
+                  </h6>
+                )}
+                {row?.milestones?.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => handleSelectMilestone(index, m)}
+                    className={`px-4 py-2 rounded-full text-sm border ${
+                      row.selectedMilestoneId === m.id
+                        ? "bg-indigo-500 text-white border-indigo-500"
+                        : "bg-white text-gray-700 border-gray-300"
+                    }`}
+                  >
+                    {m.name}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
-
-          {row?.subCategoryId && (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                disabled={row?.selectedMilestoneId ? true : false}
-                placeholder="Add your own milestone"
-                value={row.custom}
-                onChange={(e) => handleCustomChange(index, e.target.value)}
-                className="flex-grow px-4 py-2 border rounded-md focus:outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => handleAddCustomMilestone(index)}
-                className="bg-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-800"
-              >
-                +
-              </button>
-            </div>
-          )}
         </div>
       ))}
 
-      <button
-        type="button"
-        onClick={handleAddRow}
-        className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm"
-      >
-        Add Another Milestone
-      </button>
+      {(milestoneRows[milestoneRows.length - 1]?.selectedMilestoneId ||
+        milestoneRows[milestoneRows.length - 1]?.isCustomMilestone) && (
+        <button
+          type="button"
+          onClick={handleAddRow}
+          className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm"
+        >
+          Add Another Milestone
+        </button>
+      )}
 
       <button
         type="submit"

@@ -57,6 +57,7 @@ export interface FormAuthInputs {
   date_to?: string;
   activity_id?: string;
   curriculum_sub_category_id?: string;
+  milestones?: [];
   [key: `curriculum_sub_category_id_${string}`]: string;
 }
 
